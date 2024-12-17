@@ -13,12 +13,12 @@ public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id_cliente;
 
     @Column(nullable = false, length = 60)
     private String nome;
 
-    private LocalDate dataNascimento;
+    private LocalDate data_nascimento;
 
     @Column(nullable = false, length = 320)
     @Email(message = "O email deve ser válido")
@@ -41,7 +41,7 @@ public class Cliente {
     private String rua;
 
     @Column(length = 10)
-    private String numeroRua;
+    private String numero_rua;
 
     @Column(length = 2)
     private String uf;
