@@ -20,8 +20,8 @@ public class ClienteWebController {
     }
 
     @PostMapping
-    public String salvarClienteWeb(@ModelAttribute Cliente cliente, Model model) {
-        clienteService.salvar(cliente);
+    public String cadastrarClienteWeb(@ModelAttribute Cliente cliente, Model model) {
+        clienteService.cadastrar(cliente);
         model.addAttribute("mensagem", "Cliente cadastrado com sucesso!");
         return "formulario-cliente";
     }

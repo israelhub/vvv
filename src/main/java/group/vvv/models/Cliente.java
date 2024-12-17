@@ -16,19 +16,25 @@ public class Cliente {
     private Long id_cliente;
 
     @Column(nullable = false, length = 60)
+    @NotNull(message = "O nome não pode ser nulo")
     private String nome;
 
+    @Column(nullable = false)
+    @NotNull(message = "A data de nascimento não pode ser nula")
     private LocalDate data_nascimento;
 
     @Column(nullable = false, length = 320)
     @Email(message = "O email deve ser válido")
+    @NotNull(message = "O email não pode ser nulo")
     private String email;
 
-    @Column(length = 255)
+    @Column(nullable = false, length = 255)
+    @NotNull(message = "A senha não pode ser nula")
     private String senha;
 
-    @Column(length = 14)
+    @Column(nullable = false, length = 14)
     @Pattern(regexp = "\\d{11}", message = "O CPF deve conter 11 dígitos")
+    @NotNull(message = "O CPF não pode ser nulo")
     private String cpf;
 
     @Column(length = 30)
@@ -47,5 +53,6 @@ public class Cliente {
     private String uf;
 
     @Column(length = 15)
+    @NotNull(message = "O telefone não pode ser nulo")
     private String telefone;
 }

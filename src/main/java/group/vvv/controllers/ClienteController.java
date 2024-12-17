@@ -5,9 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import group.vvv.models.Cliente;
 import group.vvv.services.ClienteService;
-
-
-
 import java.util.List;
 
 @RestController
@@ -19,11 +16,11 @@ public class ClienteController {
 
     @PostMapping
     public ResponseEntity<Cliente> criarCliente(@RequestBody Cliente cliente) {
-        Cliente novoCliente = clienteService.salvar(cliente);
+        Cliente novoCliente = clienteService.cadastrar(cliente);
         return ResponseEntity.ok(novoCliente);
     }
 
-    @GetMapping
+    @GetMapping("/todos")
     public ResponseEntity<List<Cliente>> listarClientes() {
         List<Cliente> clientes = clienteService.listarTodos();
         return ResponseEntity.ok(clientes);
