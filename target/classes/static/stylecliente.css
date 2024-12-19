@@ -1,0 +1,120 @@
+/* Estilo geral do corpo */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #74ebd5, #9face6);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: #333;
+}
+
+/* Container do formulário */
+.container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    padding: 30px 40px;
+    max-width: 500px;
+    width: 100%;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Animação de entrada */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Título */
+h1 {
+    text-align: center;
+    font-size: 24px;
+    color: #4a4a4a;
+    margin-bottom: 20px;
+}
+
+/* Labels */
+.form-label {
+    font-size: 14px;
+    color: #555555;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+/* Campos de entrada */
+.form-control {
+    width:95%;
+    padding: 12px 15px;
+    font-size: 14px;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #74ebd5;
+    box-shadow: 0px 0px 8px rgba(116, 235, 213, 0.6);
+    outline: none;
+}
+
+/* Botão de envio */
+.btn-primary {
+    background-color: #74ebd5;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    padding: 12px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    width: 102%;
+}
+
+.btn-primary:hover {
+    background-color: #5acbb8;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Alerta de sucesso */
+.alert {
+    font-size: 14px;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.alert-success {
+    background-color: #eafaf1;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+}
+
+/* Responsividade */
+@media (max-width: 576px) {
+    .container {
+        padding: 20px 25px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .btn-primary {
+        font-size: 14px;
+    }
+}

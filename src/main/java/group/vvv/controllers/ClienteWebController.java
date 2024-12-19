@@ -16,13 +16,13 @@ public class ClienteWebController {
     @GetMapping("/novo")
     public String exibirFormularioCadastro(Model model) {
         model.addAttribute("cliente", new Cliente());
-        return "formulario-cliente";
+        return "areaCadastroCliente";
     }
 
     @PostMapping
     public String cadastrarClienteWeb(@ModelAttribute Cliente cliente, Model model) {
         clienteService.cadastrar(cliente);
         model.addAttribute("mensagem", "Cliente cadastrado com sucesso!");
-        return "formulario-cliente";
+        return "areaCadastroCliente";
     }
 }
