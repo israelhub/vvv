@@ -1,6 +1,6 @@
-group\vvv\controllers\ClienteController.class
 group\vvv\controllers\ClienteWebController.class
+group\vvv\VvvApplication.class
+group\vvv\controllers\ClienteController.class
 group\vvv\models\Cliente.class
 group\vvv\repositories\ClienteRepository.class
 group\vvv\services\ClienteService.class
-group\vvv\VvvApplication.class
