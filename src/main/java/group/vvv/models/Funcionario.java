@@ -36,6 +36,9 @@ public class Funcionario {
     @Column(nullable = false)
     private Cargo cargo;
 
+    @Column(nullable = false)
+    private boolean loginInicialRealizado = false;
+
     public enum Cargo {
         GERENTE, GERENTE_DE_NEGOCIOS_VIRTUAIS, PADRAO
     }

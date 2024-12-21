@@ -23,4 +23,19 @@ public class FuncionarioService {
 
         return funcionarioRepository.save(funcionario);
     }
+
+    public Funcionario login(String email, String senha) {
+        Funcionario funcionario = funcionarioRepository.findByEmailAndSenha(email, senha);
+        return funcionario;
+    }
+
+    public void atualizarDados(Funcionario funcionario) {
+        Funcionario funcionarioExistente = funcionarioRepository.findById(funcionario.getId_funcionario()).orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado"));
+        funcionarioExistente.setCep(funcionario.getCep());
+        funcionarioExistente.setRua(funcionario.getRua());
+        funcionarioExistente.setNumero_rua(funcionario.getNumero_rua());
+        funcionarioExistente.setSenha(funcionario.getSenha());
+        funcionarioExistente.setLoginInicialRealizado(true);
+        funcionarioRepository.save(funcionarioExistente);
+    }
 }
