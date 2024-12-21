@@ -1,6 +1,11 @@
+group\vvv\controllers\FuncionarioWebController.class
+group\vvv\services\FuncionarioService.class
+group\vvv\repositories\FuncionarioRepository.class
 group\vvv\controllers\ClienteWebController.class
+group\vvv\models\Funcionario.class
 group\vvv\VvvApplication.class
 group\vvv\controllers\ClienteController.class
+group\vvv\models\Funcionario$Cargo.class
 group\vvv\models\Cliente.class
 group\vvv\repositories\ClienteRepository.class
 group\vvv\services\ClienteService.class

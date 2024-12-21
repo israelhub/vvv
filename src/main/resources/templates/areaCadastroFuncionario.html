@@ -14,27 +14,17 @@
         </div>
 
         <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" name="email" th:field="*{email}" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
             <label for="cargo" class="form-label">Cargo</label>
             <select id="cargo" name="cargo" th:field="*{cargo}" class="form-control" required>
-                <option value="gerente">Gerente</option>
-                <option value="gerente de negocios virtuais">Gerente de Negócios Virtuais</option>
-                <option value="padrao">Padrão</option>
+                <option value="GERENTE">Gerente</option>
+                <option value="GERENTE_DE_NEGOCIOS_VIRTUAIS">Gerente de Negócios Virtuais</option>
+                <option value="PADRAO">Padrão</option>
             </select>
-        </div>
-
-        <div class="mb-3">
-            <label for="cep" class="form-label">CEP</label>
-            <input type="text" id="cep" name="cep" th:field="*{cep}" class="form-control">
-        </div>
-
-        <div class="mb-3">
-            <label for="rua" class="form-label">Rua</label>
-            <input type="text" id="rua" name="rua" th:field="*{rua}" class="form-control">
-        </div>
-
-        <div class="mb-3">
-            <label for="numero_rua" class="form-label">Número da Rua</label>
-            <input type="text" id="numero_rua" name="numero_rua" th:field="*{numero_rua}" class="form-control">
         </div>
 
         <button type="submit" class="btn btn-primary">Cadastrar</button>

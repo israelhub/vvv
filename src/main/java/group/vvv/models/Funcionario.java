@@ -17,7 +17,7 @@ public class Funcionario {
     @Column(nullable = false, length = 10)
     private String codigo_funcionario;
 
-    @Column(nullable = false, length = 320)
+    @Column(nullable = false, length = 320, unique = true)
     private String email;
 
     @Column(nullable = false, length = 64)
