@@ -4,7 +4,7 @@ group\vvv\repositories\FuncionarioRepository.class
 group\vvv\controllers\ClienteWebController.class
 group\vvv\models\Funcionario.class
 group\vvv\VvvApplication.class
-group\vvv\controllers\ClienteController.class
+group\vvv\controllers\PaginaInicialWebController.class
 group\vvv\models\Funcionario$Cargo.class
 group\vvv\models\Cliente.class
 group\vvv\repositories\ClienteRepository.class

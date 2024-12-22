@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import group.vvv.models.Cliente;
 
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
-    
+    Cliente findByEmailAndSenha(String email, String senha);
 }

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cadastro de Funcionário</title>
+    <link rel="stylesheet" th:href="@{/stylecliente.css}">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Cadastro de Funcionário</h1>
+    <form th:action="@{/web/funcionarios}" th:object="${funcionario}" method="post">
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome</label>
+            <input type="text" id="nome" name="nome" th:field="*{nome}" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" name="email" th:field="*{email}" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="cargo" class="form-label">Cargo</label>
+            <select id="cargo" name="cargo" th:field="*{cargo}" class="form-control" required>
+                <option value="GERENTE">Gerente</option>
+                <option value="GERENTE_DE_NEGOCIOS_VIRTUAIS">Gerente de Negócios Virtuais</option>
+                <option value="PADRAO">Padrão</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Cadastrar</button>
+    </form>
+    
+    <div th:if="${mensagem}" class="mt-3 alert alert-success">
+        <p th:text="${mensagem}"></p>
+    </div>
+</div>
+</body>
+</html>
