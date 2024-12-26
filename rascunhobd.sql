@@ -1,3 +1,4 @@
+/*
 -- Tabela Cliente
 CREATE TABLE cliente (
         id_cliente BIGSERIAL PRIMARY KEY,
@@ -190,3 +191,4 @@ CREATE TABLE ticket (
         localizador VARCHAR(50),
         id_reserva BIGINT NOT NULL REFERENCES reserva (id_reserva)
     );
+    */

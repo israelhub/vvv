@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cadastro de Viagem</title>
+    <link rel="stylesheet" th:href="@{/stylecliente.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Cadastro de Viagem</h1>
+    <form th:action="@{/web/viagens}" method="post">
+        <div class="mb-3">
+            <label for="origemCidade" class="form-label">Cidade de Origem</label>
+            <select id="origemCidade" name="origemCidade" class="form-control" required>
+                <option th:each="cidade : ${cidades}" th:value="${cidade.id_cidade}" th:text="${cidade.nome}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="origemPonto" class="form-label">Ponto de Origem</label>
+            <select id="origemPonto" name="origemPonto" class="form-control" required>
+                <option value="">Selecione um ponto</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="destinoCidade" class="form-label">Cidade de Destino</label>
+            <select id="destinoCidade" name="destinoCidade" class="form-control" required>
+                <option th:each="cidade : ${cidades}" th:value="${cidade.id_cidade}" th:text="${cidade.nome}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="destinoPonto" class="form-label">Ponto de Destino</label>
+            <select id="destinoPonto" name="destinoPonto" class="form-control" required>
+                <option value="">Selecione um ponto</option>
+            </select>
+        </div>
+        <div id="escalaContainer">
+            <div class="mb-3">
+                <label for="escalaCidade" class="form-label">Cidade de Escala (opcional)</label>
+                <select id="escalaCidade" name="escalaCidade[]" class="form-control">
+                    <option value="">Selecione uma cidade</option>
+                    <option th:each="cidade : ${cidades}" th:value="${cidade.id_cidade}" th:text="${cidade.nome}"></option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="escalaPonto" class="form-label">Ponto de Escala (opcional)</label>
+                <select id="escalaPonto" name="escalaPonto[]" class="form-control">
+                    <option value="">Selecione um ponto</option>
+                </select>
+            </div>
+        </div>
+        <button type="button" id="addEscala" class="btn btn-secondary">Adicionar Escala</button>
+        <button type="submit" class="btn btn-primary">Cadastrar</button>
+    </form>
+    <div th:if="${mensagem}" class="mt-3 alert alert-success">
+        <p th:text="${mensagem}"></p>
+    </div>
+    <div th:if="${mensagemErro}" class="mt-3 alert alert-danger">
+        <p th:text="${mensagemErro}"></p>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        function loadPontos(cidadeId, pontoSelect) {
+            $.ajax({
+                url: '/web/viagens/pontos/' + cidadeId,
+                method: 'GET',
+                success: function(data) {
+                    pontoSelect.empty();
+                    data.forEach(function(ponto) {
+                        pontoSelect.append('<option value="' + ponto.id + '">' + ponto.nome + '</option>');
+                    });
+                }
+            });
+        }
+
+        $('#origemCidade').change(function() {
+            var cidadeId = $(this).val();
+            loadPontos(cidadeId, $('#origemPonto'));
+        });
+
+        $('#destinoCidade').change(function() {
+            var cidadeId = $(this).val();
+            loadPontos(cidadeId, $('#destinoPonto'));
+        });
+
+        $('#escalaContainer').on('change', 'select[name="escalaCidade[]"]', function() {
+            var cidadeId = $(this).val();
+            var pontoSelect = $(this).closest('.mb-3').next().find('select[name="escalaPonto[]"]');
+            loadPontos(cidadeId, pontoSelect);
+        });
+
+        $('#addEscala').click(function() {
+            var escalaHtml = `
+                <div class="mb-3">
+                    <label for="escalaCidade" class="form-label">Cidade de Escala (opcional)</label>
+                    <select name="escalaCidade[]" class="form-control">
+                        <option value="">Selecione uma cidade</option>
+                        <option th:each="cidade : ${cidades}" th:value="${cidade.id_cidade}" th:text="${cidade.nome}"></option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="escalaPonto" class="form-label">Ponto de Escala (opcional)</label>
+                    <select name="escalaPonto[]" class="form-control">
+                        <option value="">Selecione um ponto</option>
+                    </select>
+                </div>`;
+            $('#escalaContainer').append(escalaHtml);
+        });
+    });
+</script>
+</body>
+</html>
