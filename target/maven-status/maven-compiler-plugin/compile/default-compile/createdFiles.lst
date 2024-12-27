@@ -1,5 +1,7 @@
 group\vvv\services\FuncionarioService.class
+group\vvv\repositories\EstacaoRepository.class
 group\vvv\repositories\FuncionarioRepository.class
+group\vvv\repositories\PortoRepository.class
 group\vvv\repositories\ViagemRepository.class
 group\vvv\controllers\ViagemWebController.class
 group\vvv\models\Funcionario.class
@@ -14,7 +16,9 @@ group\vvv\models\viagem\Local.class
 group\vvv\models\viagem\ViagemLocal$Tipo.class
 group\vvv\controllers\FuncionarioWebController.class
 group\vvv\controllers\ClienteWebController.class
+group\vvv\services\ApiService.class
 group\vvv\models\viagem\ViagemLocal.class
+group\vvv\repositories\AeroportoRepository.class
 group\vvv\VvvApplication.class
 group\vvv\controllers\PaginaInicialWebController.class
 group\vvv\models\viagem\Cidade.class

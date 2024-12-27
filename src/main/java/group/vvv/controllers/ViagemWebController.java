@@ -4,11 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import group.vvv.models.viagem.Viagem;
-import group.vvv.models.viagem.Local;
+import group.vvv.models.viagem.*;
 import group.vvv.services.ViagemService;
-import group.vvv.repositories.LocalRepository;
-import group.vvv.repositories.CidadeRepository;
+import group.vvv.services.ApiService;
+import group.vvv.repositories.*;
 
 import java.util.List;
 
@@ -25,10 +24,25 @@ public class ViagemWebController {
     @Autowired
     private CidadeRepository cidadeRepository;
 
+    @Autowired
+    private AeroportoRepository aeroportoRepository;
+
+    @Autowired
+    private PortoRepository portoRepository;
+
+    @Autowired
+    private EstacaoRepository estacaoRepository;
+
+    @Autowired
+    private ApiService apiService;
+
     @GetMapping("/novo")
     public String exibirFormularioCadastro(Model model) {
         model.addAttribute("viagem", new Viagem());
-        model.addAttribute("cidades", cidadeRepository.findAll());
+        model.addAttribute("cidades", apiService.getCidades());
+        /*model.addAttribute("aeroportos", apiService.getAeroportos());
+        model.addAttribute("portos", apiService.getPortos());
+        model.addAttribute("estacoes", apiService.getEstacoes());*/
         return "viagem/areaCadastroViagem";
     }
 

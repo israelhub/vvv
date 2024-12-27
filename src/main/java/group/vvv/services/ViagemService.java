@@ -2,13 +2,9 @@ package group.vvv.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import group.vvv.models.viagem.Viagem;
-import group.vvv.models.viagem.Local;
-import group.vvv.models.viagem.ViagemLocal;
+import group.vvv.models.viagem.*;
 import group.vvv.models.viagem.ViagemLocal.ViagemLocalId;
-import group.vvv.repositories.ViagemRepository;
-import group.vvv.repositories.LocalRepository;
-import group.vvv.repositories.ViagemLocalRepository;
+import group.vvv.repositories.*;
 
 @Service
 public class ViagemService {
@@ -21,6 +17,18 @@ public class ViagemService {
 
     @Autowired
     private ViagemLocalRepository viagemLocalRepository;
+
+    @Autowired
+    private CidadeRepository cidadeRepository;
+
+    @Autowired
+    private AeroportoRepository aeroportoRepository;
+
+    @Autowired
+    private PortoRepository portoRepository;
+
+    @Autowired
+    private EstacaoRepository estacaoRepository;
 
     public Viagem criarViagem(Long origemLocalId, Long destinoLocalId, Long escalaLocalId) {
         Viagem viagem = new Viagem();
