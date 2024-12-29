@@ -6,6 +6,8 @@ import group.vvv.models.viagem.*;
 import group.vvv.models.viagem.ViagemLocal.ViagemLocalId;
 import group.vvv.repositories.*;
 
+import java.util.List;
+
 @Service
 public class ViagemService {
 
@@ -30,7 +32,7 @@ public class ViagemService {
     @Autowired
     private EstacaoRepository estacaoRepository;
 
-    public Viagem criarViagem(Long origemLocalId, Long destinoLocalId, Long escalaLocalId) {
+    public Viagem criarViagem(Long origemLocalId, Long destinoLocalId, List<Long> escalaLocalIds) {
         Viagem viagem = new Viagem();
         viagem.setNumReservasAssociadas(0);
         viagem = viagemRepository.save(viagem);
@@ -57,15 +59,17 @@ public class ViagemService {
             viagemLocalRepository.save(viagemLocalDestino);
         }
 
-        if (escalaLocalId != null) {
-            Local escala = localRepository.findById(escalaLocalId).orElseThrow(() -> new IllegalArgumentException("Local de escala não encontrado"));
-            ViagemLocalId viagemLocalIdEscala = new ViagemLocalId(viagem.getId_viagem(), escala.getId_local());
-            ViagemLocal viagemLocalEscala = new ViagemLocal();
-            viagemLocalEscala.setId(viagemLocalIdEscala);
-            viagemLocalEscala.setViagem(viagem);
-            viagemLocalEscala.setLocal(escala);
-            viagemLocalEscala.setTipo(ViagemLocal.Tipo.ESCALA);
-            viagemLocalRepository.save(viagemLocalEscala);
+        if (escalaLocalIds != null) {
+            for (Long escalaLocalId : escalaLocalIds) {
+                Local escala = localRepository.findById(escalaLocalId).orElseThrow(() -> new IllegalArgumentException("Local de escala não encontrado"));
+                ViagemLocalId viagemLocalIdEscala = new ViagemLocalId(viagem.getId_viagem(), escala.getId_local());
+                ViagemLocal viagemLocalEscala = new ViagemLocal();
+                viagemLocalEscala.setId(viagemLocalIdEscala);
+                viagemLocalEscala.setViagem(viagem);
+                viagemLocalEscala.setLocal(escala);
+                viagemLocalEscala.setTipo(ViagemLocal.Tipo.ESCALA);
+                viagemLocalRepository.save(viagemLocalEscala);
+            }
         }
 
         return viagem;

@@ -16,33 +16,55 @@ import group.vvv.models.viagem.Cidade;
 import group.vvv.models.viagem.Aeroporto;
 import group.vvv.models.viagem.Porto;
 import group.vvv.models.viagem.Estacao;
+import group.vvv.models.viagem.Estado;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 
 
 @Service
 public class ApiService {
 
     private final RestTemplate restTemplate = new RestTemplate();
+    private final static String API_KEY = "xjodtwLrnLwFpHepDxqE30jlEBNWMMoNDl6QyVtz";
 
-    public Cidade[] getCidades() {
-        String url = "https://servicodados.ibge.gov.br/api/v1/localidades/estados/RJ/municipios";
-        return restTemplate.getForObject(url, Cidade[].class);
+    public List<Estado> getEstados() {
+        String url = "https://servicodados.ibge.gov.br/api/v1/localidades/estados";
+        return List.of(restTemplate.getForObject(url, Estado[].class));
     }
 
-   /* private final static String Bearer YOUR_API_KEY = "xjodtwLrnLwFpHepDxqE30jlEBNWMMoNDl6QyVtz";
-    public Aeroporto[] getAeroportos() {
-        String url = "https://sharpapi.com/api/v1/airports?country=SG";
+    public List<Cidade> getCidadesPorEstado(String estadoSigla) {
+        String url = "https://servicodados.ibge.gov.br/api/v1/localidades/estados/" + estadoSigla + "/municipios";
+        return List.of(restTemplate.getForObject(url, Cidade[].class));
+    }
+
+/*   public Aeroporto[] getAeroportosPorCidade(String estadoSigla) {
+        String url = "https://sharpapi.com/api/v1/airports?country=BR&state=" + estadoSigla;
         HttpHeaders headers = new HttpHeaders();
         headers.set("accept", "application/json");
-        headers.set("Authorization", "Bearer YOUR_API_KEY");
+        headers.set("Authorization", "Bearer " + API_KEY);
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        ResponseEntity<Aeroporto[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, Aeroporto[].class);
-        return response.getBody();
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+            String jsonResponse = response.getBody();
+
+            // Logar a resposta JSON para depuração
+            System.out.println("Resposta JSON: " + jsonResponse);
+
+            // Converter a resposta JSON para uma árvore de nós para inspeção
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(jsonResponse);
+            System.out.println("Estrutura JSON: " + rootNode.toPrettyString());
+
+            // Converter a resposta JSON para o tipo Aeroporto[]
+            return objectMapper.readValue(jsonResponse, Aeroporto[].class);
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao processar a resposta JSON", e);
+        }
     } */
+
 
     /*
      * public Porto[] getPortos() {

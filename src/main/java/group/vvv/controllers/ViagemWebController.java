@@ -37,17 +37,25 @@ public class ViagemWebController {
     private ApiService apiService;
 
     @GetMapping("/novo")
-    public String exibirFormularioCadastro(Model model) {
+    public String exibirFormularioCadastro(
+            @RequestParam(required = false) String estadoSigla,
+            @RequestParam(required = false) String cidadeNome,
+            Model model) {
+
         model.addAttribute("viagem", new Viagem());
-        model.addAttribute("cidades", apiService.getCidades());
-        /*model.addAttribute("aeroportos", apiService.getAeroportos());
-        model.addAttribute("portos", apiService.getPortos());
-        model.addAttribute("estacoes", apiService.getEstacoes());*/
+        model.addAttribute("estados", apiService.getEstados());
+        /*
+         * model.addAttribute("aeroportos",
+         * apiService.getAeroportosPorCidade(estadoSigla));
+         * model.addAttribute("portos", apiService.getPortos());
+         * model.addAttribute("estacoes", apiService.getEstacoes());
+         */
         return "viagem/areaCadastroViagem";
     }
 
     @PostMapping
-    public String cadastrarViagemWeb(@RequestParam Long origemLocal, @RequestParam Long destinoLocal, @RequestParam(required = false) Long escalaLocal, Model model) {
+    public String cadastrarViagemWeb(@RequestParam Long origemLocal, @RequestParam Long destinoLocal,
+            @RequestParam(required = false) List<Long> escalaLocal, Model model) {
         try {
             Viagem novaViagem = viagemService.criarViagem(origemLocal, destinoLocal, escalaLocal);
             model.addAttribute("mensagem", "Viagem cadastrada com sucesso! ID: " + novaViagem.getId_viagem());

@@ -79,6 +79,14 @@ CREATE TABLE cidade (
         codigo CHAR(3) NOT NULL UNIQUE
     );
 
+-- Tabela: estado
+CREATE TABLE estado (
+        id_estado SERIAL PRIMARY KEY,
+        nome VARCHAR(50) NOT NULL,
+        codigo CHAR(3) NOT NULL UNIQUE
+    );
+
+
 
 -- Tabela: aeroporto
 CREATE TABLE aeroporto (

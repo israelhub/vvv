@@ -10,45 +10,56 @@
     <h1>Cadastro de Viagem</h1>
     <form th:action="@{/web/viagens}" method="post">
         <div class="mb-3">
+            <label for="estado" class="form-label">Estado</label>
+            <select id="estado" name="estado" class="form-control" required>
+                <option value="">Selecione um estado</option>
+                <option th:each="estado : ${estados}" th:value="${estado.sigla}" th:text="${estado.nome}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
             <label for="origemCidade" class="form-label">Cidade de Origem</label>
-            <select id="origemCidade" name="origemCidade" class="form-control" required>
-                <option th:each="cidade : ${cidades}" th:value="${cidade.id_cidade}" th:text="${cidade.nome}"></option>
+            <select id="origemCidade" name="origemCidade" class="form-control" required disabled>
+                <option value="">Selecione uma cidade</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="origemTipo" class="form-label">Tipo de Ponto de Origem</label>
+            <select id="origemTipo" name="origemTipo" class="form-control" required disabled>
+                <option value="">Selecione um tipo</option>
+                <option value="aeroporto">Aeroporto</option>
+                <option value="estacao">Estação</option>
+                <option value="porto">Porto</option>
             </select>
         </div>
         <div class="mb-3">
             <label for="origemPonto" class="form-label">Ponto de Origem</label>
-            <select id="origemPonto" name="origemPonto" class="form-control" required>
+            <select id="origemPonto" name="origemPonto" class="form-control" required disabled>
                 <option value="">Selecione um ponto</option>
             </select>
         </div>
         <div class="mb-3">
             <label for="destinoCidade" class="form-label">Cidade de Destino</label>
-            <select id="destinoCidade" name="destinoCidade" class="form-control" required>
-                <option th:each="cidade : ${cidades}" th:value="${cidade.id_cidade}" th:text="${cidade.nome}"></option>
+            <select id="destinoCidade" name="destinoCidade" class="form-control" required disabled>
+                <option value="">Selecione uma cidade</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="destinoTipo" class="form-label">Tipo de Ponto de Destino</label>
+            <select id="destinoTipo" name="destinoTipo" class="form-control" required disabled>
+                <option value="">Selecione um tipo</option>
+                <option value="aeroporto">Aeroporto</option>
+                <option value="estacao">Estação</option>
+                <option value="porto">Porto</option>
             </select>
         </div>
         <div class="mb-3">
             <label for="destinoPonto" class="form-label">Ponto de Destino</label>
-            <select id="destinoPonto" name="destinoPonto" class="form-control" required>
+            <select id="destinoPonto" name="destinoPonto" class="form-control" required disabled>
                 <option value="">Selecione um ponto</option>
             </select>
         </div>
-        <div id="escalaContainer">
-            <div class="mb-3">
-                <label for="escalaCidade" class="form-label">Cidade de Escala (opcional)</label>
-                <select id="escalaCidade" name="escalaCidade[]" class="form-control">
-                    <option value="">Selecione uma cidade</option>
-                    <option th:each="cidade : ${cidades}" th:value="${cidade.id_cidade}" th:text="${cidade.nome}"></option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="escalaPonto" class="form-label">Ponto de Escala (opcional)</label>
-                <select id="escalaPonto" name="escalaPonto[]" class="form-control">
-                    <option value="">Selecione um ponto</option>
-                </select>
-            </div>
-        </div>
-        <button type="button" id="addEscala" class="btn btn-secondary">Adicionar Escala</button>
+        <div id="escalaContainer"></div>
+        <button type="button" id="addEscala" class="btn btn-secondary" disabled>Adicionar Escala</button>
         <button type="submit" class="btn btn-primary">Cadastrar</button>
     </form>
     <div th:if="${mensagem}" class="mt-3 alert alert-success">
@@ -61,47 +72,100 @@
 
 <script>
     $(document).ready(function() {
-        function loadPontos(cidadeId, pontoSelect) {
+        function loadCidades(estadoSigla) {
             $.ajax({
-                url: '/web/viagens/pontos/' + cidadeId,
+                url: 'https://servicodados.ibge.gov.br/api/v1/localidades/estados/' + estadoSigla + '/municipios',
                 method: 'GET',
                 success: function(data) {
-                    pontoSelect.empty();
-                    data.forEach(function(ponto) {
-                        pontoSelect.append('<option value="' + ponto.id + '">' + ponto.nome + '</option>');
+                    $('#origemCidade, #destinoCidade, select[name="escalaCidade[]"]').empty().append('<option value="">Selecione uma cidade</option>');
+                    data.forEach(function(cidade) {
+                        $('#origemCidade, #destinoCidade, select[name="escalaCidade[]"]').append('<option value="' + cidade.id + '">' + cidade.nome + '</option>');
                     });
+                    $('#origemCidade, #destinoCidade, select[name="escalaCidade[]"]').prop('disabled', false);
+                    $('#addEscala').prop('disabled', false);
                 }
             });
         }
 
-        $('#origemCidade').change(function() {
-            var cidadeId = $(this).val();
-            loadPontos(cidadeId, $('#origemPonto'));
+        function loadPontos(tipo, cidadeId, selectElement) {
+            let url;
+            if (tipo === 'aeroporto') {
+                url = '/api/aeroportos?cidadeId=' + cidadeId;
+            } else if (tipo === 'estacao') {
+                url = '/api/estacoes?cidadeId=' + cidadeId;
+            } else if (tipo === 'porto') {
+                url = '/api/portos?cidadeId=' + cidadeId;
+            }
+
+            if (url) {
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success: function(data) {
+                        selectElement.empty().append('<option value="">Selecione um ponto</option>');
+                        data.forEach(function(ponto) {
+                            selectElement.append('<option value="' + ponto.id + '">' + ponto.nome + '</option>');
+                        });
+                        selectElement.prop('disabled', false);
+                    }
+                });
+            }
+        }
+
+        $('#estado').change(function() {
+            var estadoSigla = $(this).val();
+            if (estadoSigla) {
+                loadCidades(estadoSigla);
+            } else {
+                $('#origemCidade, #destinoCidade, select[name="escalaCidade[]"]').prop('disabled', true).empty().append('<option value="">Selecione uma cidade</option>');
+                $('#origemPonto, #destinoPonto, select[name="escalaPonto[]"]').prop('disabled', true).empty().append('<option value="">Selecione um ponto</option>');
+                $('#addEscala').prop('disabled', true);
+            }
         });
 
-        $('#destinoCidade').change(function() {
+        $('#origemCidade, #destinoCidade, select[name="escalaCidade[]"]').change(function() {
             var cidadeId = $(this).val();
-            loadPontos(cidadeId, $('#destinoPonto'));
+            var tipoSelect = $(this).closest('.mb-3').next().find('select');
+            var pontoSelect = tipoSelect.next('select');
+            if (cidadeId) {
+                tipoSelect.prop('disabled', false);
+            } else {
+                tipoSelect.prop('disabled', true).val('');
+                pontoSelect.prop('disabled', true).empty().append('<option value="">Selecione um ponto</option>');
+            }
         });
 
-        $('#escalaContainer').on('change', 'select[name="escalaCidade[]"]', function() {
-            var cidadeId = $(this).val();
-            var pontoSelect = $(this).closest('.mb-3').next().find('select[name="escalaPonto[]"]');
-            loadPontos(cidadeId, pontoSelect);
+        $('#origemTipo, #destinoTipo, select[name="escalaTipo[]"]').change(function() {
+            var tipo = $(this).val();
+            var cidadeId = $(this).closest('.mb-3').prev().find('select').val();
+            var pontoSelect = $(this).next('select');
+            if (tipo && cidadeId) {
+                loadPontos(tipo, cidadeId, pontoSelect);
+            } else {
+                pontoSelect.prop('disabled', true).empty().append('<option value="">Selecione um ponto</option>');
+            }
         });
 
         $('#addEscala').click(function() {
             var escalaHtml = `
                 <div class="mb-3">
                     <label for="escalaCidade" class="form-label">Cidade de Escala (opcional)</label>
-                    <select name="escalaCidade[]" class="form-control">
+                    <select name="escalaCidade[]" class="form-control" disabled>
                         <option value="">Selecione uma cidade</option>
-                        <option th:each="cidade : ${cidades}" th:value="${cidade.id_cidade}" th:text="${cidade.nome}"></option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="escalaTipo" class="form-label">Tipo de Ponto de Escala</label>
+                    <select name="escalaTipo[]" class="form-control" disabled>
+                        <option value="">Selecione um tipo</option>
+                        <option value="aeroporto">Aeroporto</option>
+                        <option value="estacao">Estação</option>
+                        <option value="porto">Porto</option>
                     </select>
                 </div>
                 <div class="mb-3">
                     <label for="escalaPonto" class="form-label">Ponto de Escala (opcional)</label>
-                    <select name="escalaPonto[]" class="form-control">
+                    <select name="escalaPonto[]" class="form-control" disabled>
                         <option value="">Selecione um ponto</option>
                     </select>
                 </div>`;
