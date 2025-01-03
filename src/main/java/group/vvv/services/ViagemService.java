@@ -20,18 +20,6 @@ public class ViagemService {
     @Autowired
     private ViagemLocalRepository viagemLocalRepository;
 
-    @Autowired
-    private CidadeRepository cidadeRepository;
-
-    @Autowired
-    private AeroportoRepository aeroportoRepository;
-
-    @Autowired
-    private PortoRepository portoRepository;
-
-    @Autowired
-    private EstacaoRepository estacaoRepository;
-
     public Viagem criarViagem(Long origemLocalId, Long destinoLocalId, List<Long> escalaLocalIds) {
         Viagem viagem = new Viagem();
         viagem.setNumReservasAssociadas(0);

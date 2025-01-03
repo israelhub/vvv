@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cadastro de Local</title>
+    <link rel="stylesheet" th:href="@{/stylecliente.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Cadastro de Local</h1>
+    <form th:action="@{/web/locais}" method="post">
+        <div class="mb-3">
+            <label for="nomeCidade" class="form-label">Nome da Cidade</label>
+            <input type="text" id="nomeCidade" name="nomeCidade" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="codigoCidade" class="form-label">Código da Cidade</label>
+            <input type="text" id="codigoCidade" name="codigoCidade" class="form-control" pattern="[A-Z]{3}" title="Código deve ter exatamente 3 letras maiúsculas" required>
+        </div>
+        <div class="mb-3">
+            <label for="tipo" class="form-label">Tipo de Infraestrutura</label>
+            <select id="tipo" name="tipo" class="form-control" required>
+                <option value="">Selecione um tipo</option>
+                <option value="aeroporto">Aeroporto</option>
+                <option value="estacao">Estação</option>
+                <option value="porto">Porto</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="nomeInfraestrutura" class="form-label">Nome da Infraestrutura</label>
+            <input type="text" id="nomeInfraestrutura" name="nomeInfraestrutura" class="form-control" required>
+        </div>
+        <div class="mb-3" id="codigoAeroportoContainer" style="display: none;">
+            <label for="codigoAeroporto" class="form-label">Código do Aeroporto</label>
+            <input type="text" id="codigoAeroporto" name="codigoAeroporto" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Cadastrar</button>
+    </form>
+    <div th:if="${mensagem}" class="mt-3 alert alert-success">
+        <p th:text="${mensagem}"></p>
+    </div>
+    <div th:if="${mensagemErro}" class="mt-3 alert alert-danger">
+        <p th:text="${mensagemErro}"></p>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#tipo').change(function() {
+            if ($(this).val() === 'aeroporto') {
+                $('#codigoAeroportoContainer').show();
+                $('#codigoAeroporto').attr('required', true);
+            } else {
+                $('#codigoAeroportoContainer').hide();
+                $('#codigoAeroporto').removeAttr('required');
+            }
+        });
+    });
+</script>
+</body>
+</html>

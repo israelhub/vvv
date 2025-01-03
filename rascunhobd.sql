@@ -112,7 +112,7 @@ CREATE TABLE porto (
 
 -- Tabela: local (ligação com cidade e pontos específicos)
 CREATE TABLE local (
-        id SERIAL PRIMARY KEY,
+        id_local SERIAL PRIMARY KEY,
         id_cidade INT NOT NULL REFERENCES cidade (id_cidade),
         id_aeroporto INT REFERENCES aeroporto (id_aeroporto),
         id_estacao INT REFERENCES estacao (id_estacao),

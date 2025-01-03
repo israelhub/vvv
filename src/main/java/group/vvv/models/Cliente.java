@@ -2,8 +2,6 @@ package group.vvv.models;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import jakarta.persistence.*;
-import java.time.LocalDate;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 

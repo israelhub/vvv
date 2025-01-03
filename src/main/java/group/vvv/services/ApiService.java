@@ -1,4 +1,4 @@
-package group.vvv.services;
+/*package group.vvv.services;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -20,7 +20,9 @@ import group.vvv.models.viagem.Estado;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -39,32 +41,13 @@ public class ApiService {
         return List.of(restTemplate.getForObject(url, Cidade[].class));
     }
 
-/*   public Aeroporto[] getAeroportosPorCidade(String estadoSigla) {
-        String url = "https://sharpapi.com/api/v1/airports?country=BR&state=" + estadoSigla;
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("accept", "application/json");
-        headers.set("Authorization", "Bearer " + API_KEY);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        try {
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-            String jsonResponse = response.getBody();
-
-            // Logar a resposta JSON para depuração
-            System.out.println("Resposta JSON: " + jsonResponse);
-
-            // Converter a resposta JSON para uma árvore de nós para inspeção
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode rootNode = objectMapper.readTree(jsonResponse);
-            System.out.println("Estrutura JSON: " + rootNode.toPrettyString());
-
-            // Converter a resposta JSON para o tipo Aeroporto[]
-            return objectMapper.readValue(jsonResponse, Aeroporto[].class);
-        } catch (IOException e) {
-            throw new RuntimeException("Erro ao processar a resposta JSON", e);
-        }
-    } */
-
+    public List<Aeroporto> getAeroportosPorEstado(String estadoSigla) {
+        String url = "https://sistemas.anac.gov.br/dadosabertos/Aerodromos/Aer%C3%B3dromos%20P%C3%BAblicos/Lista%20de%20aer%C3%B3dromos%20p%C3%BAblicos/AerodromosPublicos.json";
+        Aeroporto[] aeroportos = restTemplate.getForObject(url, Aeroporto[].class);
+        return Arrays.stream(aeroportos)
+                     .filter(aeroporto -> aeroporto.getEstado().equalsIgnoreCase(estadoSigla))
+                     .collect(Collectors.toList());
+    }
 
     /*
      * public Porto[] getPortos() {
@@ -77,4 +60,4 @@ public class ApiService {
      * return restTemplate.getForObject(url, Estacao[].class);
      * }
      */
-}
+/* } */

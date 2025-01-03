@@ -1,5 +1,6 @@
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\ClienteWebController.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\FuncionarioWebController.java
+C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\LocalWebController.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\PaginaInicialWebController.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\ViagemWebController.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\Cliente.java
@@ -24,5 +25,6 @@ C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\services\ApiService.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\services\ClienteService.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\services\FuncionarioService.java
+C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\services\LocalService.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\services\ViagemService.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\VvvApplication.java
