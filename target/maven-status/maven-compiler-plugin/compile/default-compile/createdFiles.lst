@@ -6,9 +6,11 @@ group\vvv\repositories\ViagemRepository.class
 group\vvv\services\LocalService.class
 group\vvv\controllers\ViagemWebController.class
 group\vvv\models\Funcionario.class
+group\vvv\models\Modal.class
 group\vvv\repositories\LocalRepository.class
 group\vvv\models\viagem\Estado.class
 group\vvv\repositories\ViagemLocalRepository.class
+group\vvv\repositories\ModalRepository.class
 group\vvv\services\ClienteService.class
 group\vvv\services\ViagemService.class
 group\vvv\models\viagem\Viagem.class
@@ -17,9 +19,11 @@ group\vvv\models\viagem\Estacao.class
 group\vvv\models\viagem\Local.class
 group\vvv\models\viagem\ViagemLocal$Tipo.class
 group\vvv\controllers\FuncionarioWebController.class
+group\vvv\services\ModalService.class
 group\vvv\controllers\LocalWebController.class
 group\vvv\controllers\ClienteWebController.class
 group\vvv\models\viagem\ViagemLocal.class
+group\vvv\controllers\ModalWebController.class
 group\vvv\repositories\AeroportoRepository.class
 group\vvv\VvvApplication.class
 group\vvv\controllers\PaginaInicialWebController.class

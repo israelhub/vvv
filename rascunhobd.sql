@@ -139,7 +139,7 @@ CREATE TABLE modal (
     capacidade INT NOT NULL,
     ano_fabricacao INT,
     nome_empresa VARCHAR(50) NOT NULL,
-    estaEmManuntencao BOOLEAN NOT NULL
+    esta_em_manuntencao BOOLEAN NOT NULL
 );
 
 
