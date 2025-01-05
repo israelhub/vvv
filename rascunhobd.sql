@@ -125,7 +125,7 @@ CREATE TYPE tipo_local_enum AS ENUM ('origem', 'destino', 'escala');
 -- Tabela: viagem_local (relação entre viagem e local)
 CREATE TABLE viagem_local (
     id_viagem INT NOT NULL REFERENCES viagem(id_viagem),
-    id_local INT NOT NULL REFERENCES local(id),
+    id_local INT NOT NULL REFERENCES local(id_local),
     tipo tipo_local_enum NOT NULL,
     PRIMARY KEY (id_viagem, id_local)
 );
@@ -144,9 +144,11 @@ CREATE TABLE modal (
 
 
 -- Tabela Viagem_Modal (Relacionamento entre viagem e modal)
+CREATE TYPE tipo_enum AS ENUM ('ORIGEM', 'DESTINO, ESCALA');
 CREATE TABLE viagem_modal (
     id_viagem BIGINT REFERENCES viagem(id_viagem),
     id_modal BIGINT REFERENCES modal(id_modal),
+    tipo tipo_enum NOT NULL,
     PRIMARY KEY (id_viagem, id_modal)
 );
 

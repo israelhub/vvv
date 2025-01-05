@@ -1,10 +1,9 @@
 package group.vvv.services;
 
+import group.vvv.models.viagem.*;
+import group.vvv.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import group.vvv.models.viagem.*;
-import group.vvv.models.viagem.ViagemLocal.ViagemLocalId;
-import group.vvv.repositories.*;
 
 import java.util.List;
 
@@ -15,51 +14,55 @@ public class ViagemService {
     private ViagemRepository viagemRepository;
 
     @Autowired
-    private LocalRepository localRepository;
-
-    @Autowired
     private ViagemLocalRepository viagemLocalRepository;
 
-    public Viagem criarViagem(Long origemLocalId, Long destinoLocalId, List<Long> escalaLocalIds) {
+    @Autowired
+    private ViagemModalRepository viagemModalRepository;
+
+    public Viagem criarViagem(Long origemLocal, Long destinoLocal, List<Long> escalaLocal,
+                              Long modalOrigem, Long modalDestino, List<Long> modalEscala) throws Exception {
         Viagem viagem = new Viagem();
-        viagem.setNumReservasAssociadas(0);
+        viagem.setNumReservasAssociadas(0); // Inicialmente, sem reservas associadas
         viagem = viagemRepository.save(viagem);
 
-        if (origemLocalId != null) {
-            Local origem = localRepository.findById(origemLocalId).orElseThrow(() -> new IllegalArgumentException("Local de origem não encontrado"));
-            ViagemLocalId viagemLocalIdOrigem = new ViagemLocalId(viagem.getId_viagem(), origem.getId_local());
-            ViagemLocal viagemLocalOrigem = new ViagemLocal();
-            viagemLocalOrigem.setId(viagemLocalIdOrigem);
-            viagemLocalOrigem.setViagem(viagem);
-            viagemLocalOrigem.setLocal(origem);
-            viagemLocalOrigem.setTipo(ViagemLocal.Tipo.ORIGEM);
-            viagemLocalRepository.save(viagemLocalOrigem);
+        // Adiciona locais à viagem
+        adicionarLocal(viagem, origemLocal, ViagemLocal.Tipo.ORIGEM);
+        adicionarLocal(viagem, destinoLocal, ViagemLocal.Tipo.DESTINO);
+        if (escalaLocal != null) {
+            for (Long escala : escalaLocal) {
+                adicionarLocal(viagem, escala, ViagemLocal.Tipo.ESCALA);
+            }
         }
 
-        if (destinoLocalId != null) {
-            Local destino = localRepository.findById(destinoLocalId).orElseThrow(() -> new IllegalArgumentException("Local de destino não encontrado"));
-            ViagemLocalId viagemLocalIdDestino = new ViagemLocalId(viagem.getId_viagem(), destino.getId_local());
-            ViagemLocal viagemLocalDestino = new ViagemLocal();
-            viagemLocalDestino.setId(viagemLocalIdDestino);
-            viagemLocalDestino.setViagem(viagem);
-            viagemLocalDestino.setLocal(destino);
-            viagemLocalDestino.setTipo(ViagemLocal.Tipo.DESTINO);
-            viagemLocalRepository.save(viagemLocalDestino);
-        }
-
-        if (escalaLocalIds != null) {
-            for (Long escalaLocalId : escalaLocalIds) {
-                Local escala = localRepository.findById(escalaLocalId).orElseThrow(() -> new IllegalArgumentException("Local de escala não encontrado"));
-                ViagemLocalId viagemLocalIdEscala = new ViagemLocalId(viagem.getId_viagem(), escala.getId_local());
-                ViagemLocal viagemLocalEscala = new ViagemLocal();
-                viagemLocalEscala.setId(viagemLocalIdEscala);
-                viagemLocalEscala.setViagem(viagem);
-                viagemLocalEscala.setLocal(escala);
-                viagemLocalEscala.setTipo(ViagemLocal.Tipo.ESCALA);
-                viagemLocalRepository.save(viagemLocalEscala);
+        // Adiciona modais à viagem
+        adicionarModal(viagem, modalOrigem, ViagemModal.Tipo.ORIGEM);
+        adicionarModal(viagem, modalDestino, ViagemModal.Tipo.DESTINO);
+        if (modalEscala != null) {
+            for (Long escala : modalEscala) {
+                adicionarModal(viagem, escala, ViagemModal.Tipo.ESCALA);
             }
         }
 
         return viagem;
+    }
+
+    private void adicionarLocal(Viagem viagem, Long localId, ViagemLocal.Tipo tipo) {
+        ViagemLocal viagemLocal = new ViagemLocal();
+        viagemLocal.setId(new ViagemLocal.ViagemLocalId(viagem.getId_viagem(), localId));
+        viagemLocal.setViagem(viagem);
+        viagemLocal.setLocal(new Local());
+        viagemLocal.getLocal().setId_local(localId);
+        viagemLocal.setTipo(tipo);
+        viagemLocalRepository.save(viagemLocal);
+    }
+
+    private void adicionarModal(Viagem viagem, Long modalId, ViagemModal.Tipo tipo) {
+        ViagemModal viagemModal = new ViagemModal();
+        viagemModal.setId(new ViagemModal.ViagemModalId(viagem.getId_viagem(), modalId));
+        viagemModal.setViagem(viagem);
+        viagemModal.setModal(new Modal());
+        viagemModal.getModal().setId_modal(modalId);
+        viagemModal.setTipo(tipo);
+        viagemModalRepository.save(viagemModal);
     }
 }

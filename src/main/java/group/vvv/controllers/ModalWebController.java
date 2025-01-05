@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import group.vvv.models.Modal;
+
+import group.vvv.models.viagem.Modal;
 import group.vvv.services.ModalService;
 
 @Controller

@@ -23,6 +23,18 @@
                 <option th:each="local : ${locais}" th:value="${local.id_local}" th:text="${local.descricaoCompleta}"></option>
             </select>
         </div>
+        <div class="mb-3">
+            <label for="modalOrigem" class="form-label">Modal de Origem</label>
+            <select id="modalOrigem" name="modalOrigem" class="form-control" required>
+                <option value="">Selecione um modal</option>
+                <option th:each="modal : ${modais}" th:value="${modal.id_modal}" th:text="${modal.tipo + ' - ' + modal.modelo}"></option>            </select>
+        </div>
+        <div class="mb-3">
+            <label for="modalDestino" class="form-label">Modal de Destino</label>
+            <select id="modalDestino" name="modalDestino" class="form-control" required>
+                <option value="">Selecione um modal</option>
+                <option th:each="modal : ${modais}" th:value="${modal.id_modal}" th:text="${modal.tipo + ' - ' + modal.modelo}"></option>            </select>
+        </div>
         <div id="escalaContainer">
             <div class="mb-3">
                 <label for="escalaLocal" class="form-label">Local de Escala</label>
@@ -30,6 +42,12 @@
                     <option value="">Selecione um local</option>
                     <option th:each="local : ${locais}" th:value="${local.id_local}" th:text="${local.descricaoCompleta}"></option>
                 </select>
+            </div>
+            <div class="mb-3">
+                <label for="modalEscala" class="form-label">Modal de Escala</label>
+                <select name="modalEscala[]" class="form-control">
+                    <option value="">Selecione um modal</option>
+                    <option th:each="modal : ${modais}" th:value="${modal.id_modal}" th:text="${modal.tipo + ' - ' + modal.modelo}"></option>                </select>
             </div>
         </div>
         <button type="button" id="addEscala" class="btn btn-secondary">Adicionar Escala</button>
@@ -46,14 +64,21 @@
 <script>
     $(document).ready(function() {
         $('#addEscala').click(function() {
-            var escalaHtml = `
-                <div class="mb-3">
-                    <label for="escalaLocal" class="form-label">Local de Escala</label>
-                    <select name="escalaLocal[]" class="form-control">
-                        <option value="">Selecione um local</option>
-                        ${$('#origemLocal').html()}
-                    </select>
-                </div>`;
+            // Substituir template literal por string concatenação tradicional
+            var escalaHtml = '<div class="mb-3">' +
+                '<label for="escalaLocal" class="form-label">Local de Escala</label>' +
+                '<select name="escalaLocal[]" class="form-control">' +
+                '<option value="">Selecione um local</option>' +
+                $('#origemLocal').html() +
+                '</select>' +
+                '</div>' +
+                '<div class="mb-3">' +
+                '<label for="modalEscala" class="form-label">Modal de Escala</label>' +
+                '<select name="modalEscala[]" class="form-control">' +
+                '<option value="">Selecione um modal</option>' +
+                $('#modalOrigem').html() +
+                '</select>' +
+                '</div>';
             $('#escalaContainer').append(escalaHtml);
         });
     });
