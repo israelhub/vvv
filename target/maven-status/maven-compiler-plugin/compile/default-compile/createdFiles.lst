@@ -18,6 +18,7 @@ group\vvv\repositories\AeroportoRepository.class
 group\vvv\VvvApplication.class
 group\vvv\models\viagem\Modal.class
 group\vvv\repositories\ClienteRepository.class
+group\vvv\controllers\PaginaAdminWebController.class
 group\vvv\models\viagem\Porto.class
 group\vvv\models\viagem\ViagemLocal$ViagemLocalId.class
 group\vvv\models\viagem\ViagemModal.class
