@@ -37,16 +37,13 @@ public class ViagemModal {
         private Long id_viagem;
         private Long id_modal;
 
-        // Construtor padrão
         public ViagemModalId() {}
 
-        // Construtor com parâmetros
         public ViagemModalId(Long id_viagem, Long id_modal) {
             this.id_viagem = id_viagem;
             this.id_modal = id_modal;
         }
 
-        // hashCode e equals
         @Override
         public int hashCode() {
             return Objects.hash(id_viagem, id_modal);

@@ -1,13 +1,56 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Página Inicial</title>
-    <link rel="stylesheet" th:href="@{/stylecliente.css}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vai&Volta Viagens - Página Inicial</title>
+    <link rel="stylesheet" th:href="@{/stylehome.css}">
 </head>
 <body>
-<div class="container mt-5">
-    <h1>Bem-vindo à Vai&Volta Viagens</h1>
-    <p>Esta é a página inicial do site.</p>
-</div>
+    <header class="header">
+        <div class="logo">
+            <h1>Vai&Volta Viagens</h1>
+        </div>
+        <nav class="nav">
+            <a href="/web/clientes/login" class="login-btn">Iniciar Sessão</a>
+        </nav>
+    </header>
+
+    <main class="main">
+        <section class="hero">
+            <h2>Descubra novos destinos</h2>
+            <p>Encontre as melhores viagens para sua próxima aventura</p>
+        </section>
+
+        <section class="viagens">
+            <h2>Viagens Disponíveis</h2>
+            <div class="viagens-grid">
+                <div th:each="viagem : ${viagens}" class="viagem-card">
+                    <div class="viagem-header">
+                        <span class="viagem-id">#[[${viagem.id_viagem}]]</span>
+                    </div>
+                    <div class="viagem-content">
+                        <div class="viagem-rota">
+                            <div class="origem">
+                                <span class="label">Origem</span>
+                                <strong th:text="${viagem.origemLocal?.local?.descricaoCompleta}"></strong>
+                            </div>
+                            <div class="icon">→</div>
+                            <div class="destino">
+                                <span class="label">Destino</span>
+                                <strong th:text="${viagem.destinoLocal?.local?.descricaoCompleta}"></strong>
+                            </div>
+                        </div>
+                        <div class="viagem-footer">
+                            <span class="reservas">
+                                <span class="label">Reservas:</span>
+                                <span th:text="${viagem.numReservasAssociadas}"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 </body>
 </html>

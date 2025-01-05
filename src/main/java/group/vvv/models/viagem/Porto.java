@@ -12,5 +12,5 @@ public class Porto {
     private Long id_porto;
 
     @Column(nullable = false)
-    private String nome;  // Nome do porto
+    private String nome;  
 }

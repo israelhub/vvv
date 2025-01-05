@@ -12,5 +12,5 @@ public class Estacao {
     private Long id_estacao;
 
     @Column(nullable = false)
-    private String nome;  // Nome da estação
+    private String nome; 
 }

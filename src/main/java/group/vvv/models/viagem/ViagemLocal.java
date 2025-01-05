@@ -37,16 +37,13 @@ public class ViagemLocal {
         private Long id_viagem;
         private Long id_local;
 
-        // Construtor padrão
         public ViagemLocalId() {}
 
-        // Construtor com parâmetros
         public ViagemLocalId(Long id_viagem, Long id_local) {
             this.id_viagem = id_viagem;
             this.id_local = id_local;
         }
-
-        // hashCode e equals
+        
         @Override
         public int hashCode() {
             return Objects.hash(id_viagem, id_local);

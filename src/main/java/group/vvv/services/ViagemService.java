@@ -20,12 +20,11 @@ public class ViagemService {
     private ViagemModalRepository viagemModalRepository;
 
     public Viagem criarViagem(Long origemLocal, Long destinoLocal, List<Long> escalaLocal,
-                              Long modalOrigem, Long modalDestino, List<Long> modalEscala) throws Exception {
+                              Long modalOrigem, List<Long> modalEscala) throws Exception {
         Viagem viagem = new Viagem();
-        viagem.setNumReservasAssociadas(0); // Inicialmente, sem reservas associadas
+        viagem.setNumReservasAssociadas(0); 
         viagem = viagemRepository.save(viagem);
 
-        // Adiciona locais à viagem
         adicionarLocal(viagem, origemLocal, ViagemLocal.Tipo.ORIGEM);
         adicionarLocal(viagem, destinoLocal, ViagemLocal.Tipo.DESTINO);
         if (escalaLocal != null) {
@@ -34,9 +33,7 @@ public class ViagemService {
             }
         }
 
-        // Adiciona modais à viagem
         adicionarModal(viagem, modalOrigem, ViagemModal.Tipo.ORIGEM);
-        adicionarModal(viagem, modalDestino, ViagemModal.Tipo.DESTINO);
         if (modalEscala != null) {
             for (Long escala : modalEscala) {
                 adicionarModal(viagem, escala, ViagemModal.Tipo.ESCALA);
@@ -64,5 +61,9 @@ public class ViagemService {
         viagemModal.getModal().setId_modal(modalId);
         viagemModal.setTipo(tipo);
         viagemModalRepository.save(viagemModal);
+    }
+
+    public List<Viagem> getViagens() {
+        return viagemRepository.findAll();
     }
 }

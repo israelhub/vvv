@@ -35,10 +35,10 @@ public class ViagemWebController {
     @PostMapping
     public String cadastrarViagemWeb(@RequestParam Long origemLocal, @RequestParam Long destinoLocal,
                                      @RequestParam(required = false) List<Long> escalaLocal,
-                                     @RequestParam Long modalOrigem, @RequestParam Long modalDestino,
+                                     @RequestParam Long modalOrigem,
                                      @RequestParam(required = false) List<Long> modalEscala, Model model) {
         try {
-            Viagem novaViagem = viagemService.criarViagem(origemLocal, destinoLocal, escalaLocal, modalOrigem, modalDestino, modalEscala);
+            Viagem novaViagem = viagemService.criarViagem(origemLocal, destinoLocal, escalaLocal, modalOrigem, modalEscala);
             model.addAttribute("mensagem", "Viagem cadastrada com sucesso! ID: " + novaViagem.getId_viagem());
         } catch (Exception e) {
             model.addAttribute("mensagemErro", "Erro ao cadastrar viagem: " + e.getMessage());

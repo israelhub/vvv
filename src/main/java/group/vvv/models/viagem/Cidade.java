@@ -15,5 +15,5 @@ public class Cidade {
     private String nome;
 
     @Column(nullable = false, length = 3)
-    private String codigo;  // Código de 3 caracteres, ex: "RIO"
+    private String codigo;  
 }

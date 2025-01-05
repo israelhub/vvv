@@ -15,5 +15,5 @@ public class Aeroporto {
     private String nome;
 
     @Column(nullable = false, unique = true)
-    private int codigo;  // Código único do aeroporto, ex: 1234
+    private int codigo;  
 }
