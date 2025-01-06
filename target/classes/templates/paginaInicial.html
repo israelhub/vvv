@@ -26,28 +26,30 @@
             <h2>Viagens Disponíveis</h2>
             <div class="viagens-grid">
                 <div th:each="viagem : ${viagens}" class="viagem-card">
-                    <div class="viagem-header">
-                        <span class="viagem-id">#[[${viagem.id_viagem}]]</span>
-                    </div>
-                    <div class="viagem-content">
-                        <div class="viagem-rota">
-                            <div class="origem">
-                                <span class="label">Origem</span>
-                                <strong th:text="${viagem.origemLocal?.local?.descricaoCompleta}"></strong>
+                    <a th:href="@{/web/viagens/detalhes/{id}(id=${viagem.id_viagem})}">
+                        <div class="viagem-header">
+                            <span class="viagem-id">#[[${viagem.id_viagem}]]</span>
+                        </div>
+                        <div class="viagem-content">
+                            <div class="viagem-rota">
+                                <div class="origem">
+                                    <span class="label">Origem</span>
+                                    <strong th:text="${viagem.origemLocal?.local?.descricaoCompleta}"></strong>
+                                </div>
+                                <div class="icon">→</div>
+                                <div class="destino">
+                                    <span class="label">Destino</span>
+                                    <strong th:text="${viagem.destinoLocal?.local?.descricaoCompleta}"></strong>
+                                </div>
                             </div>
-                            <div class="icon">→</div>
-                            <div class="destino">
-                                <span class="label">Destino</span>
-                                <strong th:text="${viagem.destinoLocal?.local?.descricaoCompleta}"></strong>
+                            <div class="viagem-footer">
+                                <span class="reservas">
+                                    <span class="label">Reservas:</span>
+                                    <span th:text="${viagem.numReservasAssociadas}"></span>
+                                </span>
                             </div>
                         </div>
-                        <div class="viagem-footer">
-                            <span class="reservas">
-                                <span class="label">Reservas:</span>
-                                <span th:text="${viagem.numReservasAssociadas}"></span>
-                            </span>
-                        </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </section>

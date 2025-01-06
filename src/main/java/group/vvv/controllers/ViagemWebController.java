@@ -47,4 +47,11 @@ public class ViagemWebController {
         model.addAttribute("modais", modalService.getModais());
         return "viagem/areaCadastroViagem";
     }
+
+    @GetMapping("/detalhes/{id}")
+    public String exibirDetalhesViagem(@PathVariable Long id, Model model) {
+        Viagem viagem = viagemService.getViagemById(id);
+        model.addAttribute("viagem", viagem);
+        return "viagem/detalhesViagem";
+    }
 }

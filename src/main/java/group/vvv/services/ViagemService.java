@@ -66,4 +66,8 @@ public class ViagemService {
     public List<Viagem> getViagens() {
         return viagemRepository.findAll();
     }
+
+    public Viagem getViagemById(Long id) {
+        return viagemRepository.findById(id).orElseThrow(() -> new RuntimeException("Viagem não encontrada"));
+    }
 }
