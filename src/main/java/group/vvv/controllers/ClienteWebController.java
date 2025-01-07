@@ -14,6 +14,24 @@ public class ClienteWebController {
     @Autowired
     private ClienteService clienteService;
 
+    @GetMapping("/novo")
+    public String exibirFormularioCadastro(Model model) {
+        model.addAttribute("cliente", new Cliente());
+        return "cliente/areaCadastroCliente";
+    }
+
+    @PostMapping
+    public String cadastrarClienteWeb(@ModelAttribute Cliente cliente, Model model) {
+        try {
+            clienteService.cadastrar(cliente);
+            model.addAttribute("mensagem", "Cliente cadastrado com sucesso!");
+            return "cliente/areaCadastroCliente";
+        } catch (Exception e) {
+            model.addAttribute("mensagem", "Erro ao cadastrar: " + e.getMessage());
+            return "cliente/areaCadastroCliente";
+        }
+    }
+
     @GetMapping("/login")
     public String exibirFormularioLogin(Model model) {
         model.addAttribute("cliente", new Cliente());

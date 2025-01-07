@@ -16,7 +16,6 @@
             <h2>Destino</h2>
             <p th:text="${viagem.destinoLocal?.local?.descricaoCompleta}"></p>
         </div>
-        <!-- Só mostra escalas se existirem -->
         <div th:if="${not #lists.isEmpty(viagem.escalas)}">
             <h2>Pontos de Escala</h2>
             <ul>

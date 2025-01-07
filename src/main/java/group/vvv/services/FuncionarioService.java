@@ -3,8 +3,10 @@ package group.vvv.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import group.vvv.models.Funcionario;
+import group.vvv.models.Funcionario.Cargo;
 import group.vvv.repositories.FuncionarioRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -38,4 +40,8 @@ public class FuncionarioService {
         funcionarioExistente.setLoginInicialRealizado(true);
         funcionarioRepository.save(funcionarioExistente);
     }
+
+    public List<Funcionario> listarGerentes() {
+    return funcionarioRepository.findByCargo(Cargo.GERENTE);
+}
 }

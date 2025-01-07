@@ -1,6 +1,7 @@
 group\vvv\repositories\EstacaoRepository.class
 group\vvv\repositories\PortoRepository.class
 group\vvv\controllers\ViagemWebController.class
+group\vvv\models\PontoDeVenda.class
 group\vvv\repositories\LocalRepository.class
 group\vvv\repositories\ModalRepository.class
 group\vvv\services\ClienteService.class
@@ -16,11 +17,13 @@ group\vvv\models\viagem\ViagemLocal.class
 group\vvv\controllers\ModalWebController.class
 group\vvv\repositories\AeroportoRepository.class
 group\vvv\VvvApplication.class
+group\vvv\controllers\PontoDeVendaWebController.class
 group\vvv\models\viagem\Modal.class
 group\vvv\repositories\ClienteRepository.class
 group\vvv\controllers\PaginaAdminWebController.class
 group\vvv\models\viagem\Porto.class
 group\vvv\models\viagem\ViagemLocal$ViagemLocalId.class
+group\vvv\repositories\PontoDeVendaRepository.class
 group\vvv\models\viagem\ViagemModal.class
 group\vvv\services\FuncionarioService.class
 group\vvv\repositories\FuncionarioRepository.class
@@ -39,3 +42,4 @@ group\vvv\models\viagem\ViagemModal$ViagemModalId.class
 group\vvv\repositories\CidadeRepository.class
 group\vvv\models\Funcionario$Cargo.class
 group\vvv\models\Cliente.class
+group\vvv\services\PontoDeVendaService.class

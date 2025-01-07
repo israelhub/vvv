@@ -1,5 +1,6 @@
 HELP.md
 issues
+rascunhobd.sql
 #target/ !.mvn/wrapper/maven-wrapper.jar !**/src/main/**/target/ !**/src/test/**/target/
 
 ### STS ###
