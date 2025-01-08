@@ -62,7 +62,7 @@ CREATE TABLE ponto_funcionario (
     dia_semana dia_semana_enum NOT NULL,
     horario_inicial TIME NOT NULL,
     horario_final TIME NOT NULL,
-    PRIMARY KEY (id_funcionario, id_ponto_de_venda)
+    PRIMARY KEY (id_funcionario, id_ponto_de_venda, dia_semana)
 );
 
 -- Tabela: viagem

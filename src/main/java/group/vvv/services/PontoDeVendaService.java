@@ -20,4 +20,8 @@ public class PontoDeVendaService {
     public List<PontoDeVenda> listarTodos() {
         return pontoDeVendaRepository.findAll();
     }
+
+    public PontoDeVenda buscarPorId(Long id) {
+        return pontoDeVendaRepository.findById(id).orElseThrow(() -> new RuntimeException("Ponto de Venda não encontrado"));
+    }
 }
