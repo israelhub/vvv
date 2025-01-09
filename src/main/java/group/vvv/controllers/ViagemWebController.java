@@ -62,9 +62,23 @@ public class ViagemWebController {
     }
 
     @GetMapping("/detalhes/{id}")
-    public String exibirDetalhesViagem(@PathVariable Long id, Model model) {
+    public String exibirDetalhesViagem(
+        @PathVariable Long id,
+        @RequestParam(defaultValue = "0") Integer passageirosNormal,
+        @RequestParam(defaultValue = "0") Integer passageirosCrianca,
+        Model model) {
+    
         Viagem viagem = viagemService.getViagemById(id);
+        BigDecimal valorBase = viagem.getValor();
+        BigDecimal valorTotalNormal = valorBase.multiply(BigDecimal.valueOf(passageirosNormal));
+        BigDecimal valorTotalCrianca = valorBase.multiply(BigDecimal.valueOf(0.6)).multiply(BigDecimal.valueOf(passageirosCrianca));
+        BigDecimal valorTotal = valorTotalNormal.add(valorTotalCrianca);
+    
         model.addAttribute("viagem", viagem);
+        model.addAttribute("passageirosNormal", passageirosNormal);
+        model.addAttribute("passageirosCrianca", passageirosCrianca);
+        model.addAttribute("valorTotal", valorTotal);
+    
         return "viagem/detalhesViagem";
     }
 }

@@ -28,8 +28,60 @@
                 <li th:each="viagemModal : ${viagem.modais}" th:text="${viagemModal.modal.tipo + ' - ' + viagemModal.modal.modelo}"></li>
             </ul>
         </div>
+        <div class="simulador-precos">
+            <h2>Simular Preços</h2>
+            <form th:action="@{/web/viagens/detalhes/{id}(id=${viagem.id_viagem})}" method="get" class="form-simulador">
+                <div class="controle-passageiros">
+                    <div class="grupo-passageiros">
+                        <h3>Passageiros Normais (11+ anos)</h3>
+                        <div class="contador-wrapper">
+                            <a th:href="@{/web/viagens/detalhes/{id}(id=${viagem.id_viagem}, 
+                               passageirosNormal=${passageirosNormal - 1 >= 0 ? passageirosNormal - 1 : 0}, 
+                               passageirosCrianca=${passageirosCrianca})}" 
+                               class="btn-contador">-</a>
+                            
+                            <span class="contador-valor" th:text="${passageirosNormal}">0</span>
+                            
+                            <a th:href="@{/web/viagens/detalhes/{id}(id=${viagem.id_viagem}, 
+                               passageirosNormal=${passageirosNormal + 1}, 
+                               passageirosCrianca=${passageirosCrianca})}" 
+                               class="btn-contador">+</a>
+                        </div>
+                    </div>
+                    
+                    <div class="grupo-passageiros">
+                        <h3>Crianças (2-10 anos)</h3>
+                        <div class="contador-wrapper">
+                            <a th:href="@{/web/viagens/detalhes/{id}(id=${viagem.id_viagem}, 
+                               passageirosNormal=${passageirosNormal}, 
+                               passageirosCrianca=${passageirosCrianca - 1 >= 0 ? passageirosCrianca - 1 : 0})}" 
+                               class="btn-contador">-</a>
+                            
+                            <span class="contador-valor" th:text="${passageirosCrianca}">0</span>
+                            
+                            <a th:href="@{/web/viagens/detalhes/{id}(id=${viagem.id_viagem}, 
+                               passageirosNormal=${passageirosNormal}, 
+                               passageirosCrianca=${passageirosCrianca + 1})}" 
+                               class="btn-contador">+</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="resumo-valores">
+                    <h3>Resumo dos Valores</h3>
+                    <p>Valor base por pessoa: 
+                        <span th:text="${'R$ ' + #numbers.formatDecimal(viagem.valor, 1, 'POINT', 2, 'COMMA')}"></span>
+                    </p>
+                    <p>Valor total: 
+                        <span th:text="${'R$ ' + #numbers.formatDecimal(valorTotal, 1, 'POINT', 2, 'COMMA')}"></span>
+                    </p>
+                </div>
+            </form>
+        </div>
+
         <button class="btn btn-primary" th:onclick="|window.location.href='/web/pagamento/reservar/${viagem.id_viagem}'|">Reservar</button>
     </div>
 </div>
+
 </body>
 </html>
