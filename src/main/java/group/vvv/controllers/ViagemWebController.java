@@ -9,6 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalTime;
 import java.util.List;
 
 @Controller
@@ -33,12 +36,22 @@ public class ViagemWebController {
     }
 
     @PostMapping
-    public String cadastrarViagemWeb(@RequestParam Long origemLocal, @RequestParam Long destinoLocal,
-                                     @RequestParam(required = false) List<Long> escalaLocal,
-                                     @RequestParam Long modalOrigem,
-                                     @RequestParam(required = false) List<Long> modalEscala, Model model) {
+    public String cadastrarViagemWeb(@RequestParam Long origemLocal,
+            @RequestParam Long destinoLocal,
+            @RequestParam(required = false) List<Long> escalaLocal,
+            @RequestParam Long modalOrigem,
+            @RequestParam(required = false) List<Long> modalEscala,
+            @RequestParam LocalTime horarioPartida,
+            @RequestParam LocalTime horarioChegada,
+            @RequestParam Date dataPartida,
+            @RequestParam Date dataChegada,
+            @RequestParam BigDecimal valor,
+            Model model) {
         try {
-            Viagem novaViagem = viagemService.criarViagem(origemLocal, destinoLocal, escalaLocal, modalOrigem, modalEscala);
+            Viagem novaViagem = viagemService.criarViagem(origemLocal, destinoLocal, escalaLocal,
+                    modalOrigem, modalEscala,
+                    horarioPartida, horarioChegada,
+                    dataPartida, dataChegada, valor);
             model.addAttribute("mensagem", "Viagem cadastrada com sucesso! ID: " + novaViagem.getId_viagem());
         } catch (Exception e) {
             model.addAttribute("mensagemErro", "Erro ao cadastrar viagem: " + e.getMessage());

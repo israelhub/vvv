@@ -18,15 +18,15 @@ public class PontoFuncionario {
     @JoinColumn(name = "id_funcionario")
     private Funcionario funcionario;
 
-    @ManyToOne(optional = true)  // Torna o relacionamento opcional
+    @ManyToOne(optional = true) 
     @MapsId("id_ponto_de_venda")
-    @JoinColumn(name = "id_ponto_de_venda", nullable = true)  // Permite valores nulos
+    @JoinColumn(name = "id_ponto_de_venda", nullable = true)
     private PontoDeVenda pontoDeVenda;
 
-    @Column(name = "horario_inicial")  // Remove nullable = false
+    @Column(name = "horario_inicial")
     private LocalTime horarioInicial;
 
-    @Column(name = "horario_final")    // Remove nullable = false
+    @Column(name = "horario_final")  
     private LocalTime horarioFinal;
 
     public enum DiaSemana {

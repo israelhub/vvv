@@ -68,7 +68,12 @@ CREATE TABLE ponto_funcionario (
 -- Tabela: viagem
 CREATE TABLE viagem (
         id_viagem SERIAL PRIMARY KEY,
-        num_reservas_associadas INT
+        num_reservas_associadas INT,
+        valor NUMERIC(10, 2) NOT NULL,
+        horario_partida TIME NOT NULL,
+        horario_chegada TIME NOT NULL,
+        data_partida DATE NOT NULL,
+        data_chegada DATE NOT NULL
     );
 
 

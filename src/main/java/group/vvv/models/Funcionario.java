@@ -36,7 +36,7 @@ public class Funcionario {
     @Column(nullable = false)
     private Cargo cargo;
 
-    @Column(nullable = false)
+    @Column(name = "login_inicial_realizado", nullable = false)
     private boolean loginInicialRealizado = false;
 
     public enum Cargo {

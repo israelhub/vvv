@@ -5,6 +5,9 @@ import group.vvv.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -19,14 +22,27 @@ public class ViagemService {
     @Autowired
     private ViagemModalRepository viagemModalRepository;
 
-    public Viagem criarViagem(Long origemLocal, Long destinoLocal, List<Long> escalaLocal,
-                              Long modalOrigem, List<Long> modalEscala) throws Exception {
+    public Viagem criarViagem(Long origemLocal, Long destinoLocal,
+            List<Long> escalaLocal, Long modalOrigem,
+            List<Long> modalEscala,
+            LocalTime horarioPartida, LocalTime horarioChegada,
+            Date dataPartida, Date dataChegada,
+            BigDecimal valor) throws Exception {
+
         Viagem viagem = new Viagem();
-        viagem.setNumReservasAssociadas(0); 
+        viagem.setNumReservasAssociadas(0);
+        viagem.setHorarioPartida(horarioPartida);
+        viagem.setHorarioChegada(horarioChegada);
+        viagem.setDataPartida(dataPartida);
+        viagem.setDataChegada(dataChegada);
+        viagem.setValor(valor);
+
         viagem = viagemRepository.save(viagem);
 
+        // Código existente para adicionar locais e modais
         adicionarLocal(viagem, origemLocal, ViagemLocal.Tipo.ORIGEM);
         adicionarLocal(viagem, destinoLocal, ViagemLocal.Tipo.DESTINO);
+
         if (escalaLocal != null) {
             for (Long escala : escalaLocal) {
                 adicionarLocal(viagem, escala, ViagemLocal.Tipo.ESCALA);
