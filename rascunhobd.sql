@@ -160,19 +160,32 @@ CREATE TABLE viagem_modal (
 
 -- Tabela Reserva
 CREATE TABLE reserva (
-        id_reserva BIGSERIAL PRIMARY KEY,
-        data DATE,
-        status VARCHAR(10),
-        valor NUMERIC(10, 2),
-        origem VARCHAR(50),
-        destino VARCHAR(50),
-        tipo_passagem VARCHAR(10),
-        localizador VARCHAR(50),
-        id_cliente BIGINT NOT NULL REFERENCES cliente (id_cliente),
-        id_funcionario BIGINT REFERENCES funcionario (id_funcionario),
-        id_viagem BIGINT REFERENCES viagem (id_viagem)
-    );
+    id_reserva BIGSERIAL PRIMARY KEY,
+    data DATE,
+    status VARCHAR(10),
+    valor NUMERIC(10, 2),
+    origem VARCHAR(50),
+    destino VARCHAR(50),
+    id_cliente BIGINT NOT NULL REFERENCES cliente (id_cliente),
+    id_funcionario BIGINT REFERENCES funcionario (id_funcionario),
+    id_viagem BIGINT REFERENCES viagem (id_viagem)
+);
 
+CREATE TABLE passageiro (
+    id_passageiro BIGSERIAL PRIMARY KEY,
+    nome VARCHAR(60) NOT NULL,
+    data_nascimento DATE NOT NULL,
+    cpf VARCHAR(14) NOT NULL,
+    telefone VARCHAR(15),
+    profissao VARCHAR(30),
+    id_responsavel BIGINT REFERENCES passageiro (id_passageiro)
+);
+
+CREATE TABLE reserva_passageiro (
+    id_reserva BIGINT NOT NULL REFERENCES reserva(id_reserva),
+    id_passageiro BIGINT NOT NULL REFERENCES passageiro(id_passageiro),
+    PRIMARY KEY (id_reserva, id_passageiro)
+);
 
 -- Tabela Pagamento
 CREATE TYPE metodo_pagamento_enum AS ENUM ('pix', 'boleto', 'cartao');

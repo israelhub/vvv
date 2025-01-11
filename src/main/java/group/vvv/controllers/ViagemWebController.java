@@ -1,18 +1,29 @@
 package group.vvv.controllers;
 
+import group.vvv.config.UserSession;
+import group.vvv.models.Passageiro;
+import group.vvv.models.Reserva;
+import group.vvv.models.ReservaPassageiro;
 import group.vvv.models.viagem.Viagem;
 import group.vvv.services.LocalService;
 import group.vvv.services.ModalService;
+import group.vvv.services.PassageiroService;
+import group.vvv.services.ReservaService;
 import group.vvv.services.ViagemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/web/viagens")
@@ -20,6 +31,15 @@ public class ViagemWebController {
 
     @Autowired
     private ViagemService viagemService;
+
+    @Autowired
+    private PassageiroService passageiroService;
+
+    @Autowired
+    private ReservaService reservaService;
+
+    @Autowired
+    private UserSession userSession;
 
     @Autowired
     private LocalService localService;
@@ -62,23 +82,187 @@ public class ViagemWebController {
     }
 
     @GetMapping("/detalhes/{id}")
-    public String exibirDetalhesViagem(
-        @PathVariable Long id,
-        @RequestParam(defaultValue = "0") Integer passageirosNormal,
-        @RequestParam(defaultValue = "0") Integer passageirosCrianca,
-        Model model) {
-    
+    public String mostrarDetalhesViagem(@PathVariable Long id,
+            @RequestParam(defaultValue = "0") int passageirosNormal,
+            @RequestParam(defaultValue = "0") int passageirosCrianca,
+            Model model) {
         Viagem viagem = viagemService.getViagemById(id);
-        BigDecimal valorBase = viagem.getValor();
-        BigDecimal valorTotalNormal = valorBase.multiply(BigDecimal.valueOf(passageirosNormal));
-        BigDecimal valorTotalCrianca = valorBase.multiply(BigDecimal.valueOf(0.6)).multiply(BigDecimal.valueOf(passageirosCrianca));
-        BigDecimal valorTotal = valorTotalNormal.add(valorTotalCrianca);
-    
+        BigDecimal valorTotal = calcularValorTotal(viagem, passageirosNormal, passageirosCrianca);
+
         model.addAttribute("viagem", viagem);
         model.addAttribute("passageirosNormal", passageirosNormal);
         model.addAttribute("passageirosCrianca", passageirosCrianca);
         model.addAttribute("valorTotal", valorTotal);
-    
+
         return "viagem/detalhesViagem";
+    }
+
+    private BigDecimal calcularValorTotal(Viagem viagem, int passageirosNormal, int passageirosCrianca) {
+        BigDecimal total = BigDecimal.ZERO;
+        total = total.add(viagem.getValor().multiply(new BigDecimal(passageirosNormal)));
+        total = total
+                .add(viagem.getValor().multiply(new BigDecimal("0.6")).multiply(new BigDecimal(passageirosCrianca)));
+        return total;
+    }
+
+    @GetMapping("/reservar/{id}")
+    public String exibirFormularioCadastroPassageiros(
+            @PathVariable Long id,
+            @RequestParam int passageirosNormal,
+            @RequestParam int passageirosCrianca,
+            Model model) {
+
+        if (!userSession.isAuthenticated()) {
+            return "redirect:/web/clientes/login";
+        }
+
+        Viagem viagem = viagemService.getViagemById(id);
+        model.addAttribute("viagem", viagem);
+        model.addAttribute("passageirosNormal", passageirosNormal);
+        model.addAttribute("passageirosCrianca", passageirosCrianca);
+        return "viagem/cadastroPassageiros";
+    }
+
+    @PostMapping("/reservar/{id}/passageiros")
+    public String processarPassageiros(
+            @PathVariable Long id,
+            @RequestParam("nome[]") String[] nomes,
+            @RequestParam("data_nascimento[]") String[] datasNascimento,
+            @RequestParam("cpf[]") String[] cpfs,
+            @RequestParam("telefone[]") String[] telefones,
+            @RequestParam("profissao[]") String[] profissoes,
+            Model model) {
+
+        List<Passageiro> passageiros = new ArrayList<>();
+
+        try {
+            // Criar e salvar passageiros
+            for (int i = 0; i < nomes.length; i++) {
+                Passageiro passageiro = new Passageiro();
+                passageiro.setNome(nomes[i]);
+                passageiro.setData_nascimento(Date.valueOf(datasNascimento[i]));
+                passageiro.setCpf(cpfs[i]);
+                passageiro.setTelefone(telefones[i]);
+                passageiro.setProfissao(profissoes[i]);
+
+                passageiroService.salvarPassageiro(passageiro);
+                passageiros.add(passageiro);
+            }
+
+            // Separar crianças e adultos
+            List<Passageiro> criancas = passageiros.stream()
+                    .filter(p -> p.getIdade() < 11)
+                    .collect(Collectors.toList());
+
+            List<Passageiro> adultos = passageiros.stream()
+                    .filter(p -> p.getIdade() >= 11)
+                    .collect(Collectors.toList());
+
+            if (!criancas.isEmpty()) {
+                // Redirecionar para página de associação de responsáveis
+                model.addAttribute("criancas", criancas);
+                model.addAttribute("adultos", adultos);
+                model.addAttribute("passageiros", passageiros);
+                model.addAttribute("viagemId", id);
+                return "viagem/associarResponsaveis";
+            }
+
+            // Se não houver crianças, seguir direto para processamento de responsáveis
+            return "redirect:/web/viagens/reservar/" + id + "/responsaveis?passageiroIds=" +
+                    passageiros.stream()
+                            .map(p -> p.getId_passageiro().toString())
+                            .collect(Collectors.joining(","));
+
+        } catch (Exception e) {
+            model.addAttribute("erro", "Erro ao processar passageiros: " + e.getMessage());
+            return "redirect:/web/viagens/detalhes/" + id;
+        }
+    }
+
+    @PostMapping("/reservar/{id}/responsaveis")
+    public String processarResponsaveis(
+            @PathVariable Long id,
+            @RequestParam(value = "passageiroIds", required = true) String passageiroIdsStr,
+            @RequestParam(required = false) Map<String, String> responsaveis,
+            RedirectAttributes redirectAttributes) {
+    
+        try {
+            // Converte string de IDs em List<Long>
+            List<Long> passageiroIds = Arrays.stream(passageiroIdsStr.split(","))
+                                           .map(Long::parseLong)
+                                           .collect(Collectors.toList());
+    
+            if (passageiroIds.isEmpty()) {
+                throw new RuntimeException("Lista de passageiros não pode estar vazia");
+            }
+    
+            // Recupera todos os passageiros
+            List<Passageiro> passageiros = passageiroIds.stream()
+                    .map(pid -> passageiroService.getPassageiroById(pid))
+                    .collect(Collectors.toList());
+    
+            // Processa responsáveis se houver
+            if (responsaveis != null) {
+                responsaveis.forEach((key, value) -> {
+                    if (key.startsWith("responsaveis[")) {
+                        Long idCrianca = Long.parseLong(key.replaceAll("responsaveis\\[(\\d+)\\]", "$1"));
+                        Long idResponsavel = Long.parseLong(value);
+                        
+                        Passageiro crianca = passageiroService.getPassageiroById(idCrianca);
+                        Passageiro responsavel = passageiroService.getPassageiroById(idResponsavel);
+                        
+                        crianca.setResponsavel(responsavel);
+                        passageiroService.salvarPassageiro(crianca);
+                    }
+                });
+            }
+    
+            // Criar e salvar a reserva
+            Viagem viagem = viagemService.getViagemById(id);
+            Reserva reserva = new Reserva();
+            reserva.setViagem(viagem);
+            reserva.setData(new Date(System.currentTimeMillis()));
+            reserva.setStatus("CONFIRMADA");
+            reserva.setValor(calcularValorTotal(viagem, passageiros));
+            reserva.setOrigem(viagem.getOrigemLocal().getLocal().getDescricaoCompleta());
+            reserva.setDestino(viagem.getDestinoLocal().getLocal().getDescricaoCompleta());
+            reserva.setCliente(userSession.getCliente());
+    
+            // Salva a reserva
+            reservaService.salvarReserva(reserva);
+    
+            // Associa os passageiros à reserva
+            for (Passageiro passageiro : passageiros) {
+                ReservaPassageiro reservaPassageiro = new ReservaPassageiro();
+                reservaPassageiro.setId(new ReservaPassageiro.ReservaPassageiroId(
+                    reserva.getId_reserva(), 
+                    passageiro.getId_passageiro()
+                ));
+                reservaPassageiro.setReserva(reserva);
+                reservaPassageiro.setPassageiro(passageiro);
+                reservaService.salvarReservaPassageiro(reservaPassageiro);
+            }
+    
+            redirectAttributes.addFlashAttribute("mensagemSucesso", 
+                "Reserva realizada com sucesso! Código da reserva: " + reserva.getId_reserva());
+            return "redirect:/web/viagens/reserva/sucesso";
+    
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensagemErro", 
+                "Erro ao processar reserva: " + e.getMessage());
+            return "redirect:/web/viagens/detalhes/" + id;
+        }
+    }
+
+    private BigDecimal calcularValorTotal(Viagem viagem, List<Passageiro> passageiros) {
+        BigDecimal total = BigDecimal.ZERO;
+        for (Passageiro passageiro : passageiros) {
+            if (passageiro.getIdade() >= 2 && passageiro.getIdade() <= 10) {
+                total = total.add(viagem.getValor().multiply(new BigDecimal("0.6")));
+            } else {
+                total = total.add(viagem.getValor());
+            }
+        }
+        return total;
     }
 }

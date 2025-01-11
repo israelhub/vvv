@@ -79,7 +79,14 @@
             </form>
         </div>
 
-        <button class="btn btn-primary" th:onclick="|window.location.href='/web/pagamento/reservar/${viagem.id_viagem}'|">Reservar</button>
+        <div th:if="${not @userSession.authenticated}" class="alert alert-warning">
+            Você precisa estar logado para fazer uma reserva. 
+            <a href="/web/clientes/login" class="btn btn-primary">Fazer Login</a>
+        </div>
+
+        <a th:if="${@userSession.authenticated}" th:href="@{/web/viagens/reservar/{id}(id=${viagem.id_viagem}, passageirosNormal=${passageirosNormal}, passageirosCrianca=${passageirosCrianca})}" class="btn btn-primary">
+            Reservar
+        </a>
     </div>
 </div>
 

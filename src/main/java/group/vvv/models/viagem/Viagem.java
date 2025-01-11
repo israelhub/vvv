@@ -24,22 +24,22 @@ public class Viagem {
     @Column(nullable = false)
     private BigDecimal valor;
 
-    @Column (name = "horario_partida", nullable = false)
+    @Column(name = "horario_partida", nullable = false)
     private LocalTime horarioPartida;
 
-    @Column (name = "horario_chegada", nullable = false)
+    @Column(name = "horario_chegada", nullable = false)
     private LocalTime horarioChegada;
 
-    @Column (name = "data_partida", nullable = false)
+    @Column(name = "data_partida", nullable = false)
     private Date dataPartida;
 
-    @Column (name = "data_chegada", nullable = false)
+    @Column(name = "data_chegada", nullable = false)
     private Date dataChegada;
 
     @OneToMany(mappedBy = "viagem", cascade = CascadeType.ALL)
     private List<ViagemLocal> locais;
 
-    @OneToMany(mappedBy = "viagem", cascade = CascadeType.ALL) 
+    @OneToMany(mappedBy = "viagem", cascade = CascadeType.ALL)
     private List<ViagemModal> modais;
 
     public List<ViagemLocal> getEscalas() {

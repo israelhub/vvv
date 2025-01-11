@@ -86,4 +86,8 @@ public class ViagemService {
     public Viagem getViagemById(Long id) {
         return viagemRepository.findById(id).orElseThrow(() -> new RuntimeException("Viagem não encontrada"));
     }
+
+    public void atualizarViagem(Viagem viagem) {
+        viagemRepository.save(viagem);
+    }
 }

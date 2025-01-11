@@ -108,7 +108,6 @@ public class FuncionarioWebController {
                 model.addAttribute("funcionario", funcionarioExistente);
                 return "funcionario/atualizarDadosFuncionario";
             } else {
-                // Redirecionar para o endpoint de administração (a ser configurado no futuro)
                 return "redirect:/web/administracao";
             }
         } else {

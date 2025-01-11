@@ -1,5 +1,6 @@
 package group.vvv.controllers;
 
+import group.vvv.config.UserSession;
 import group.vvv.models.Cliente;
 import group.vvv.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ public class ClienteWebController {
 
     @Autowired
     private ClienteService clienteService;
+
+    @Autowired
+    private UserSession userSession;
 
     @GetMapping("/novo")
     public String exibirFormularioCadastro(Model model) {
@@ -42,10 +46,17 @@ public class ClienteWebController {
     public String login(@ModelAttribute Cliente cliente, Model model) {
         Cliente clienteLogado = clienteService.login(cliente.getEmail(), cliente.getSenha());
         if (clienteLogado != null) {
+            userSession.login(clienteLogado);
             return "redirect:/web/paginaInicial";
         } else {
             model.addAttribute("mensagem", "Email ou senha inválidos.");
             return "cliente/loginCliente";
         }
+    }
+
+    @GetMapping("/logout")
+    public String logout() {
+        userSession.logout();
+        return "redirect:/web/paginaInicial";
     }
 }
