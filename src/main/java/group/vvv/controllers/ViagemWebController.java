@@ -1,6 +1,7 @@
 package group.vvv.controllers;
 
 import group.vvv.config.UserSession;
+import group.vvv.models.Cliente;
 import group.vvv.models.Passageiro;
 import group.vvv.models.Reserva;
 import group.vvv.models.ReservaPassageiro;
@@ -151,23 +152,31 @@ public class ViagemWebController {
 
             // Separar crianças e adultos
             List<Passageiro> criancas = passageiros.stream()
-                    .filter(p -> p.getIdade() < 11)
+                    .filter(p -> p.getIdade() >= 2 && p.getIdade() <= 10)
                     .collect(Collectors.toList());
 
-            List<Passageiro> adultos = passageiros.stream()
-                    .filter(p -> p.getIdade() >= 11)
+            List<Passageiro> adultosResponsaveis = passageiros.stream()
+                    .filter(p -> p.getIdade() >= 21)
                     .collect(Collectors.toList());
 
+            // Validação: se há crianças, deve haver pelo menos um adulto responsável
+            if (!criancas.isEmpty() && adultosResponsaveis.isEmpty()) {
+                model.addAttribute("erro",
+                        "Para viajar com crianças (2-10 anos) é necessário haver pelo menos um passageiro com 21 anos ou mais como responsável.");
+                model.addAttribute("viagem", viagemService.getViagemById(id));
+                return "viagem/cadastroPassageiros";
+            }
+
+            // Se houver crianças, redireciona para associar responsáveis
             if (!criancas.isEmpty()) {
-                // Redirecionar para página de associação de responsáveis
                 model.addAttribute("criancas", criancas);
-                model.addAttribute("adultos", adultos);
+                model.addAttribute("adultos", adultosResponsaveis);
                 model.addAttribute("passageiros", passageiros);
                 model.addAttribute("viagemId", id);
                 return "viagem/associarResponsaveis";
             }
 
-            // Se não houver crianças, seguir direto para processamento de responsáveis
+            // Se não houver crianças, prossegue com a reserva
             return "redirect:/web/viagens/reservar/" + id + "/responsaveis?passageiroIds=" +
                     passageiros.stream()
                             .map(p -> p.getId_passageiro().toString())
@@ -175,7 +184,8 @@ public class ViagemWebController {
 
         } catch (Exception e) {
             model.addAttribute("erro", "Erro ao processar passageiros: " + e.getMessage());
-            return "redirect:/web/viagens/detalhes/" + id;
+            model.addAttribute("viagem", viagemService.getViagemById(id));
+            return "viagem/cadastroPassageiros";
         }
     }
 
@@ -185,72 +195,94 @@ public class ViagemWebController {
             @RequestParam(value = "passageiroIds", required = true) String passageiroIdsStr,
             @RequestParam(required = false) Map<String, String> responsaveis,
             RedirectAttributes redirectAttributes) {
-    
+
         try {
             // Converte string de IDs em List<Long>
             List<Long> passageiroIds = Arrays.stream(passageiroIdsStr.split(","))
-                                           .map(Long::parseLong)
-                                           .collect(Collectors.toList());
-    
+                    .map(Long::parseLong)
+                    .collect(Collectors.toList());
+
             if (passageiroIds.isEmpty()) {
                 throw new RuntimeException("Lista de passageiros não pode estar vazia");
             }
-    
+
+            // Recupera viagem e incrementa número de reservas
+            Viagem viagem = viagemService.getViagemById(id);
+            viagem.setNumReservasAssociadas(viagem.getNumReservasAssociadas() + 1);
+
             // Recupera todos os passageiros
             List<Passageiro> passageiros = passageiroIds.stream()
                     .map(pid -> passageiroService.getPassageiroById(pid))
                     .collect(Collectors.toList());
-    
+
             // Processa responsáveis se houver
             if (responsaveis != null) {
-                responsaveis.forEach((key, value) -> {
-                    if (key.startsWith("responsaveis[")) {
-                        Long idCrianca = Long.parseLong(key.replaceAll("responsaveis\\[(\\d+)\\]", "$1"));
-                        Long idResponsavel = Long.parseLong(value);
-                        
-                        Passageiro crianca = passageiroService.getPassageiroById(idCrianca);
-                        Passageiro responsavel = passageiroService.getPassageiroById(idResponsavel);
-                        
-                        crianca.setResponsavel(responsavel);
-                        passageiroService.salvarPassageiro(crianca);
-                    }
-                });
+                processarResponsaveisPassageiros(responsaveis, passageiroService);
             }
-    
+
             // Criar e salvar a reserva
-            Viagem viagem = viagemService.getViagemById(id);
-            Reserva reserva = new Reserva();
-            reserva.setViagem(viagem);
-            reserva.setData(new Date(System.currentTimeMillis()));
-            reserva.setStatus("CONFIRMADA");
-            reserva.setValor(calcularValorTotal(viagem, passageiros));
-            reserva.setOrigem(viagem.getOrigemLocal().getLocal().getDescricaoCompleta());
-            reserva.setDestino(viagem.getDestinoLocal().getLocal().getDescricaoCompleta());
-            reserva.setCliente(userSession.getCliente());
-    
-            // Salva a reserva
+            Reserva reserva = criarReserva(viagem, passageiros, userSession.getCliente());
             reservaService.salvarReserva(reserva);
-    
+
             // Associa os passageiros à reserva
-            for (Passageiro passageiro : passageiros) {
-                ReservaPassageiro reservaPassageiro = new ReservaPassageiro();
-                reservaPassageiro.setId(new ReservaPassageiro.ReservaPassageiroId(
-                    reserva.getId_reserva(), 
-                    passageiro.getId_passageiro()
-                ));
-                reservaPassageiro.setReserva(reserva);
-                reservaPassageiro.setPassageiro(passageiro);
-                reservaService.salvarReservaPassageiro(reservaPassageiro);
-            }
-    
-            redirectAttributes.addFlashAttribute("mensagemSucesso", 
-                "Reserva realizada com sucesso! Código da reserva: " + reserva.getId_reserva());
+            associarPassageirosReserva(reserva, passageiros);
+
+            // Atualiza a viagem com o novo número de reservas
+            viagemService.atualizarViagem(viagem);
+
+            redirectAttributes.addFlashAttribute("mensagemSucesso",
+                    "Reserva realizada com sucesso! Código da reserva: " + reserva.getId_reserva());
             return "redirect:/web/viagens/reserva/sucesso";
-    
+
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensagemErro", 
-                "Erro ao processar reserva: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("mensagemErro",
+                    "Erro ao processar reserva: " + e.getMessage());
             return "redirect:/web/viagens/detalhes/" + id;
+        }
+    }
+
+    @GetMapping("/reserva/sucesso")
+    public String mostrarPaginaSucesso() {
+        return "viagem/reservaSucesso";
+    }
+
+    private void processarResponsaveisPassageiros(Map<String, String> responsaveis,
+            PassageiroService passageiroService) {
+        responsaveis.forEach((key, value) -> {
+            if (key.startsWith("responsaveis[")) {
+                Long idCrianca = Long.parseLong(key.replaceAll("responsaveis\\[(\\d+)\\]", "$1"));
+                Long idResponsavel = Long.parseLong(value);
+
+                Passageiro crianca = passageiroService.getPassageiroById(idCrianca);
+                Passageiro responsavel = passageiroService.getPassageiroById(idResponsavel);
+
+                crianca.setResponsavel(responsavel);
+                passageiroService.salvarPassageiro(crianca);
+            }
+        });
+    }
+
+    private Reserva criarReserva(Viagem viagem, List<Passageiro> passageiros, Cliente cliente) {
+        Reserva reserva = new Reserva();
+        reserva.setViagem(viagem);
+        reserva.setData(new Date(System.currentTimeMillis()));
+        reserva.setStatus("CONFIRMADA");
+        reserva.setValor(calcularValorTotal(viagem, passageiros));
+        reserva.setOrigem(viagem.getOrigemLocal().getLocal().getDescricaoCompleta());
+        reserva.setDestino(viagem.getDestinoLocal().getLocal().getDescricaoCompleta());
+        reserva.setCliente(cliente);
+        return reserva;
+    }
+
+    private void associarPassageirosReserva(Reserva reserva, List<Passageiro> passageiros) {
+        for (Passageiro passageiro : passageiros) {
+            ReservaPassageiro reservaPassageiro = new ReservaPassageiro();
+            reservaPassageiro.setId(new ReservaPassageiro.ReservaPassageiroId(
+                    reserva.getId_reserva(),
+                    passageiro.getId_passageiro()));
+            reservaPassageiro.setReserva(reserva);
+            reservaPassageiro.setPassageiro(passageiro);
+            reservaService.salvarReservaPassageiro(reservaPassageiro);
         }
     }
 

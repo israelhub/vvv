@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Reserva Confirmada</title>
+    <link rel="stylesheet" th:href="@{/styledetalhesviagem.css}">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="alert alert-success">
+        <h1>Reserva Realizada com Sucesso!</h1>
+        <p th:if="${mensagemSucesso}" th:text="${mensagemSucesso}"></p>
+    </div>
+    <div class="mt-4">
+        <a href="/web/paginaInicial" class="btn btn-primary">Voltar para Página Inicial</a>
+    </div>
+</div>
+</body>
+</html>
