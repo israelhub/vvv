@@ -159,28 +159,37 @@ public class ViagemWebController {
                     .filter(p -> p.getIdade() >= 21)
                     .collect(Collectors.toList());
 
-            // Validação: se há crianças, deve haver pelo menos um adulto responsável
-            if (!criancas.isEmpty() && adultosResponsaveis.isEmpty()) {
-                model.addAttribute("erro",
-                        "Para viajar com crianças (2-10 anos) é necessário haver pelo menos um passageiro com 21 anos ou mais como responsável.");
-                model.addAttribute("viagem", viagemService.getViagemById(id));
-                return "viagem/cadastroPassageiros";
-            }
-
-            // Se houver crianças, redireciona para associar responsáveis
+            // Se houver crianças, validar responsáveis
             if (!criancas.isEmpty()) {
+                if (adultosResponsaveis.isEmpty()) {
+                    model.addAttribute("erro",
+                            "Para viajar com crianças (2-10 anos) é necessário haver pelo menos um passageiro com 21 anos ou mais como responsável.");
+                    model.addAttribute("viagem", viagemService.getViagemById(id));
+                    return "viagem/cadastroPassageiros";
+                }
+                // Redirecionar para associar responsáveis
                 model.addAttribute("criancas", criancas);
                 model.addAttribute("adultos", adultosResponsaveis);
                 model.addAttribute("passageiros", passageiros);
                 model.addAttribute("viagemId", id);
                 return "viagem/associarResponsaveis";
-            }
+            } else {
+                // Se não houver crianças, criar reserva diretamente
+                Viagem viagem = viagemService.getViagemById(id);
+                viagem.setNumReservasAssociadas(viagem.getNumReservasAssociadas() + 1);
 
-            // Se não houver crianças, prossegue com a reserva
-            return "redirect:/web/viagens/reservar/" + id + "/responsaveis?passageiroIds=" +
-                    passageiros.stream()
-                            .map(p -> p.getId_passageiro().toString())
-                            .collect(Collectors.joining(","));
+                // Criar e salvar a reserva
+                Reserva reserva = criarReserva(viagem, passageiros, userSession.getCliente());
+                reservaService.salvarReserva(reserva);
+
+                // Associar passageiros à reserva
+                associarPassageirosReserva(reserva, passageiros);
+
+                // Atualizar viagem
+                viagemService.atualizarViagem(viagem);
+
+                return "redirect:/web/viagens/reserva/sucesso";
+            }
 
         } catch (Exception e) {
             model.addAttribute("erro", "Erro ao processar passageiros: " + e.getMessage());
