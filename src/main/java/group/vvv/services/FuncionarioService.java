@@ -20,10 +20,8 @@ public class FuncionarioService {
     private PontoFuncionarioRepository pontoFuncionarioRepository;
 
     public Funcionario cadastrar(Funcionario funcionario) {
-        String codigo_funcionario = UUID.randomUUID().toString().substring(0, 10);
+        
         String senha = UUID.randomUUID().toString().substring(0, 8);
-
-        funcionario.setCodigo_funcionario(codigo_funcionario);
         funcionario.setSenha(senha);
 
         return funcionarioRepository.save(funcionario);

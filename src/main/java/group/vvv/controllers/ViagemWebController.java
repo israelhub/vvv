@@ -137,7 +137,6 @@ public class ViagemWebController {
         List<Passageiro> passageiros = new ArrayList<>();
 
         try {
-            // Criar e salvar passageiros
             for (int i = 0; i < nomes.length; i++) {
                 Passageiro passageiro = new Passageiro();
                 passageiro.setNome(nomes[i]);
@@ -150,7 +149,6 @@ public class ViagemWebController {
                 passageiros.add(passageiro);
             }
 
-            // Separar crianças e adultos
             List<Passageiro> criancas = passageiros.stream()
                     .filter(p -> p.getIdade() >= 2 && p.getIdade() <= 10)
                     .collect(Collectors.toList());
@@ -159,7 +157,6 @@ public class ViagemWebController {
                     .filter(p -> p.getIdade() >= 21)
                     .collect(Collectors.toList());
 
-            // Se houver crianças, validar responsáveis
             if (!criancas.isEmpty()) {
                 if (adultosResponsaveis.isEmpty()) {
                     model.addAttribute("erro",
@@ -167,25 +164,20 @@ public class ViagemWebController {
                     model.addAttribute("viagem", viagemService.getViagemById(id));
                     return "viagem/cadastroPassageiros";
                 }
-                // Redirecionar para associar responsáveis
                 model.addAttribute("criancas", criancas);
                 model.addAttribute("adultos", adultosResponsaveis);
                 model.addAttribute("passageiros", passageiros);
                 model.addAttribute("viagemId", id);
                 return "viagem/associarResponsaveis";
             } else {
-                // Se não houver crianças, criar reserva diretamente
                 Viagem viagem = viagemService.getViagemById(id);
                 viagem.setNumReservasAssociadas(viagem.getNumReservasAssociadas() + 1);
 
-                // Criar e salvar a reserva
                 Reserva reserva = criarReserva(viagem, passageiros, userSession.getCliente());
                 reservaService.salvarReserva(reserva);
 
-                // Associar passageiros à reserva
                 associarPassageirosReserva(reserva, passageiros);
 
-                // Atualizar viagem
                 viagemService.atualizarViagem(viagem);
 
                 return "redirect:/web/viagens/reserva/sucesso";
@@ -206,7 +198,6 @@ public class ViagemWebController {
             RedirectAttributes redirectAttributes) {
 
         try {
-            // Converte string de IDs em List<Long>
             List<Long> passageiroIds = Arrays.stream(passageiroIdsStr.split(","))
                     .map(Long::parseLong)
                     .collect(Collectors.toList());
@@ -215,28 +206,22 @@ public class ViagemWebController {
                 throw new RuntimeException("Lista de passageiros não pode estar vazia");
             }
 
-            // Recupera viagem e incrementa número de reservas
             Viagem viagem = viagemService.getViagemById(id);
             viagem.setNumReservasAssociadas(viagem.getNumReservasAssociadas() + 1);
 
-            // Recupera todos os passageiros
             List<Passageiro> passageiros = passageiroIds.stream()
                     .map(pid -> passageiroService.getPassageiroById(pid))
                     .collect(Collectors.toList());
 
-            // Processa responsáveis se houver
             if (responsaveis != null) {
                 processarResponsaveisPassageiros(responsaveis, passageiroService);
             }
 
-            // Criar e salvar a reserva
             Reserva reserva = criarReserva(viagem, passageiros, userSession.getCliente());
             reservaService.salvarReserva(reserva);
 
-            // Associa os passageiros à reserva
             associarPassageirosReserva(reserva, passageiros);
 
-            // Atualiza a viagem com o novo número de reservas
             viagemService.atualizarViagem(viagem);
 
             redirectAttributes.addFlashAttribute("mensagemSucesso",
@@ -275,7 +260,7 @@ public class ViagemWebController {
         Reserva reserva = new Reserva();
         reserva.setViagem(viagem);
         reserva.setData(new Date(System.currentTimeMillis()));
-        reserva.setStatus("CONFIRMADA");
+        reserva.setStatus(Reserva.StatusReserva.PENDENTE_AO_GERENTE_DE_NEGOCIOS_VIRTUAIS);
         reserva.setValor(calcularValorTotal(viagem, passageiros));
         reserva.setOrigem(viagem.getOrigemLocal().getLocal().getDescricaoCompleta());
         reserva.setDestino(viagem.getDestinoLocal().getLocal().getDescricaoCompleta());

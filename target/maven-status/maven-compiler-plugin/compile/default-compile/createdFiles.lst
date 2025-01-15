@@ -34,6 +34,7 @@ group\vvv\models\viagem\ViagemLocal$ViagemLocalId.class
 group\vvv\repositories\PontoDeVendaRepository.class
 group\vvv\models\Passageiro.class
 group\vvv\models\viagem\ViagemModal.class
+group\vvv\models\Reserva$StatusReserva.class
 group\vvv\services\FuncionarioService.class
 group\vvv\repositories\FuncionarioRepository.class
 group\vvv\repositories\ViagemRepository.class

@@ -18,8 +18,9 @@ public class Reserva {
     @Column(nullable = false)
     private Date data;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
-    private String status;
+    private StatusReserva status;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal valor;
@@ -41,4 +42,8 @@ public class Reserva {
     @ManyToOne
     @JoinColumn(name = "id_viagem", nullable = false)
     private Viagem viagem;
+
+    public enum StatusReserva {
+        PENDENTE_PAGAMENTO, CONFIRMADA, CANCELADA, PENDENTE_AO_GERENTE_DE_NEGOCIOS_VIRTUAIS
+    }
 }
