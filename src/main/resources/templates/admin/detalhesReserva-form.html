@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+    <title>Detalhes da Reserva</title>
+</head>
+<div layout:fragment="content">
+    <div class="container mt-5">
+        <h2>Detalhes da Reserva</h2>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Informações da Reserva</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>ID:</strong> <span th:text="${reserva.id_reserva}"></span></p>
+                <p><strong>Status:</strong> <span th:text="${reserva.status}"></span></p>
+                <p><strong>Data:</strong> <span th:text="${#dates.format(reserva.data, 'dd/MM/yyyy')}"></span></p>
+                <p><strong>Valor:</strong> <span th:text="${'R$ ' + #numbers.formatDecimal(reserva.valor, 1, 'POINT', 2, 'COMMA')}"></span></p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Dados do Cliente</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>Nome:</strong> <span th:text="${reserva.cliente.nome}"></span></p>
+                <p><strong>Email:</strong> <span th:text="${reserva.cliente.email}"></span></p>
+                <p><strong>CPF:</strong> <span th:text="${reserva.cliente.cpf}"></span></p>
+                <p><strong>Telefone:</strong> <span th:text="${reserva.cliente.telefone}"></span></p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Dados da Viagem</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>Origem:</strong> <span th:text="${reserva.origem}"></span></p>
+                <p><strong>Destino:</strong> <span th:text="${reserva.destino}"></span></p>
+                <p><strong>Data Partida:</strong> <span th:text="${#dates.format(reserva.viagem.dataPartida, 'dd/MM/yyyy')}"></span></p>
+                <p><strong>Hora Partida:</strong> <span th:text="${reserva.viagem.horarioPartida}"></span></p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Passageiros</h3>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>CPF</th>
+                            <th>Idade</th>
+                            <th>Telefone</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="rp : ${passageiros}">
+                            <td th:text="${rp.passageiro.nome}"></td>
+                            <td th:text="${rp.passageiro.cpf}"></td>
+                            <td th:text="${rp.passageiro.idade}"></td>
+                            <td th:text="${rp.passageiro.telefone}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <form th:action="@{/web/administracao/reservas/{id}/confirmar(id=${reserva.id_reserva})}" method="post">
+            <button type="submit" class="btn btn-success">Confirmar Reserva</button>
+            <a href="/web/administracao/reservas-pendentes" class="btn btn-secondary">Voltar</a>
+        </form>
+    </div>
+</div>
+</html>

@@ -19,7 +19,7 @@ public class Reserva {
     private Date data;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false)
     private StatusReserva status;
 
     @Column(nullable = false, precision = 10, scale = 2)

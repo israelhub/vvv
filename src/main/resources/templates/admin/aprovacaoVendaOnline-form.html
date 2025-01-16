@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+    <title>Reservas Pendentes</title>
+</head>
+<div layout:fragment="content">
+    <div class="container mt-5">
+        <h2>Reservas Pendentes de Aprovação</h2>
+        
+        <div th:if="${mensagem}" th:class="${'alert alert-' + tipoMensagem}" role="alert">
+            <span th:text="${mensagem}"></span>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Data</th>
+                    <th>Origem</th>
+                    <th>Destino</th>
+                    <th>Valor</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="reserva : ${reservas}">
+                    <td th:text="${reserva.id_reserva}"></td>
+                    <td th:text="${reserva.cliente.nome}"></td>
+                    <td th:text="${#dates.format(reserva.data, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${reserva.origem}"></td>
+                    <td th:text="${reserva.destino}"></td>
+                    <td th:text="${'R$ ' + #numbers.formatDecimal(reserva.valor, 1, 'POINT', 2, 'COMMA')}"></td>
+                    <td>
+                        <a th:href="@{/web/administracao/reservas/{id}(id=${reserva.id_reserva})}" 
+                           class="btn btn-info btn-sm">Ver Detalhes</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</html>
