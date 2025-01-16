@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Administração - Vai&Volta</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/admin.css}">
+</head>
+<body>
+    <div class="admin-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>Administração</h2>
+            </div>
+            <ul class="nav-menu">
+                <li>
+                    <a th:href="@{/web/administracao/modal}">
+                        <span class="material-icons">directions_bus</span>
+                        Cadastrar Modal
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/web/administracao/local}">
+                        <span class="material-icons">location_on</span>
+                        Cadastrar Local
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/web/administracao/viagem}">
+                        <span class="material-icons">card_travel</span>
+                        Cadastrar Viagem
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/web/administracao/ponto-de-venda}">
+                        <span class="material-icons">store</span>
+                        Cadastrar Ponto de Venda
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/web/administracao/reservas-pendentes}">
+                        <span class="material-icons">pending_actions</span>
+                        Aprovar Reservas
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <main class="content">
+            <div th:if="${mensagem}" th:class="${'alert alert-' + tipoMensagem}" role="alert">
+                <span th:text="${mensagem}"></span>
+            </div>
+            <div layout:fragment="content"></div>
+        </main>
+    </div>
+</body>
+</html>

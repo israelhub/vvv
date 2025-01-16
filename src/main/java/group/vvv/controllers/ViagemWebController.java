@@ -1,15 +1,19 @@
 package group.vvv.controllers;
 
 import group.vvv.config.UserSession;
+import group.vvv.models.Cartao.TipoCartao;
 import group.vvv.models.Cliente;
 import group.vvv.models.Passageiro;
 import group.vvv.models.Reserva;
+import group.vvv.models.Reserva.StatusReserva;
 import group.vvv.models.ReservaPassageiro;
 import group.vvv.models.viagem.Viagem;
+import group.vvv.services.CartaoService;
 import group.vvv.services.LocalService;
 import group.vvv.services.ModalService;
 import group.vvv.services.PassageiroService;
 import group.vvv.services.ReservaService;
+import group.vvv.services.TicketService;
 import group.vvv.services.ViagemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,44 +47,10 @@ public class ViagemWebController {
     private UserSession userSession;
 
     @Autowired
-    private LocalService localService;
+    private CartaoService cartaoService;
 
     @Autowired
-    private ModalService modalService;
-
-    @GetMapping("/novo")
-    public String exibirFormularioCadastro(Model model) {
-        model.addAttribute("viagem", new Viagem());
-        model.addAttribute("locais", localService.getLocais());
-        model.addAttribute("modais", modalService.getModais());
-        return "viagem/areaCadastroViagem";
-    }
-
-    @PostMapping
-    public String cadastrarViagemWeb(@RequestParam Long origemLocal,
-            @RequestParam Long destinoLocal,
-            @RequestParam(required = false) List<Long> escalaLocal,
-            @RequestParam Long modalOrigem,
-            @RequestParam(required = false) List<Long> modalEscala,
-            @RequestParam LocalTime horarioPartida,
-            @RequestParam LocalTime horarioChegada,
-            @RequestParam Date dataPartida,
-            @RequestParam Date dataChegada,
-            @RequestParam BigDecimal valor,
-            Model model) {
-        try {
-            Viagem novaViagem = viagemService.criarViagem(origemLocal, destinoLocal, escalaLocal,
-                    modalOrigem, modalEscala,
-                    horarioPartida, horarioChegada,
-                    dataPartida, dataChegada, valor);
-            model.addAttribute("mensagem", "Viagem cadastrada com sucesso! ID: " + novaViagem.getId_viagem());
-        } catch (Exception e) {
-            model.addAttribute("mensagemErro", "Erro ao cadastrar viagem: " + e.getMessage());
-        }
-        model.addAttribute("locais", localService.getLocais());
-        model.addAttribute("modais", modalService.getModais());
-        return "viagem/areaCadastroViagem";
-    }
+    private TicketService ticketService;
 
     @GetMapping("/detalhes/{id}")
     public String mostrarDetalhesViagem(@PathVariable Long id,
@@ -180,7 +150,7 @@ public class ViagemWebController {
 
                 viagemService.atualizarViagem(viagem);
 
-                return "redirect:/web/viagens/reserva/sucesso";
+                return "redirect:/web/viagens/reserva/" + reserva.getId_reserva() + "/pagamento";
             }
 
         } catch (Exception e) {
@@ -224,9 +194,7 @@ public class ViagemWebController {
 
             viagemService.atualizarViagem(viagem);
 
-            redirectAttributes.addFlashAttribute("mensagemSucesso",
-                    "Reserva realizada com sucesso! Código da reserva: " + reserva.getId_reserva());
-            return "redirect:/web/viagens/reserva/sucesso";
+            return "redirect:/web/viagens/reserva/" + reserva.getId_reserva() + "/pagamento";
 
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensagemErro",
@@ -260,7 +228,7 @@ public class ViagemWebController {
         Reserva reserva = new Reserva();
         reserva.setViagem(viagem);
         reserva.setData(new Date(System.currentTimeMillis()));
-        reserva.setStatus(Reserva.StatusReserva.PENDENTE_AO_GERENTE_DE_NEGOCIOS_VIRTUAIS);
+        reserva.setStatus(Reserva.StatusReserva.PENDENTE_PAGAMENTO);
         reserva.setValor(calcularValorTotal(viagem, passageiros));
         reserva.setOrigem(viagem.getOrigemLocal().getLocal().getDescricaoCompleta());
         reserva.setDestino(viagem.getDestinoLocal().getLocal().getDescricaoCompleta());
@@ -290,5 +258,44 @@ public class ViagemWebController {
             }
         }
         return total;
+    }
+
+    @GetMapping("/reserva/{id}/pagamento")
+    public String exibirPaginaPagamento(@PathVariable Long id, Model model) {
+        Reserva reserva = reservaService.getReservaById(id);
+        model.addAttribute("reserva", reserva);
+        return "viagem/pagamento";
+    }
+
+    @PostMapping("/reserva/pagamento")
+    public String processarPagamento(
+            @RequestParam Long reservaId,
+            @RequestParam String numero,
+            @RequestParam String cvv,
+            @RequestParam String validade,
+            @RequestParam String nomeTitular,
+            @RequestParam TipoCartao tipoCartao,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+
+            Cliente cliente = userSession.getCliente();
+            cartaoService.salvarCartao(numero, cvv, validade, nomeTitular, tipoCartao, cliente);
+
+            Reserva reserva = reservaService.getReservaById(reservaId);
+            reserva.setStatus(StatusReserva.PENDENTE_AO_GERENTE_DE_NEGOCIOS_VIRTUAIS);
+            reservaService.salvarReserva(reserva);
+
+            ticketService.gerarTickets(reserva);
+
+            redirectAttributes.addFlashAttribute("mensagemSucesso",
+                    "Pagamento processado com sucesso! Aguardando aprovação.");
+            return "redirect:/web/viagens/reserva/sucesso";
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensagemErro",
+                    "Erro ao processar pagamento: " + e.getMessage());
+            return "redirect:/web/viagens/reserva/" + reservaId + "/pagamento";
+        }
     }
 }

@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+    <title>Cadastro de Viagem</title>
+</head>
+<div layout:fragment="content">
+    <div class="container mt-5">
+        <h2>Cadastro de Viagem</h2>
+
+        <div th:if="${mensagem}" th:class="${'alert alert-' + tipoMensagem}" role="alert">
+            <span th:text="${mensagem}"></span>
+        </div>
+
+        <form th:action="@{/web/administracao/viagem}" th:object="${viagem}" method="post">
+            <!-- Origem/Destino -->
+            <div class="mb-3">
+                <label for="origemLocal" class="form-label">Local de Origem</label>
+                <select id="origemLocal" name="origemLocal" class="form-control" required>
+                    <option value="">Selecione um local</option>
+                    <option th:each="local : ${locais}" 
+                            th:value="${local.id_local}" 
+                            th:text="${local.descricaoCompleta}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="destinoLocal" class="form-label">Local de Destino</label>
+                <select id="destinoLocal" name="destinoLocal" class="form-control" required>
+                    <option value="">Selecione um local</option>
+                    <option th:each="local : ${locais}"
+                            th:value="${local.id_local}"
+                            th:text="${local.descricaoCompleta}">
+                    </option>
+                </select>
+            </div>
+
+            <!-- Modal -->
+            <div class="mb-3">
+                <label for="modalOrigem" class="form-label">Modal de Origem</label>
+                <select id="modalOrigem" name="modalOrigem" class="form-control" required>
+                    <option value="">Selecione um modal</option>
+                    <option th:each="modal : ${modais}"
+                            th:value="${modal.id_modal}"
+                            th:text="${modal.tipo + ' - ' + modal.modelo}">
+                    </option>
+                </select>
+            </div>
+
+            <!-- Escalas (usando lista no controller) -->
+            <div th:each="escala,stat : ${escalas}" class="mb-3">
+                <h4>Escala [[${stat.index + 1}]]</h4>
+                
+                <div class="mb-3">
+                    <label th:for="${'escalaLocal' + stat.index}" class="form-label">Local</label>
+                    <select th:id="${'escalaLocal' + stat.index}" 
+                            th:name="escalaLocal"
+                            class="form-control">
+                        <option value="">Selecione um local</option>
+                        <option th:each="local : ${locais}"
+                                th:value="${local.id_local}"
+                                th:text="${local.descricaoCompleta}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label th:for="${'modalEscala' + stat.index}" class="form-label">Modal</label>
+                    <select th:id="${'modalEscala' + stat.index}"
+                            th:name="modalEscala"
+                            class="form-control">
+                        <option value="">Selecione um modal</option>
+                        <option th:each="modal : ${modais}"
+                                th:value="${modal.id_modal}"
+                                th:text="${modal.tipo + ' - ' + modal.modelo}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <a th:href="@{/web/administracao/viagem/addEscala}" 
+                   class="btn btn-secondary">Adicionar Escala</a>
+            </div>
+
+            <!-- Horários e Datas -->
+            <div class="mb-3">
+                <label for="horarioPartida" class="form-label">Horário de Partida</label>
+                <input type="time" id="horarioPartida" name="horarioPartida" 
+                       class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="horarioChegada" class="form-label">Horário de Chegada</label>
+                <input type="time" id="horarioChegada" name="horarioChegada"
+                       class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="dataPartida" class="form-label">Data de Partida</label>
+                <input type="date" id="dataPartida" name="dataPartida"
+                       class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="dataChegada" class="form-label">Data de Chegada</label>
+                <input type="date" id="dataChegada" name="dataChegada"
+                       class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="valor" class="form-label">Valor</label>
+                <input type="number" id="valor" name="valor"
+                       class="form-control" step="0.01" min="0" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Cadastrar Viagem</button>
+        </form>
+    </div>
+</div>
+</html>

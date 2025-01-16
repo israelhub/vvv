@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+    <title>Cadastro de Modal</title>
+</head>
+<div layout:fragment="content">
+    <div class="container mt-5">
+        <h2>Cadastro de Modal</h2>
+        
+        <div th:if="${mensagem}" th:class="${'alert alert-' + tipoMensagem}" role="alert">
+            <span th:text="${mensagem}"></span>
+        </div>
+
+        <form th:action="@{/web/administracao/modal}" th:object="${modal}" method="post">
+            <div class="mb-3">
+                <label for="tipo" class="form-label">Tipo</label>
+                <input type="text" id="tipo" th:field="*{tipo}" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="modelo" class="form-label">Modelo</label>
+                <input type="text" id="modelo" th:field="*{modelo}" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label for="capacidade" class="form-label">Capacidade</label>
+                <input type="number" id="capacidade" th:field="*{capacidade}" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="ano_fabricacao" class="form-label">Ano de Fabricação</label>
+                <input type="number" id="ano_fabricacao" th:field="*{ano_fabricacao}" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label for="nome_empresa" class="form-label">Nome da Empresa</label>
+                <input type="text" id="nome_empresa" th:field="*{nome_empresa}" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Cadastrar Modal</button>
+        </form>
+    </div>
+</div>
+</html>
