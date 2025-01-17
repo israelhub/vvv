@@ -1,6 +1,9 @@
 HELP.md
 issues
-rascunhobd.sql
+.env
+application.properties
+*.properties
+!application.properties.example
 #target/ !.mvn/wrapper/maven-wrapper.jar !**/src/main/**/target/ !**/src/test/**/target/
 
 ### STS ###

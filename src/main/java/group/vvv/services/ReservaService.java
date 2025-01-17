@@ -1,5 +1,6 @@
 package group.vvv.services;
 
+import group.vvv.models.Cliente;
 import group.vvv.models.Reserva;
 import group.vvv.models.Reserva.StatusReserva;
 import group.vvv.models.ReservaPassageiro;
@@ -26,7 +27,7 @@ public class ReservaService {
 
     public Reserva getReservaById(Long id) {
         return reservaRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Reserva não encontrada"));
+                .orElseThrow(() -> new RuntimeException("Reserva não encontrada"));
     }
 
     public void salvarReserva(Reserva reserva) {
@@ -45,5 +46,9 @@ public class ReservaService {
         Reserva reserva = getReservaById(id);
         reserva.setStatus(StatusReserva.CONFIRMADA);
         reservaRepository.save(reserva);
+    }
+
+    public List<Reserva> getReservasByCliente(Cliente cliente) {
+        return reservaRepository.findByClienteOrderByDataDesc(cliente);
     }
 }

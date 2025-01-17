@@ -5,17 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vai&Volta Viagens - Página Inicial</title>
     <link rel="stylesheet" th:href="@{/stylehome.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <header class="header">
         <div class="logo">
             <h1>Vai&Volta Viagens</h1>
         </div>
-        <nav class="nav">
-            <a href="/web/clientes/login" class="login-btn">Iniciar Sessão</a>
+        <nav class="nav-menu">
+            <div th:if="${not @userSession.authenticated}">
+                <a href="/web/clientes/login" class="login-btn">
+                    <i class="fas fa-user"></i>
+                    Iniciar Sessão
+                </a>
+            </div>
+            
+            <div th:if="${@userSession.authenticated}" class="user-menu">
+                <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+                <label for="menu-toggle" class="menu-button">
+                    <i class="fas fa-user"></i>
+                    <span th:text="${#strings.substring(@userSession.cliente.nome, 0, #strings.indexOf(@userSession.cliente.nome, ' '))}"></span>
+                    <i class="fas fa-chevron-down"></i>
+                </label>
+                
+                <div class="dropdown-menu">
+                    <div class="user-info">
+                        <span>Olá,</span>
+                        <strong th:text="${@userSession.cliente.nome}"></strong>
+                    </div>
+                    <div class="menu-divider"></div>
+                    <a href="/web/minhas-reservas" class="menu-item">
+                        <i class="fas fa-ticket-alt"></i>
+                        Minhas Reservas
+                    </a>
+                    <a href="/web/clientes/perfil" class="menu-item">
+                        <i class="fas fa-user-cog"></i>
+                        Minha Conta
+                    </a>
+                    <div class="menu-divider"></div>
+                    <a href="/web/clientes/logout" class="menu-item logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sair
+                    </a>
+                </div>
+            </div>
         </nav>
     </header>
-
     <main class="main">
         <section class="hero">
             <h2>Descubra novos destinos</h2>
@@ -54,5 +89,6 @@
             </div>
         </section>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

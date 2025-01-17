@@ -1,0 +1,8 @@
+spring.application.name=VVV
+spring.datasource.url=jdbc:postgresql://localhost:5432/database_name
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.show-sql=true
+server.port=8080
