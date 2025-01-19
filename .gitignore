@@ -1,12 +1,24 @@
-HELP.md
-issues
+# Arquivos de compilação e build
+target/
+build/
+!**/src/main/**/target/
+!**/src/test/**/target/
+*.class
+
+# Arquivos de configuração sensíveis
 .env
 application.properties
 *.properties
 !application.properties.example
-#target/ !.mvn/wrapper/maven-wrapper.jar !**/src/main/**/target/ !**/src/test/**/target/
 
-### STS ###
+# Logs
+*.log
+logs/
+
+# IDEs e Editores
+## VS Code
+.vscode/
+## Eclipse/STS
 .apt_generated
 .classpath
 .factorypath
@@ -14,22 +26,46 @@ application.properties
 .settings
 .springBeans
 .sts4-cache
-
-### IntelliJ IDEA ###
-.idea
+## IntelliJ IDEA
+.idea/
 *.iws
 *.iml
 *.ipr
-
-### NetBeans ###
+## NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
-.vscode/
+# Arquivos do Sistema
+.DS_Store
+Thumbs.db
+
+# Maven
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+
+# Maven Wrapper
+!.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+.mvn/timing.properties
+
+# Banco de Dados
+*.sqlite
+*.db
+*.sql
+!schema.sql
+
+# Documentação gerada
+/docs/generated/
+HELP.md

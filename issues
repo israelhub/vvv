@@ -1,0 +1,21 @@
+- (area cadastro local) precisa adicionar um mecanismo que só é salvo no banco de dados se tudo que for preenchido no formulario da area de cadastro de local for preenchido com exito para evitar que uma das partes seja salva sem o todo
+
+
+
+não é prioridade:
+- em cadastro local, o usuario deve cadastrar uma cidade sem nenhuma infraestrutura
+- melhorar area de cadastro em geral
+- adicionar botao "não é cadastrado? Cadastre-se" na pafina de cadastro do usuario
+- adicionar "Esqueci a senha" na pagina de cadastro do usuario
+- melhorar a nomeação dos endpoints
+- permitir que apenas funcionarios logados consigam acessar /web/administracao
+
+trocar pra TIMESTAMP data da tabela reserva e na model
+
+PARA 12/01/2025:
+
+- fazer a validação de idade do passageiro adulto (passageiros menores de 21 anos estão conseguindo ser
+selecionados como resposanvel e nao pode) - FEITO
+- analisar se a reserva esta sendo feita corretamente se nao tiver crianças como passageiros (caso nao esteja,
+fazer a correção) - FEITO 
+- verificar o erro que esta acontecendo ao executar o comando mvn spring-boot:run

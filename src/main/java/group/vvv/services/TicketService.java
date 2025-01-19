@@ -18,9 +18,14 @@ import group.vvv.repositories.TicketRepository;
 public class TicketService {
     @Autowired
     private TicketRepository ticketRepository;
-
+    
     @Autowired
     private ReservaService reservaService;
+    
+    public List<Ticket> getTicketsByReserva(Long idReserva) {
+        return ticketRepository.findByReservaId(idReserva);
+    }
+    
     
     public void gerarTickets(Reserva reserva) {
         List<ReservaPassageiro> passageiros = reservaService.getPassageiros(reserva);
@@ -32,20 +37,17 @@ public class TicketService {
             ticket.setHoraPartida(reserva.getViagem().getHorarioPartida());
             ticket.setHoraChegada(reserva.getViagem().getHorarioChegada());
             ticket.setReserva(reserva);
+            ticket.setPassageiro(rp.getPassageiro());
             
             ticketRepository.save(ticket);
         }
     }
     
     private String gerarLocalizador() {
-        return "LOC" + UUID.randomUUID().toString().substring(0, 6);
+        return "LOC" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
     }
     
     private String determinarTipoPassagem(Passageiro passageiro) {
         return passageiro.getIdade() <= 10 ? "INFANTIL" : "ADULTO";
-    }
-    
-    private Long calcularTempoViagem(LocalTime partida, LocalTime chegada) {
-        return ChronoUnit.MINUTES.between(partida, chegada);
     }
 }

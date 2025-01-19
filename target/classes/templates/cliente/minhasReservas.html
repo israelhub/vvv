@@ -12,26 +12,40 @@
         <div class="reservas-grid">
             <div th:each="reserva : ${reservas}" class="card mb-4">
                 <div class="card-header">
-                    <span class="badge" th:classappend="${
-                        reserva.status == T(group.vvv.models.Reserva.StatusReserva).CONFIRMADA ? 'bg-success' :
-                        reserva.status == T(group.vvv.models.Reserva.StatusReserva).PENDENTE_PAGAMENTO ? 'bg-warning' :
-                        reserva.status == T(group.vvv.models.Reserva.StatusReserva).PENDENTE_AO_GERENTE_DE_NEGOCIOS_VIRTUAIS ? 'bg-info' :
-                        'bg-danger'}"
-                        th:text="${
-                        reserva.status == T(group.vvv.models.Reserva.StatusReserva).CONFIRMADA ? 'CONFIRMADA' :
-                        reserva.status == T(group.vvv.models.Reserva.StatusReserva).PENDENTE_PAGAMENTO ? 'AGUARDANDO PAGAMENTO' :
-                        reserva.status == T(group.vvv.models.Reserva.StatusReserva).PENDENTE_AO_GERENTE_DE_NEGOCIOS_VIRTUAIS ? 'AGUARDANDO APROVAÇÃO' :
-                        reserva.status}">
+                    <span class="badge" th:with="status=${reserva?.status}" 
+                          th:classappend="${
+                            status != null ? (
+                                status.name() == 'CONFIRMADA' ? 'bg-success' :
+                                status.name() == 'PENDENTE_PAGAMENTO' ? 'bg-warning' :
+                                status.name() == 'PENDENTE_AO_GERENTE_DE_NEGOCIOS_VIRTUAIS' ? 'bg-info' :
+                                'bg-danger'
+                            ) : 'bg-secondary'
+                          }">
+                        <span th:text="${
+                            status != null ? (
+                                status.name() == 'CONFIRMADA' ? 'CONFIRMADA' :
+                                status.name() == 'PENDENTE_PAGAMENTO' ? 'AGUARDANDO PAGAMENTO' :
+                                status.name() == 'PENDENTE_AO_GERENTE_DE_NEGOCIOS_VIRTUAIS' ? 'AGUARDANDO APROVAÇÃO' :
+                                status.name()
+                            ) : 'STATUS DESCONHECIDO'
+                        }">Status</span>
                     </span>
                 </div>
+                
                 <div class="card-body">
-                    <h5 class="card-title">Viagem: <span th:text="${reserva.origem + ' → ' + reserva.destino}"></span></h5>
+                    <h5 class="card-title">Viagem: 
+                        <span th:text="${(reserva?.origem ?: 'Origem não definida') + ' → ' + (reserva?.destino ?: 'Destino não definido')}"></span>
+                    </h5>
+                    
                     <p class="card-text">
-                        <strong>Data:</strong> <span th:text="${#dates.format(reserva.data, 'dd/MM/yyyy')}"></span><br>
-                        <strong>Valor:</strong> <span th:text="${'R$ ' + #numbers.formatDecimal(reserva.valor, 1, 'POINT', 2, 'COMMA')}"></span>
+                        <strong>Data:</strong> 
+                        <span th:text="${reserva?.data != null ? #dates.format(reserva.data, 'dd/MM/yyyy') : 'Data não definida'}"></span>
+                        <br>
+                        <strong>Valor:</strong>
+                        <span th:text="${reserva?.valor != null ? 'R$ ' + #numbers.formatDecimal(reserva.valor, 1, 'POINT', 2, 'COMMA') : 'Valor não definido'}"></span>
                     </p>
                     
-                    <div th:if="${reserva.status.name() == 'CONFIRMADA'}" class="mt-3">
+                    <div th:if="${reserva?.status?.name() == 'CONFIRMADA'}" class="mt-3">
                         <a th:href="@{/web/minhas-reservas/ticket/{id}(id=${reserva.id_reserva})}" 
                            class="btn btn-primary">
                             Download Ticket

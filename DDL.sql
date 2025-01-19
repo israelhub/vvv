@@ -1,4 +1,3 @@
-
 -- Tabela Cliente
 CREATE TABLE cliente (
         id_cliente BIGSERIAL PRIMARY KEY,
