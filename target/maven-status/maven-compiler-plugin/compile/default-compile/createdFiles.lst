@@ -49,11 +49,13 @@ group\vvv\repositories\ViagemModalRepository.class
 group\vvv\models\viagem\ViagemModal$Tipo.class
 group\vvv\repositories\ViagemLocalRepository.class
 group\vvv\repositories\CartaoRepository.class
+group\vvv\config\FuncionarioSession.class
 group\vvv\repositories\PassageiroRepository.class
 group\vvv\models\Cartao$TipoCartao.class
 group\vvv\repositories\TicketRepository.class
 group\vvv\repositories\PontoFuncionarioRepository.class
 group\vvv\models\viagem\Estacao.class
+group\vvv\config\AdminAuthInterceptor.class
 group\vvv\controllers\ClienteWebController.class
 group\vvv\services\PassageiroService.class
 group\vvv\models\ReservaPassageiro$ReservaPassageiroId.class

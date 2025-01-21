@@ -16,12 +16,10 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String path = request.getRequestURI();
         
-        // Permitir acesso à página de login e cadastro
         if (path.contains("/login") || path.contains("/novo") || path.startsWith("/web/paginaInicial")) {
             return true;
         }
 
-        // Verificar autenticação para outras páginas
         if (!userSession.isAuthenticated()) {
             response.sendRedirect("/web/clientes/login");
             return false;

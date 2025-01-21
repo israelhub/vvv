@@ -1,41 +1,52 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" 
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/layout}">
+<head>
+    <title>Cadastro de Local</title>
+</head>
 <div layout:fragment="content">
-    <h2>Cadastro de Local</h2>
-    <form th:action="@{/web/administracao/local}" method="post">
-        <div class="mb-3">
-            <label for="nomeCidade" class="form-label">Nome da Cidade</label>
-            <input type="text" id="nomeCidade" name="nomeCidade" class="form-control" required>
+    <div class="container mt-5">
+        <h2>Cadastro de Local</h2>
+
+        <div th:if="${mensagem}" th:class="${'alert alert-' + tipoMensagem}" role="alert">
+            <span th:text="${mensagem}"></span>
         </div>
 
-        <div class="mb-3">
-            <label for="codigoCidade" class="form-label">Código da Cidade</label>
-            <input type="text" id="codigoCidade" name="codigoCidade" class="form-control" pattern="[A-Z]{3}" title="Código deve ter exatamente 3 letras maiúsculas" required>
-        </div>
-        
-        <div class="mb-3">
-            <label for="tipo" class="form-label">Tipo de Infraestrutura</label>
-            <select id="tipo" name="tipo" class="form-control" required>
-                <option value="">Selecione um tipo</option>
-                <option value="aeroporto">Aeroporto</option>
-                <option value="estacao">Estação</option>
-                <option value="porto">Porto</option>
-            </select>
-        </div>
+        <form th:action="@{/web/administracao/local}" method="post">
+            <div class="mb-3">
+                <label for="nomeCidade" class="form-label">Nome da Cidade</label>
+                <input type="text" id="nomeCidade" name="nomeCidade" class="form-control" required>
+            </div>
 
-        <div class="mb-3">
-            <label for="nomeInfraestrutura" class="form-label">Nome da Infraestrutura</label>
-            <input type="text" id="nomeInfraestrutura" name="nomeInfraestrutura" class="form-control" required>
-        </div>
+            <div class="mb-3">
+                <label for="codigoCidade" class="form-label">Código da Cidade</label>
+                <input type="text" id="codigoCidade" name="codigoCidade" class="form-control" pattern="[A-Z]{3}" title="Código deve ter exatamente 3 letras maiúsculas" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="tipo" class="form-label">Tipo de Infraestrutura</label>
+                <select id="tipo" name="tipo" class="form-control" required>
+                    <option value="">Selecione um tipo</option>
+                    <option value="aeroporto">Aeroporto</option>
+                    <option value="estacao">Estação</option>
+                    <option value="porto">Porto</option>
+                </select>
+            </div>
 
-        <div class="mb-3" id="codigoAeroportoContainer">
-            <label for="codigoAeroporto" class="form-label">Código do Aeroporto (Se o tipo for aeroporto)</label>
-            <input type="text" id="codigoAeroporto" name="codigoAeroporto" class="form-control">
-        </div>
+            <div class="mb-3">
+                <label for="nomeInfraestrutura" class="form-label">Nome da Infraestrutura</label>
+                <input type="text" id="nomeInfraestrutura" name="nomeInfraestrutura" class="form-control" required>
+            </div>
 
-        <button type="submit" class="btn btn-primary">Cadastrar</button>
-    </form>
+            <div class="mb-3" id="codigoAeroportoContainer">
+                <label for="codigoAeroporto" class="form-label">Código do Aeroporto (Se o tipo for aeroporto)</label>
+                <input type="text" id="codigoAeroporto" name="codigoAeroporto" class="form-control">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
+        </form>
+    </div>
 </div>
 
 <script>
