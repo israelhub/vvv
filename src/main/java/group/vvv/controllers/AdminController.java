@@ -21,10 +21,12 @@ import group.vvv.services.ViagemService;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -138,44 +140,6 @@ public class AdminController {
         return "redirect:/web/administracao/local";
     }
 
-    // Viagem
-    @GetMapping("/viagem")
-    public String viagemForm(Model model) {
-        model.addAttribute("viagem", new Viagem());
-        model.addAttribute("locais", localService.getLocais());
-        model.addAttribute("modais", modalService.getModais());
-        return "admin/viagem-form";
-    }
-
-    @PostMapping("/viagem")
-    public String cadastrarViagem(@RequestParam Long origemLocal,
-            @RequestParam Long destinoLocal,
-            @RequestParam(required = false) List<Long> escalaLocal,
-            @RequestParam Long modalOrigem,
-            @RequestParam(required = false) List<Long> modalEscala,
-            @RequestParam LocalTime horarioPartida,
-            @RequestParam LocalTime horarioChegada,
-            @RequestParam Date dataPartida,
-            @RequestParam Date dataChegada,
-            @RequestParam BigDecimal valor,
-            RedirectAttributes ra) {
-        try {
-            // Usando o viagemService para criar a viagem
-            Viagem novaViagem = viagemService.criarViagem(origemLocal, destinoLocal, escalaLocal,
-                    modalOrigem, modalEscala,
-                    horarioPartida, horarioChegada,
-                    dataPartida, dataChegada, valor);
-
-            ra.addFlashAttribute("mensagem", "Viagem cadastrada com sucesso! ID: " + novaViagem.getId_viagem());
-            ra.addFlashAttribute("tipoMensagem", "success");
-
-        } catch (Exception e) {
-            ra.addFlashAttribute("mensagem", "Erro ao cadastrar viagem: " + e.getMessage());
-            ra.addFlashAttribute("tipoMensagem", "error");
-        }
-        return "redirect:/web/administracao/viagem";
-    }
-
     // Ponto de Venda
     @GetMapping("/ponto-de-venda")
     public String pontoVendaForm(Model model) {
@@ -235,13 +199,13 @@ public class AdminController {
 
     @GetMapping("/funcionario")
     public String funcionarioForm(Model model, RedirectAttributes ra) {
-        if (funcionarioSession == null || funcionarioSession.getFuncionario() == null || 
-            funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.GERENTE) {
+        if (funcionarioSession == null || funcionarioSession.getFuncionario() == null ||
+                funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.GERENTE) {
             ra.addFlashAttribute("mensagem", "Só o Gerente pode acessar essa página");
             ra.addFlashAttribute("tipoMensagem", "error");
             return "redirect:/web/administracao";
         }
-        
+
         model.addAttribute("pontosDeVenda", pontoDeVendaService.listarTodos());
         return "admin/cadastroFuncionario-form";
     }

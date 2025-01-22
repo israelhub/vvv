@@ -7,6 +7,7 @@ import group.vvv.models.Passageiro;
 import group.vvv.models.Reserva;
 import group.vvv.models.Reserva.StatusReserva;
 import group.vvv.models.ReservaPassageiro;
+import group.vvv.models.viagem.Conexao;
 import group.vvv.models.viagem.Viagem;
 import group.vvv.services.CartaoService;
 import group.vvv.services.PassageiroService;
@@ -228,8 +229,20 @@ public class ViagemWebController {
         reserva.setData(new Date(System.currentTimeMillis()));
         reserva.setStatus(Reserva.StatusReserva.PENDENTE_PAGAMENTO);
         reserva.setValor(calcularValorTotal(viagem, passageiros));
-        reserva.setOrigem(viagem.getOrigemLocal().getLocal().getDescricaoCompleta());
-        reserva.setDestino(viagem.getDestinoLocal().getLocal().getDescricaoCompleta());
+
+        // Adicionar verificações de null safety
+        Conexao origem = viagem.getOrigemLocal();
+        if (origem == null || origem.getLocal() == null) {
+            throw new RuntimeException("Viagem não possui origem definida");
+        }
+
+        Conexao destino = viagem.getDestinoLocal();
+        if (destino == null || destino.getLocal() == null) {
+            throw new RuntimeException("Viagem não possui destino definido");
+        }
+
+        reserva.setOrigem(origem.getLocal().getDescricaoCompleta());
+        reserva.setDestino(destino.getLocal().getDescricaoCompleta());
         reserva.setCliente(cliente);
         return reserva;
     }

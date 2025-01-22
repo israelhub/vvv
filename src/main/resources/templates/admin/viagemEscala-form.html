@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+    <title>Cadastro de Viagem - Escalas</title>
+</head>
+<div layout:fragment="content">
+    <div class="container mt-5">
+        <h2>Cadastro de Viagem - Etapa 2: Escalas</h2>
+        
+        <div id="escalas-container">
+            <!-- Escalas serão adicionadas aqui dinamicamente -->
+        </div>
+
+        <div class="mb-3">
+            <button type="button" id="addEscala" class="btn btn-secondary">Adicionar Escala</button>
+            <form th:action="@{/web/administracao/viagem/escalas}" method="post" id="escalasForm">
+                <input type="hidden" name="escalasJson" id="escalasJson">
+                <button type="button" class="btn btn-primary" id="prosseguir">Prosseguir</button>
+                <a th:href="@{/web/administracao/viagem/destino}" class="btn btn-link">Pular Escalas</a>
+            </form>
+        </div>
+    </div>
+
+    <template id="escala-template">
+        <div class="escala-item mb-4 border p-3">
+            <h4>Nova Escala</h4>
+            <div class="mb-3">
+                <label class="form-label">Local</label>
+                <select class="form-control escala-local" required>
+                    <option value="">Selecione um local</option>
+                    <option th:each="local : ${locais}"
+                            th:value="${local.id_local}"
+                            th:text="${local.descricaoCompleta}">
+                    </option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Modal</label>
+                <select class="form-control escala-modal" required>
+                    <option value="">Selecione um modal</option>
+                    <option th:each="modal : ${modais}"
+                            th:value="${modal.id_modal}"
+                            th:text="${modal.tipo + ' - ' + modal.modelo}">
+                    </option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Data de Partida</label>
+                <input type="date" class="form-control escala-data" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Horário de Partida</label>
+                <input type="time" class="form-control escala-horario" required>
+            </div>
+            <button type="button" class="btn btn-danger remove-escala">Remover Escala</button>
+        </div>
+    </template>
+
+    <script>
+        document.getElementById('addEscala').addEventListener('click', function() {
+            const template = document.getElementById('escala-template');
+            const container = document.getElementById('escalas-container');
+            const clone = template.content.cloneNode(true);
+            
+            clone.querySelector('.remove-escala').addEventListener('click', function(e) {
+                e.target.closest('.escala-item').remove();
+            });
+            
+            container.appendChild(clone);
+        });
+
+        document.getElementById('prosseguir').addEventListener('click', function() {
+            const escalas = [];
+            document.querySelectorAll('.escala-item').forEach(item => {
+                escalas.push({
+                    localId: item.querySelector('.escala-local').value,
+                    modalId: item.querySelector('.escala-modal').value,
+                    data: item.querySelector('.escala-data').value,
+                    horario: item.querySelector('.escala-horario').value
+                });
+            });
+
+            document.getElementById('escalasJson').value = JSON.stringify(escalas);
+            document.getElementById('escalasForm').submit();
+        });
+    </script>
+</div>
+</html>

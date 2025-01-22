@@ -12,6 +12,8 @@ import group.vvv.models.Passageiro;
 import group.vvv.models.Reserva;
 import group.vvv.models.ReservaPassageiro;
 import group.vvv.models.Ticket;
+import group.vvv.models.viagem.Viagem;
+import group.vvv.models.viagem.Conexao;
 import group.vvv.repositories.TicketRepository;
 
 @Service
@@ -26,20 +28,26 @@ public class TicketService {
         return ticketRepository.findByReservaId(idReserva);
     }
     
-    
     public void gerarTickets(Reserva reserva) {
         List<ReservaPassageiro> passageiros = reservaService.getPassageiros(reserva);
-        
+        Viagem viagem = reserva.getViagem();
+        List<Conexao> locais = viagem.getRoteiros();
+
         for (ReservaPassageiro rp : passageiros) {
-            Ticket ticket = new Ticket();
-            ticket.setTipoPassagem(determinarTipoPassagem(rp.getPassageiro()));
-            ticket.setLocalizador(gerarLocalizador());
-            ticket.setHoraPartida(reserva.getViagem().getHorarioPartida());
-            ticket.setHoraChegada(reserva.getViagem().getHorarioChegada());
-            ticket.setReserva(reserva);
-            ticket.setPassageiro(rp.getPassageiro());
-            
-            ticketRepository.save(ticket);
+            for (int i = 0; i < locais.size() - 1; i++) {
+                Conexao origem = locais.get(i);
+                Conexao destino = locais.get(i + 1);
+
+                Ticket ticket = new Ticket();
+                ticket.setTipoPassagem(determinarTipoPassagem(rp.getPassageiro()));
+                ticket.setLocalizador(gerarLocalizador());
+                ticket.setHoraPartida(origem.getHorarioPartida());
+                ticket.setHoraChegada(destino.getHorarioChegada());
+                ticket.setReserva(reserva);
+                ticket.setPassageiro(rp.getPassageiro());
+
+                ticketRepository.save(ticket);
+            }
         }
     }
     

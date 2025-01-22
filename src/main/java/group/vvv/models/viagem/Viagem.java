@@ -2,10 +2,7 @@ package group.vvv.models.viagem;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.math.BigDecimal;
-import java.sql.Date;
-import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,61 +10,45 @@ import java.util.stream.Collectors;
 @Data
 @Entity
 public class Viagem {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_viagem;
 
-    @Column(nullable = false)
-    private int numReservasAssociadas;
+    @OneToMany(mappedBy = "viagem", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Conexao> roteiros;
 
     @Column(nullable = false)
     private BigDecimal valor;
 
-    @Column(name = "horario_partida", nullable = false)
-    private LocalTime horarioPartida;
+    @Column(nullable = false)
+    private int numReservasAssociadas;
 
-    @Column(name = "horario_chegada", nullable = false)
-    private LocalTime horarioChegada;
-
-    @Column(name = "data_partida", nullable = false)
-    private Date dataPartida;
-
-    @Column(name = "data_chegada", nullable = false)
-    private Date dataChegada;
-
-    @OneToMany(mappedBy = "viagem", cascade = CascadeType.ALL)
-    private List<ViagemLocal> locais;
-
-    @OneToMany(mappedBy = "viagem", cascade = CascadeType.ALL)
-    private List<ViagemModal> modais;
-
-    public List<ViagemLocal> getEscalas() {
-        if (locais != null) {
-            return locais.stream()
-                .filter(vl -> vl.getTipo() == ViagemLocal.Tipo.ESCALA)
-                .collect(Collectors.toList());
+    public Conexao getOrigemLocal() {
+        if (roteiros == null || roteiros.isEmpty()) {
+            return null;
         }
-        return Collections.emptyList();
-    }
-
-    public ViagemLocal getOrigemLocal() {
-        if (locais != null) {
-            return locais.stream()
-                .filter(vl -> vl.getTipo() == ViagemLocal.Tipo.ORIGEM)
+        return roteiros.stream()
+                .filter(r -> r != null && Conexao.Tipo.ORIGEM.equals(r.getTipo()))
                 .findFirst()
                 .orElse(null);
-        }
-        return null;
     }
 
-    public ViagemLocal getDestinoLocal() {
-        if (locais != null) {
-            return locais.stream()
-                .filter(vl -> vl.getTipo() == ViagemLocal.Tipo.DESTINO)
+    public Conexao getDestinoLocal() {
+        if (roteiros == null || roteiros.isEmpty()) {
+            return null;
+        }
+        return roteiros.stream()
+                .filter(r -> r != null && Conexao.Tipo.DESTINO.equals(r.getTipo()))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public List<Conexao> getEscalas() {
+        if (roteiros == null || roteiros.isEmpty()) {
+            return Collections.emptyList();
         }
-        return null;
+        return roteiros.stream()
+                .filter(r -> r != null && Conexao.Tipo.ESCALA.equals(r.getTipo()))
+                .collect(Collectors.toUnmodifiableList());
     }
 }

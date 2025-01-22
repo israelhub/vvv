@@ -89,36 +89,44 @@ body {
     background: var(--card-background);
     border-radius: 12px;
     box-shadow: var(--shadow);
-    overflow: hidden;
-    transition: transform 0.3s;
-    max-width: 100%;
-    min-height: 180px;
+    transition: all 0.3s ease;
 }
 
 .viagem-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
 }
 
 .viagem-header {
     padding: 1rem;
-    background-color: var(--primary-color);
+    background: var(--primary-color);
     color: white;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 12px 12px 0 0;
 }
 
 .viagem-content {
     padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: calc(100% - 60px);
 }
 
 .viagem-rota {
     display: grid;
-    grid-template-columns: 2fr 1fr 2fr;
+    grid-template-columns: 2fr 0.5fr 2fr;
     gap: 1rem;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.origem, .destino {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.modal {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
 }
 
 .icon {
@@ -134,9 +142,17 @@ body {
 }
 
 .viagem-footer {
-    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding-top: 1rem;
     border-top: 1px solid #eee;
+}
+
+.preco {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--primary-color);
 }
 
 .nav-menu {

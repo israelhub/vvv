@@ -1,94 +1,181 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+  <head>
     <title>Detalhes da Viagem</title>
-    <link rel="stylesheet" th:href="@{/styledetalhesviagem.css}">
-</head>
-<body>
-<div class="container mt-5">
-    <h1>Detalhes da Viagem</h1>
-    <div class="viagem-detalhes">
-        <div>
-            <h2>Origem</h2>
-            <p th:text="${viagem.origemLocal?.local?.descricaoCompleta}"></p>
+    <link rel="stylesheet" th:href="@{/styledetalhesviagem.css}" />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1>Detalhes da Viagem</h1>
+
+      <div class="viagem-detalhes">
+        <div class="origem-destino">
+          <!-- Origem -->
+          <div class="origem">
+            <h3>Origem</h3>
+            <p th:text="${viagem?.origemLocal?.local?.descricaoCompleta}">
+              Origem
+            </p>
+            <p th:if="${viagem?.origemLocal != null}">
+              Partida:
+              <span
+                th:if="${viagem.origemLocal.horarioPartida != null}"
+                th:text="${#temporals.format(viagem.origemLocal.horarioPartida, 'HH:mm')}"
+              ></span>
+              <span
+                th:if="${viagem.origemLocal.dataPartida != null}"
+                th:text="${#dates.format(viagem.origemLocal.dataPartida, 'dd/MM/yyyy')}"
+              ></span>
+            </p>
+          </div>
+
+          <!-- Escalas -->
+          <div
+            class="escalas"
+            th:if="${viagem?.escalas != null and not #lists.isEmpty(viagem.escalas)}"
+          >
+            <h3>Escalas</h3>
+            <div th:each="escala : ${viagem.escalas}" class="escala">
+              <p th:text="${escala?.local?.descricaoCompleta}"></p>
+              <p
+                th:if="${escala?.horarioPartida != null || escala?.dataPartida != null}"
+              >
+                Horário:
+                <span
+                  th:if="${escala.horarioPartida != null}"
+                  th:text="${#temporals.format(escala.horarioPartida, 'HH:mm')}"
+                ></span>
+                <span
+                  th:if="${escala.dataPartida != null}"
+                  th:text="${#dates.format(escala.dataPartida, 'dd/MM/yyyy')}"
+                ></span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Destino -->
+          <div class="destino">
+            <h3>Destino</h3>
+            <p th:text="${viagem?.destinoLocal?.local?.descricaoCompleta}">
+              Destino
+            </p>
+            <p th:if="${viagem?.destinoLocal != null}">
+              Chegada:
+              <span
+                th:if="${viagem.destinoLocal.horarioChegada != null}"
+                th:text="${#temporals.format(viagem.destinoLocal.horarioChegada, 'HH:mm')}"
+              ></span>
+              <span
+                th:if="${viagem.destinoLocal.dataChegada != null}"
+                th:text="${#dates.format(viagem.destinoLocal.dataChegada, 'dd/MM/yyyy')}"
+              ></span>
+            </p>
+          </div>
         </div>
-        <div>
-            <h2>Destino</h2>
-            <p th:text="${viagem.destinoLocal?.local?.descricaoCompleta}"></p>
-        </div>
-        <div th:if="${not #lists.isEmpty(viagem.escalas)}">
-            <h2>Pontos de Escala</h2>
-            <ul>
-                <li th:each="escala : ${viagem.escalas}" th:text="${escala.local.descricaoCompleta}"></li>
-            </ul>
-        </div>
-        <div>
-            <h2>Modais Utilizados</h2>
-            <ul>
-                <li th:each="viagemModal : ${viagem.modais}" th:text="${viagemModal.modal.tipo + ' - ' + viagemModal.modal.modelo}"></li>
-            </ul>
-        </div>
-        <div class="simulador-precos">
-            <h2>Simular Preços</h2>
-            <form th:action="@{/web/viagens/detalhes/{id}(id=${viagem.id_viagem})}" method="get" class="form-simulador">
-                <div class="controle-passageiros">
-                    <div class="grupo-passageiros">
-                        <h3>Passageiros Normais (11+ anos)</h3>
-                        <div class="contador-wrapper">
-                            <a th:href="@{/web/viagens/detalhes/{id}(id=${viagem.id_viagem}, 
-                               passageirosNormal=${passageirosNormal - 1 >= 0 ? passageirosNormal - 1 : 0}, 
-                               passageirosCrianca=${passageirosCrianca})}" 
-                               class="btn-contador">-</a>
-                            
-                            <span class="contador-valor" th:text="${passageirosNormal}">0</span>
-                            
-                            <a th:href="@{/web/viagens/detalhes/{id}(id=${viagem.id_viagem}, 
-                               passageirosNormal=${passageirosNormal + 1}, 
-                               passageirosCrianca=${passageirosCrianca})}" 
-                               class="btn-contador">+</a>
-                        </div>
-                    </div>
-                    
-                    <div class="grupo-passageiros">
-                        <h3>Crianças (2-10 anos)</h3>
-                        <div class="contador-wrapper">
-                            <a th:href="@{/web/viagens/detalhes/{id}(id=${viagem.id_viagem}, 
-                               passageirosNormal=${passageirosNormal}, 
-                               passageirosCrianca=${passageirosCrianca - 1 >= 0 ? passageirosCrianca - 1 : 0})}" 
-                               class="btn-contador">-</a>
-                            
-                            <span class="contador-valor" th:text="${passageirosCrianca}">0</span>
-                            
-                            <a th:href="@{/web/viagens/detalhes/{id}(id=${viagem.id_viagem}, 
-                               passageirosNormal=${passageirosNormal}, 
-                               passageirosCrianca=${passageirosCrianca + 1})}" 
-                               class="btn-contador">+</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="resumo-valores">
-                    <h3>Resumo dos Valores</h3>
-                    <p>Valor base por pessoa: 
-                        <span th:text="${'R$ ' + #numbers.formatDecimal(viagem.valor, 1, 'POINT', 2, 'COMMA')}"></span>
-                    </p>
-                    <p>Valor total: 
-                        <span th:text="${'R$ ' + #numbers.formatDecimal(valorTotal, 1, 'POINT', 2, 'COMMA')}"></span>
-                    </p>
-                </div>
-            </form>
+      </div>
+      <!-- Simulador de Preços -->
+      <div class="simulador-precos">
+        <h2>Simular Preços</h2>
+        <form
+          th:action="@{/web/viagens/detalhes/{id}(id=${viagem.id_viagem})}"
+          method="get"
+          class="form-simulador"
+        >
+          <div class="controle-passageiros">
+            <!-- Passageiros Normais -->
+            <div class="grupo-passageiros">
+              <h3>Passageiros Normais (11+ anos)</h3>
+              <div class="contador-wrapper">
+                <a
+                  th:href="@{/web/viagens/detalhes/{id}(
+                            id=${viagem.id_viagem},
+                            passageirosNormal=${passageirosNormal > 0 ? passageirosNormal - 1 : 0},
+                            passageirosCrianca=${passageirosCrianca})}"
+                  class="btn-contador"
+                  >-</a
+                >
+                <span class="contador-valor" th:text="${passageirosNormal}"
+                  >0</span
+                >
+                <a
+                  th:href="@{/web/viagens/detalhes/{id}(
+                            id=${viagem.id_viagem},
+                            passageirosNormal=${passageirosNormal + 1},
+                            passageirosCrianca=${passageirosCrianca})}"
+                  class="btn-contador"
+                  >+</a
+                >
+              </div>
+            </div>
+
+            <!-- Passageiros Crianças -->
+            <div class="grupo-passageiros">
+              <h3>Crianças (2-10 anos)</h3>
+              <div class="contador-wrapper">
+                <a
+                  th:href="@{/web/viagens/detalhes/{id}(
+                            id=${viagem.id_viagem},
+                            passageirosNormal=${passageirosNormal},
+                            passageirosCrianca=${passageirosCrianca > 0 ? passageirosCrianca - 1 : 0})}"
+                  class="btn-contador"
+                  >-</a
+                >
+                <span class="contador-valor" th:text="${passageirosCrianca}"
+                  >0</span
+                >
+                <a
+                  th:href="@{/web/viagens/detalhes/{id}(
+                            id=${viagem.id_viagem},
+                            passageirosNormal=${passageirosNormal},
+                            passageirosCrianca=${passageirosCrianca + 1})}"
+                  class="btn-contador"
+                  >+</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Resumo de Valores -->
+          <div class="resumo-valores">
+            <h3>Resumo dos Valores</h3>
+            <p>
+              Valor base por pessoa:
+              <span
+                th:text="${'R$ ' + #numbers.formatDecimal(viagem.valor, 1, 'POINT', 2, 'COMMA')}"
+                >R$ 0,00</span
+              >
+            </p>
+            <p>
+              Valor total:
+              <span
+                th:text="${'R$ ' + #numbers.formatDecimal(valorTotal, 1, 'POINT', 2, 'COMMA')}"
+                >R$ 0,00</span
+              >
+            </p>
+          </div>
+        </form>
+      </div>
+
+      <!-- Botões de Ação -->
+      <div class="acoes">
+        <div
+          th:if="${not @userSession.authenticated}"
+          class="alert alert-warning"
+        >
+          Você precisa estar logado para fazer uma reserva.
+          <a href="/web/clientes/login" class="btn btn-primary">Fazer Login</a>
         </div>
 
-        <div th:if="${not @userSession.authenticated}" class="alert alert-warning">
-            Você precisa estar logado para fazer uma reserva. 
-            <a href="/web/clientes/login" class="btn btn-primary">Fazer Login</a>
-        </div>
-
-        <a th:if="${@userSession.authenticated}" th:href="@{/web/viagens/reservar/{id}(id=${viagem.id_viagem}, passageirosNormal=${passageirosNormal}, passageirosCrianca=${passageirosCrianca})}" class="btn btn-primary">
-            Reservar
-        </a>
+        <a
+          th:if="${@userSession.authenticated}"
+          th:href="@{/web/viagens/reservar/{id}(
+               id=${viagem.id_viagem},
+               passageirosNormal=${passageirosNormal},
+               passageirosCrianca=${passageirosCrianca})}"
+          class="btn btn-primary"
+          >Reservar</a
+        >
+      </div>
     </div>
-</div>
-
-</body>
+  </body>
 </html>

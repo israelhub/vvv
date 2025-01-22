@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+    <title>Cadastro de Viagem - Destino</title>
+</head>
+<div layout:fragment="content">
+    <div class="container mt-5">
+        <h2>Cadastro de Viagem - Etapa Final: Destino</h2>
+        
+        <form th:action="@{/web/administracao/viagem/destino}" method="post">
+            <div class="mb-3">
+                <label for="destinoLocal" class="form-label">Local de Destino</label>
+                <select id="destinoLocal" name="destinoLocal" class="form-control" required>
+                    <option value="">Selecione um local</option>
+                    <option th:each="local : ${locais}"
+                            th:value="${local.id_local}"
+                            th:text="${local.descricaoCompleta}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="dataChegada" class="form-label">Data de Chegada</label>
+                <input type="date" id="dataChegada" name="dataChegada" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="horarioChegada" class="form-label">Horário de Chegada</label>
+                <input type="time" id="horarioChegada" name="horarioChegada" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="valor" class="form-label">Valor da Viagem</label>
+                <input type="number" id="valor" name="valor" step="0.01" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Finalizar Cadastro</button>
+        </form>
+    </div>
+</div>
+</html>

@@ -1,6 +1,11 @@
 package group.vvv.controllers;
 
+import group.vvv.models.viagem.Viagem;
 import group.vvv.services.ViagemService;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,8 +20,9 @@ public class PaginaInicialWebController {
     private ViagemService viagemService;
 
     @GetMapping("/paginaInicial")
-    public String exibirPaginaInicial(Model model) {
-        model.addAttribute("viagens", viagemService.getViagens());
+    public String paginaInicial(Model model) {
+        List<Viagem> viagens = viagemService.getViagens();
+        model.addAttribute("viagens", viagens);
         return "paginaInicial";
     }
 }
