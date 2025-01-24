@@ -18,6 +18,11 @@ public class ClienteWebController {
     @Autowired
     private UserSession userSession;
 
+    public ClienteWebController(ClienteService clienteService, UserSession userSession) {
+        this.clienteService = clienteService;
+        this.userSession = userSession;
+    }
+
     @GetMapping("/novo")
     public String exibirFormularioCadastro(Model model) {
         model.addAttribute("cliente", new Cliente());

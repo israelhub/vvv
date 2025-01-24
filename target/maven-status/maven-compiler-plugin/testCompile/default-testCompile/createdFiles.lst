@@ -1,1 +1,4 @@
+group\vvv\controllers\ClienteWebControllerTest.class
+group\vvv\services\ClienteServiceTest.class
+group\vvv\models\ClienteTest.class
 group\vvv\VvvApplicationTests.class

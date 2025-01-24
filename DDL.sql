@@ -14,7 +14,7 @@ CREATE TABLE cliente (
         telefone VARCHAR(15) NOT NULL
     );
 
-CREATE TYPE cargo_enum AS ENUM ('PADRAO', 'GERENTE', 'GERENTE, GERENTE_DE_NEGOCIOS_VIRTUAIS');
+CREATE TYPE cargo_enum AS ENUM ('PADRAO', 'GERENTE', 'GERENTE_DE_NEGOCIOS_VIRTUAIS');
 
 -- Tabela Funcionario
 CREATE TABLE funcionario (
