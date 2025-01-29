@@ -39,6 +39,8 @@ public class ClienteServiceTest {
         verify(clienteRepository, times(1)).save(cliente);
     }
 
+    
+
     @Test
     public void testListarTodos() {
         Cliente cliente1 = new Cliente();
@@ -68,7 +70,7 @@ public class ClienteServiceTest {
         doNothing().when(clienteRepository).deleteById(1L);
 
         clienteService.deletar(1L);
-
+        
         verify(clienteRepository, times(1)).deleteById(1L);
     }
 
