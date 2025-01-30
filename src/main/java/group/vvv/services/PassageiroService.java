@@ -25,4 +25,9 @@ public class PassageiroService {
         return passageiroRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Passageiro não encontrado"));
     }
+
+    public Passageiro getPassageiroByCpf(String cpf) {
+        return passageiroRepository.findByCpf(cpf)
+            .orElseThrow(() -> new RuntimeException("Passageiro não encontrado"));
+    }
 }

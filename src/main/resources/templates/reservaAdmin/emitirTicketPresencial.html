@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+    <title>Emitir Tickets</title>
+</head>
+<div layout:fragment="content">
+    <div class="container mt-5">
+        <div class="alert alert-success mb-4">
+            <h2>Reserva Confirmada!</h2>
+            <p>O pagamento foi processado com sucesso.</p>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Detalhes da Reserva #<span th:text="${reserva.id_reserva}"></span></h3>
+            </div>
+            <div class="card-body">
+                <p><strong>Origem:</strong> <span th:text="${reserva.origem}"></span></p>
+                <p><strong>Destino:</strong> <span th:text="${reserva.destino}"></span></p>
+                <p><strong>Data da Reserva:</strong> <span th:text="${#dates.format(reserva.data, 'dd/MM/yyyy')}"></span></p>
+                <p><strong>Valor Total:</strong> <span th:text="${'R$ ' + #numbers.formatDecimal(reserva.valor, 1, 'POINT', 2, 'COMMA')}"></span></p>
+            </div>
+        </div>
+
+        <div class="tickets-container">
+            <h3 class="mb-4">Tickets dos Passageiros</h3>
+            <div class="row">
+                <div th:each="ticket : ${tickets}" class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4>Ticket #<span th:text="${ticket.localizador}"></span></h4>
+                            <p><strong>Passageiro:</strong> <span th:text="${ticket.passageiro.nome}"></span></p>
+                            <p><strong>Tipo:</strong> <span th:text="${ticket.tipoPassagem}"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <a th:href="@{/web/pontos-de-venda/reservas/viagem/{id}/ticket/download(id=${reserva.id_reserva})}" class="btn btn-primary">
+                <i class="fas fa-download"></i> Download Tickets
+            </a>
+            <a href="/web/pontos-de-venda/viagens" class="btn btn-secondary">Voltar para Viagens</a>
+        </div>
+    </div>
+</div>
+</html>

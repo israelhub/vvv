@@ -7,6 +7,7 @@
 <body>
     <div class="container mt-5">
         <h2>Pagamento da Reserva</h2>
+        
         <form th:action="@{/web/viagens/reserva/pagamento}" method="post">
             <input type="hidden" name="reservaId" th:value="${reserva.id_reserva}">
             
@@ -29,7 +30,7 @@
             </div>
             
             <div class="mb-3">
-                <label class="form-label">Validade (MM/YYYY)</label>
+                <label class="form-label">Validade</label>
                 <input type="text" name="validade" class="form-control" required>
             </div>
             

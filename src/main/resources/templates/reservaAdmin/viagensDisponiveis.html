@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+    <title>Viagens Disponíveis</title>
+</head>
+<div layout:fragment="content">
+    <div class="container mt-5">
+        <h2>Viagens Disponíveis</h2>
+
+        <div th:if="${mensagem}" th:class="${'alert alert-' + tipoMensagem}" role="alert">
+            <span th:text="${mensagem}"></span>
+        </div>
+
+        <div class="row">
+            <div th:each="viagem : ${viagens}" class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <span th:text="${viagem.origemLocal?.local?.descricaoCompleta + ' → ' + viagem.destinoLocal?.local?.descricaoCompleta}">
+                            </span>
+                        </h5>
+                        <p class="card-text">
+                            <strong>Data Partida:</strong> 
+                            <span th:text="${#dates.format(viagem.dataPartida, 'dd/MM/yyyy')}"></span>
+                        </p>
+                        <p class="card-text">
+                            <strong>Hora Partida:</strong>
+                            <span th:text="${viagem.horarioPartida}"></span>
+                        </p>
+                        <p class="card-text">
+                            <strong>Valor:</strong>
+                            <span th:text="${'R$ ' + #numbers.formatDecimal(viagem.valor, 1, 'POINT', 2, 'COMMA')}"></span>
+                        </p>
+                        <a th:href="@{/web/pontos-de-venda/reservas/viagem/{id}(id=${viagem.id_viagem})}" 
+                           class="btn btn-primary">Reservar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

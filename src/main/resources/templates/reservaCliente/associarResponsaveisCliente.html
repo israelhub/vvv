@@ -2,18 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Associar Responsáveis</title>
-    <link rel="stylesheet" th:href="@{/styleassociarresponsaveis.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h1>Associar Responsáveis às Crianças</h1>
+    <div class="container mt-5">
+        <h2>Associar Responsáveis aos Passageiros</h2>
         
-        <form th:action="@{/web/viagens/reservar/{id}/responsaveis(id=${viagemId})}" method="post">
-            <!-- Campo oculto para todos os IDs de passageiros -->
+        <form th:action="@{/web/viagens/reservar/{viagemId}/responsaveis(viagemId=${viagemId})}" method="post">
             <input type="hidden" name="passageiroIds" th:value="${#strings.listJoin(passageiros.![id_passageiro], ',')}"/>
-    
-            <div th:each="crianca : ${criancas}" class="form-group">
-                <label th:text="${'Responsável para ' + crianca.nome}"></label>
+            
+            <div th:each="crianca : ${criancas}" class="mb-3">
+                <label th:text="${'Responsável para ' + crianca.nome}" class="form-label"></label>
                 <select th:name="'responsaveis[' + ${crianca.id_passageiro} + ']'" class="form-control" required>
                     <option value="">Selecione um responsável</option>
                     <option th:each="adulto : ${adultos}" 
@@ -22,8 +21,8 @@
                     </option>
                 </select>
             </div>
-        
-            <button type="submit" class="btn btn-primary mt-3">Confirmar Reserva</button>
+            
+            <button type="submit" class="btn btn-primary">Confirmar</button>
         </form>
     </div>
 </body>

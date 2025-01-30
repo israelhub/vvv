@@ -154,9 +154,9 @@ CREATE TABLE reserva (
     valor NUMERIC(10, 2),
     origem VARCHAR(50),
     destino VARCHAR(50),
-    id_cliente BIGINT NOT NULL REFERENCES cliente (id_cliente),
+    id_cliente BIGINT REFERENCES cliente (id_cliente),
     id_funcionario BIGINT REFERENCES funcionario (id_funcionario),
-    id_viagem BIGINT REFERENCES viagem (id_viagem)
+    id_viagem BIGINT NOT NULL REFERENCES viagem (id_viagem)
 );
 
 CREATE TABLE passageiro (
@@ -184,7 +184,7 @@ CREATE TABLE cartao (
         validade VARCHAR(7) NOT NULL,
         nome_titular VARCHAR(60) NOT NULL,
         tipo tipo_cartao_enum NOT NULL,
-        id_cliente BIGINT NOT NULL REFERENCES cliente (id_cliente)
+        id_cliente BIGINT REFERENCES cliente (id_cliente)
     );
 
 -- Tabela Ticket

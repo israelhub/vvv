@@ -27,7 +27,7 @@ public class Cartao {
     private TipoCartao tipo;
 
     @ManyToOne
-    @JoinColumn(name = "id_cliente", nullable = false)
+    @JoinColumn(name = "id_cliente", nullable = true)
     private Cliente cliente;
     
     public enum TipoCartao {

@@ -8,7 +8,8 @@ VALUES
 INSERT INTO funcionario (nome, email, senha, cep, rua, numero_rua, cargo, login_inicial_realizado)
 VALUES 
 ('Carlos Pereira', 'carlos.pereira@example.com', 'senha789', '54321-987', 'Rua C', '789', 'GERENTE', TRUE),
-('Ana Costa', 'ana.costa@example.com', 'senha321', '67890-123', 'Rua D', '101', 'PADRAO', FALSE);
+('Ana Costa', 'ana.costa@example.com', 'senha321', '67890-123', 'Rua D', '101', 'PADRAO', FALSE),
+('Pedro Santos', 'pedro.santos@example.com', 'senha123', '09876-543', 'Rua E', '112', 'GERENTE_DE_NEGOCIOS_VIRTUAIS', TRUE);
 
 -- Inserir dados na tabela ponto_de_venda
 INSERT INTO ponto_de_venda (nome, cnpj, cep, rua, numero_rua, telefone, id_gerente)

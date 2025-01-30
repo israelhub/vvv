@@ -32,7 +32,7 @@ public class Reserva {
     private String destino;
 
     @ManyToOne
-    @JoinColumn(name = "id_cliente", nullable = false)
+    @JoinColumn(name = "id_cliente", nullable = true)
     private Cliente cliente;
 
     @ManyToOne

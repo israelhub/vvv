@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import group.vvv.models.Cartao;
 import group.vvv.models.Cliente;
+import group.vvv.models.Funcionario;
 import group.vvv.models.Cartao.TipoCartao;
 import group.vvv.repositories.CartaoRepository;
 
@@ -30,6 +31,17 @@ public class CartaoService {
         cartao.setNomeTitular(nomeTitular);
         cartao.setTipo(tipo);
         cartao.setCliente(cliente);
+        return cartaoRepository.save(cartao);
+    }
+
+        public Cartao salvarCartaoParaFuncionario(String numero, String cvv, String validade, 
+                                              String nomeTitular, TipoCartao tipo) {
+        Cartao cartao = new Cartao();
+        cartao.setNumeroEncriptado(encriptar(numero));
+        cartao.setCvvEncriptado(encriptar(cvv));
+        cartao.setValidade(validade);
+        cartao.setNomeTitular(nomeTitular);
+        cartao.setTipo(tipo);
         return cartaoRepository.save(cartao);
     }
     

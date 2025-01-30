@@ -89,7 +89,7 @@ public class ViagemWebController {
         model.addAttribute("viagem", viagem);
         model.addAttribute("passageirosNormal", passageirosNormal);
         model.addAttribute("passageirosCrianca", passageirosCrianca);
-        return "viagem/cadastroPassageiros";
+        return "reservaCliente/cadastroPassageiros";
     }
 
     @PostMapping("/reservar/{id}/passageiros")
@@ -101,9 +101,9 @@ public class ViagemWebController {
             @RequestParam("telefone[]") String[] telefones,
             @RequestParam("profissao[]") String[] profissoes,
             Model model) {
-
+    
         List<Passageiro> passageiros = new ArrayList<>();
-
+    
         try {
             for (int i = 0; i < nomes.length; i++) {
                 Passageiro passageiro = new Passageiro();
@@ -112,49 +112,50 @@ public class ViagemWebController {
                 passageiro.setCpf(cpfs[i]);
                 passageiro.setTelefone(telefones[i]);
                 passageiro.setProfissao(profissoes[i]);
-
+    
                 passageiroService.salvarPassageiro(passageiro);
                 passageiros.add(passageiro);
             }
-
+    
             List<Passageiro> criancas = passageiros.stream()
                     .filter(p -> p.getIdade() >= 2 && p.getIdade() <= 10)
                     .collect(Collectors.toList());
-
+    
             List<Passageiro> adultosResponsaveis = passageiros.stream()
                     .filter(p -> p.getIdade() >= 21)
                     .collect(Collectors.toList());
-
+    
             if (!criancas.isEmpty()) {
                 if (adultosResponsaveis.isEmpty()) {
-                    model.addAttribute("erro",
-                            "Para viajar com crianças (2-10 anos) é necessário haver pelo menos um passageiro com 21 anos ou mais como responsável.");
+                    model.addAttribute("erro", 
+                        "Para viajar com crianças (2-10 anos) é necessário haver pelo menos um passageiro com 21 anos ou mais como responsável.");
                     model.addAttribute("viagem", viagemService.getViagemById(id));
-                    return "viagem/cadastroPassageiros";
+                    return "reservaCliente/cadastroPassageiros";
                 }
                 model.addAttribute("criancas", criancas);
                 model.addAttribute("adultos", adultosResponsaveis);
                 model.addAttribute("passageiros", passageiros);
                 model.addAttribute("viagemId", id);
-                return "viagem/associarResponsaveis";
-            } else {
-                Viagem viagem = viagemService.getViagemById(id);
-                viagem.setNumReservasAssociadas(viagem.getNumReservasAssociadas() + 1);
-
-                Reserva reserva = criarReserva(viagem, passageiros, userSession.getCliente());
-                reservaService.salvarReserva(reserva);
-
-                associarPassageirosReserva(reserva, passageiros);
-
-                viagemService.atualizarViagem(viagem);
-
-                return "redirect:/web/viagens/reserva/" + reserva.getId_reserva() + "/pagamento";
+                return "reservaCliente/associarResponsaveisCliente";
             }
-
+    
+            // Se não houver crianças, criar reserva diretamente
+            Viagem viagem = viagemService.getViagemById(id);
+            viagem.setNumReservasAssociadas(viagem.getNumReservasAssociadas() + 1);
+            
+            Reserva reserva = criarReserva(viagem, passageiros, userSession.getCliente());
+            reservaService.salvarReserva(reserva);
+            
+            associarPassageirosReserva(reserva, passageiros);
+            
+            viagemService.atualizarViagem(viagem);
+    
+            return "redirect:/web/viagens/reserva/" + reserva.getId_reserva() + "/pagamento";
+    
         } catch (Exception e) {
             model.addAttribute("erro", "Erro ao processar passageiros: " + e.getMessage());
             model.addAttribute("viagem", viagemService.getViagemById(id));
-            return "viagem/cadastroPassageiros";
+            return "reservaCliente/cadastroPassageiros";
         }
     }
 
@@ -203,7 +204,7 @@ public class ViagemWebController {
 
     @GetMapping("/reserva/sucesso")
     public String mostrarPaginaSucesso() {
-        return "viagem/reservaSucesso";
+        return "reservaCliente/reservaSucesso";
     }
 
     private void processarResponsaveisPassageiros(Map<String, String> responsaveis,
@@ -262,7 +263,7 @@ public class ViagemWebController {
     public String exibirPaginaPagamento(@PathVariable Long id, Model model) {
         Reserva reserva = reservaService.getReservaById(id);
         model.addAttribute("reserva", reserva);
-        return "viagem/pagamento";
+        return "reservaCliente/pagamentoCliente";
     }
 
     @PostMapping("/reserva/pagamento")

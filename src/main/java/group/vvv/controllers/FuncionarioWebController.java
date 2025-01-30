@@ -58,6 +58,6 @@ public class FuncionarioWebController {
     public String atualizarDadosFuncionario(@ModelAttribute Funcionario funcionario, Model model) {
         funcionarioService.atualizarDados(funcionario);
         model.addAttribute("mensagem", "Dados atualizados com sucesso!");
-        return "funcionario/atualizarDadosFuncionario";
+        return "redirect:/web/administracao";
     }
 }

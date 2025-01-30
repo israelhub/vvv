@@ -59,7 +59,6 @@ public class MinhasReservasController {
                 throw new RuntimeException("Reserva não encontrada");
             }
     
-            // Verifica se a reserva pertence ao cliente logado
             if (!reserva.getCliente().getId_cliente().equals(userSession.getCliente().getId_cliente())) {
                 throw new RuntimeException("Acesso não autorizado a esta reserva");
             }
@@ -73,7 +72,6 @@ public class MinhasReservasController {
                 throw new RuntimeException("Não há tickets disponíveis para esta reserva");
             }
     
-            // Gerar PDF
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             Document document = new Document(PageSize.A4, 36, 36, 90, 36);
             PdfWriter.getInstance(document, baos);
@@ -85,10 +83,8 @@ public class MinhasReservasController {
     
             try {
                 for (Ticket ticket : tickets) {
-                    // Adiciona conteúdo do ticket
                     addTicketContent(document, ticket, titleFont, headerFont, normalFont);
                     
-                    // Nova página para próximo ticket
                     if (tickets.indexOf(ticket) < tickets.size() - 1) {
                         document.newPage();
                     }
@@ -97,7 +93,6 @@ public class MinhasReservasController {
                 document.close();
             }
     
-            // Configurar resposta HTTP
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDisposition(
@@ -108,17 +103,14 @@ public class MinhasReservasController {
             return new ResponseEntity<>(baos.toByteArray(), headers, HttpStatus.OK);
     
         } catch (Exception e) {
-            // Log detalhado do erro
             e.printStackTrace();
             throw new RuntimeException("Erro ao gerar tickets: " + e.getMessage());
         }
     }
     
-    // Método auxiliar para adicionar conteúdo do ticket
     private void addTicketContent(Document document, Ticket ticket, 
         Font titleFont, Font headerFont, Font normalFont) throws DocumentException {
         
-        // Cabeçalho
         Paragraph header = new Paragraph();
         header.setAlignment(Element.ALIGN_CENTER);
         header.add(new Chunk("VVV VIAGENS\n", titleFont));
@@ -127,13 +119,11 @@ public class MinhasReservasController {
         header.setSpacingAfter(20);
         document.add(header);
     
-        // Tabela de informações
         PdfPTable table = new PdfPTable(2);
         table.setWidthPercentage(100);
         table.setSpacingBefore(10);
         table.setSpacingAfter(10);
     
-        // Localizador
         PdfPCell localizadorCell = new PdfPCell(
             new Phrase("LOCALIZADOR: " + ticket.getLocalizador(), headerFont));
         localizadorCell.setColspan(2);
@@ -142,13 +132,11 @@ public class MinhasReservasController {
         localizadorCell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(localizadorCell);
     
-        // Dados do ticket
         addTableRow(table, "Passageiro:", ticket.getPassageiro().getNome(), headerFont, normalFont);
         addTableRow(table, "Tipo de Passagem:", ticket.getTipoPassagem(), headerFont, normalFont);
         addTableRow(table, "Origem:", ticket.getReserva().getOrigem(), headerFont, normalFont);
         addTableRow(table, "Destino:", ticket.getReserva().getDestino(), headerFont, normalFont);
         
-        // Formatação de datas
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         
@@ -166,13 +154,11 @@ public class MinhasReservasController {
     
         document.add(table);
     
-        // QR Code
         BarcodeQRCode qrCode = new BarcodeQRCode(ticket.getLocalizador(), 100, 100, null);
         Image qrCodeImage = qrCode.getImage();
         qrCodeImage.setAlignment(Element.ALIGN_CENTER);
         document.add(qrCodeImage);
     
-        // Rodapé
         Paragraph footer = new Paragraph();
         footer.setAlignment(Element.ALIGN_CENTER);
         footer.add(new Chunk("\n\nApresente este ticket na hora do embarque",
