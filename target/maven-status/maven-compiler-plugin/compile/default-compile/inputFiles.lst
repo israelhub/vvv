@@ -15,6 +15,8 @@ C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\Cartao.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\Cliente.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\Funcionario.java
+C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\Pagamento.java
+C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\Parcela.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\Passageiro.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\PontoDeVenda.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\PontoFuncionario.java
@@ -40,6 +42,8 @@ C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\repositories\FuncionarioRepository.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\repositories\LocalRepository.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\repositories\ModalRepository.java
+C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\repositories\PagamentoRepository.java
+C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\repositories\ParcelaRepository.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\repositories\PassageiroRepository.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\repositories\PontoDeVendaRepository.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\repositories\PontoFuncionarioRepository.java
@@ -55,6 +59,8 @@ C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\services\FuncionarioService.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\services\LocalService.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\services\ModalService.java
+C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\services\PagamentoService.java
+C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\services\ParcelaService.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\services\PassageiroService.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\services\PontoDeVendaService.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\services\ReservaService.java

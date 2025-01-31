@@ -42,7 +42,7 @@
                         <span th:text="${reserva?.data != null ? #dates.format(reserva.data, 'dd/MM/yyyy') : 'Data não definida'}"></span>
                         <br>
                         <strong>Valor:</strong>
-                        <span th:text="${reserva?.valor != null ? 'R$ ' + #numbers.formatDecimal(reserva.valor, 1, 'POINT', 2, 'COMMA') : 'Valor não definido'}"></span>
+                        <span th:text="${reserva?.valorTotal != null ? 'R$ ' + #numbers.formatDecimal(reserva.valorTotal, 1, 'POINT', 2, 'COMMA') : 'Valor não definido'}"></span>
                     </p>
                     
                     <div th:if="${reserva?.status?.name() == 'CONFIRMADA'}" class="mt-3">

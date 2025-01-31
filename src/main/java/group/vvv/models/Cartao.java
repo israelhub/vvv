@@ -1,5 +1,7 @@
 package group.vvv.models;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -29,6 +31,9 @@ public class Cartao {
     @ManyToOne
     @JoinColumn(name = "id_cliente", nullable = true)
     private Cliente cliente;
+
+    @OneToMany(mappedBy = "cartao")
+    private List<Pagamento> pagamentos;
     
     public enum TipoCartao {
         CREDITO, DEBITO

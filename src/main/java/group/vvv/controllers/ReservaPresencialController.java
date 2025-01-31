@@ -52,6 +52,9 @@ public class ReservaPresencialController {
     @Autowired
     private CartaoService cartaoService;
 
+    @Autowired
+    private PagamentoService pagamentoService;
+
     @GetMapping("/viagem/{id}")
     public String iniciarReservaPresencial(@PathVariable Long id, Model model, RedirectAttributes ra) {
         if (funcionarioSession.getFuncionario() == null) {
@@ -218,15 +221,25 @@ public class ReservaPresencialController {
             @RequestParam String validade,
             @RequestParam String nomeTitular,
             @RequestParam TipoCartao tipoCartao,
+            @RequestParam(defaultValue = "1") Integer numParcelas,
             RedirectAttributes ra,
             Model model) {
-
+    
         try {
             Reserva reserva = reservaService.getReservaById(id);
-            cartaoService.salvarCartaoParaFuncionario(numero, cvv, validade, nomeTitular, tipoCartao);
+            // Salva o cartão para o funcionário
+            Cartao cartao = cartaoService.salvarCartaoParaFuncionario(numero, cvv, validade, nomeTitular, tipoCartao);
+            
+            // Cria o pagamento e as parcelas
+            pagamentoService.criarPagamento(reserva, cartao, numParcelas);
+            
+            // Atualiza status da reserva
             reserva.setStatus(StatusReserva.CONFIRMADA);
             reservaService.salvarReserva(reserva);
+            
+            // Gera os tickets
             ticketService.gerarTickets(reserva);
+            
             return "redirect:/web/pontos-de-venda/reservas/viagem/" + id + "/tickets";
         } catch (Exception e) {
             ra.addFlashAttribute("mensagem", "Erro ao processar pagamento: " + e.getMessage());
@@ -234,7 +247,6 @@ public class ReservaPresencialController {
             return "redirect:/web/pontos-de-venda/reservas/viagem/" + id + "/pagamento";
         }
     }
-
     @GetMapping("/viagem/{id}/tickets")
     public String exibirTickets(@PathVariable Long id, Model model) {
         Reserva reserva = reservaService.getReservaById(id);
@@ -387,7 +399,7 @@ public class ReservaPresencialController {
         reserva.setViagem(viagem);
         reserva.setData(new Date(System.currentTimeMillis()));
         reserva.setStatus(StatusReserva.PENDENTE_PAGAMENTO);
-        reserva.setValor(calcularValorTotal(viagem, passageiros));
+        reserva.setValorTotal(calcularValorTotal(viagem, passageiros));
         reserva.setOrigem(viagem.getOrigem().getDescricaoCompleta());
         reserva.setDestino(viagem.getDestino().getDescricaoCompleta());
         reserva.setFuncionario(funcionario);

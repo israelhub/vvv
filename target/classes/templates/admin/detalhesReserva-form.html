@@ -17,7 +17,7 @@
                 <p><strong>ID:</strong> <span th:text="${reserva.id_reserva}"></span></p>
                 <p><strong>Status:</strong> <span th:text="${reserva.status}"></span></p>
                 <p><strong>Data:</strong> <span th:text="${#dates.format(reserva.data, 'dd/MM/yyyy')}"></span></p>
-                <p><strong>Valor:</strong> <span th:text="${'R$ ' + #numbers.formatDecimal(reserva.valor, 1, 'POINT', 2, 'COMMA')}"></span></p>
+                <p><strong>Valor:</strong> <span th:text="${'R$ ' + #numbers.formatDecimal(reserva.valorTotal, 1, 'POINT', 2, 'COMMA')}"></span></p>
             </div>
         </div>
 
@@ -38,10 +38,39 @@
                 <h3>Dados da Viagem</h3>
             </div>
             <div class="card-body">
-                <p><strong>Origem:</strong> <span th:text="${reserva.origem}"></span></p>
-                <p><strong>Destino:</strong> <span th:text="${reserva.destino}"></span></p>
-                <p><strong>Data Partida:</strong> <span th:text="${#dates.format(reserva.viagem.dataPartida, 'dd/MM/yyyy')}"></span></p>
-                <p><strong>Hora Partida:</strong> <span th:text="${reserva.viagem.horarioPartida}"></span></p>
+                <p><strong>Origem:</strong> <span th:text="${reserva.viagem.origem.descricaoCompleta}"></span></p>
+                <p><strong>Destino:</strong> <span th:text="${reserva.viagem.destino.descricaoCompleta}"></span></p>
+                <p>
+                    <strong>Horário de Partida:</strong> 
+                    <span th:text="${#temporals.format(reserva.viagem.horarioPartida, 'dd/MM/yyyy HH:mm')}"></span>
+                </p>
+                <p>
+                    <strong>Horário de Chegada:</strong>
+                    <span th:text="${#temporals.format(reserva.viagem.horarioChegada, 'dd/MM/yyyy HH:mm')}"></span>
+                </p>
+            </div>
+        </div>
+
+        <div class="card mb-4" th:if="${not #lists.isEmpty(reserva.viagem.escalas)}">
+            <div class="card-header">
+                <h3>Escalas</h3>
+            </div>
+            <div class="card-body">
+                <div th:each="escala, iterStat : ${reserva.viagem.escalas}" class="mb-3">
+                    <p>
+                        <strong>Local:</strong> 
+                        <span th:text="${escala.origem.descricaoCompleta}"></span>
+                    </p>
+                    <p>
+                        <strong>Partida:</strong>
+                        <span th:text="${#temporals.format(escala.horarioPartida, 'dd/MM/yyyy HH:mm')}"></span>
+                    </p>
+                    <p>
+                        <strong>Chegada:</strong>
+                        <span th:text="${#temporals.format(escala.horarioChegada, 'dd/MM/yyyy HH:mm')}"></span>
+                    </p>
+                    <hr th:if="${!iterStat.last}">
+                </div>
             </div>
         </div>
 

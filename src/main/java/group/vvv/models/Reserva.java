@@ -22,8 +22,8 @@ public class Reserva {
     @Column(nullable = false)
     private StatusReserva status;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal valor;
+    @Column(name = "valor_total", nullable = false, precision = 10, scale = 2)
+    private BigDecimal valorTotal;
 
     @Column(nullable = false, length = 50)
     private String origem;

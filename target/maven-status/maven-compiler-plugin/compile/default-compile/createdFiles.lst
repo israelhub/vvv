@@ -1,4 +1,5 @@
 group\vvv\config\WebConfig.class
+group\vvv\repositories\ParcelaRepository.class
 group\vvv\repositories\EstacaoRepository.class
 group\vvv\controllers\ViagemWebController.class
 group\vvv\repositories\ReservaPassageiroRepository.class
@@ -14,14 +15,17 @@ group\vvv\services\ModalService.class
 group\vvv\services\TicketService.class
 group\vvv\repositories\AeroportoRepository.class
 group\vvv\repositories\ClienteRepository.class
+group\vvv\repositories\PagamentoRepository.class
 group\vvv\repositories\PontoDeVendaRepository.class
 group\vvv\models\Passageiro.class
 group\vvv\models\Reserva$StatusReserva.class
+group\vvv\models\Parcela.class
 group\vvv\models\Funcionario.class
 group\vvv\repositories\ViagemModalRepository.class
 group\vvv\repositories\CartaoRepository.class
 group\vvv\config\FuncionarioSession.class
 group\vvv\models\Cartao$TipoCartao.class
+group\vvv\models\Pagamento$StatusPagamento.class
 group\vvv\repositories\PontoFuncionarioRepository.class
 group\vvv\models\viagem\Estacao.class
 group\vvv\config\AdminAuthInterceptor.class
@@ -40,6 +44,7 @@ group\vvv\config\AuthInterceptor.class
 group\vvv\repositories\ReservaRepository.class
 group\vvv\models\viagem\Escala.class
 group\vvv\services\ClienteService.class
+group\vvv\services\ParcelaService.class
 group\vvv\models\viagem\Viagem.class
 group\vvv\models\viagem\Aeroporto.class
 group\vvv\repositories\EscalaRepository.class
@@ -57,12 +62,14 @@ group\vvv\repositories\FuncionarioRepository.class
 group\vvv\repositories\ViagemRepository.class
 group\vvv\services\LocalService.class
 group\vvv\models\PontoFuncionario.class
+group\vvv\services\PagamentoService.class
 group\vvv\models\ReservaPassageiro.class
 group\vvv\models\viagem\Estado.class
 group\vvv\models\viagem\ViagemModal$Tipo.class
 group\vvv\controllers\ReservaPresencialController.class
 group\vvv\repositories\PassageiroRepository.class
 group\vvv\repositories\TicketRepository.class
+group\vvv\models\Pagamento.class
 group\vvv\controllers\ClienteWebController.class
 group\vvv\services\PassageiroService.class
 group\vvv\controllers\ModificarViagemController.class

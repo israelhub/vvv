@@ -32,7 +32,7 @@
                     <td th:text="${#dates.format(reserva.data, 'dd/MM/yyyy')}"></td>
                     <td th:text="${reserva.origem}"></td>
                     <td th:text="${reserva.destino}"></td>
-                    <td th:text="${'R$ ' + #numbers.formatDecimal(reserva.valor, 1, 'POINT', 2, 'COMMA')}"></td>
+                    <td th:text="${'R$ ' + #numbers.formatDecimal(reserva.valorTotal, 1, 'POINT', 2, 'COMMA')}"></td>
                     <td>
                         <a th:href="@{/web/administracao/reservas/{id}(id=${reserva.id_reserva})}" 
                            class="btn btn-info btn-sm">Ver Detalhes</a>

@@ -147,7 +147,7 @@ CREATE TABLE reserva (
     id_reserva BIGSERIAL PRIMARY KEY,
     data DATE,
     status status_reserva_enum NOT NULL,
-    valor NUMERIC(10, 2),
+    valor_total NUMERIC(10, 2),
     origem VARCHAR(50),
     destino VARCHAR(50),
     id_cliente BIGINT REFERENCES cliente (id_cliente),
@@ -181,6 +181,24 @@ CREATE TABLE cartao (
         nome_titular VARCHAR(60) NOT NULL,
         tipo tipo_cartao_enum NOT NULL,
         id_cliente BIGINT REFERENCES cliente (id_cliente)
+);
+
+CREATE TYPE status_pagamento_enum AS ENUM ('PENDENTE', 'AUTORIZADO', 'NEGADO');
+-- Criar tabela pagamento
+CREATE TABLE pagamento (
+    id BIGSERIAL PRIMARY KEY,
+    id_reserva BIGINT NOT NULL REFERENCES reserva(id_reserva),
+    id_cartao BIGINT NOT NULL REFERENCES cartao(id),
+    num_parcelas INT NOT NULL,
+    status_pagamento status_pagamento_enum NOT NULL
+);
+
+-- Criar tabela parcela
+CREATE TABLE parcela (
+    id BIGSERIAL PRIMARY KEY,
+    id_pagamento BIGINT NOT NULL REFERENCES pagamento(id),
+    numero_parcela INT NOT NULL,
+    valor_parcela NUMERIC(10, 2) NOT NULL
 );
 
 -- Tabela Ticket

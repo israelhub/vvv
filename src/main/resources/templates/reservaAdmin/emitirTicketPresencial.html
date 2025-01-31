@@ -20,7 +20,19 @@
                 <p><strong>Origem:</strong> <span th:text="${reserva.origem}"></span></p>
                 <p><strong>Destino:</strong> <span th:text="${reserva.destino}"></span></p>
                 <p><strong>Data da Reserva:</strong> <span th:text="${#dates.format(reserva.data, 'dd/MM/yyyy')}"></span></p>
-                <p><strong>Valor Total:</strong> <span th:text="${'R$ ' + #numbers.formatDecimal(reserva.valor, 1, 'POINT', 2, 'COMMA')}"></span></p>
+                <p><strong>Valor Total:</strong> <span th:text="${'R$ ' + #numbers.formatDecimal(reserva.valorTotal, 1, 'POINT', 2, 'COMMA')}"></span></p>
+                
+                <!-- Nova seção de Escalas -->
+                <div th:if="${not #lists.isEmpty(reserva.viagem.escalas)}">
+                    <h4 class="mt-3">Escalas:</h4>
+                    <div th:each="escala : ${reserva.viagem.escalas}" class="ms-3 mt-2">
+                        <p>
+                            <strong>Local:</strong> <span th:text="${escala.origem.descricaoCompleta}"></span><br>
+                            <strong>Partida:</strong> <span th:text="${#temporals.format(escala.horarioPartida, 'dd/MM/yyyy HH:mm')}"></span><br>
+                            <strong>Chegada:</strong> <span th:text="${#temporals.format(escala.horarioChegada, 'dd/MM/yyyy HH:mm')}"></span>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
 

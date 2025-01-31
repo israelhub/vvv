@@ -1,6 +1,7 @@
 package group.vvv.controllers;
 
 import group.vvv.config.UserSession;
+import group.vvv.models.Cartao;
 import group.vvv.models.Cartao.TipoCartao;
 import group.vvv.models.Cliente;
 import group.vvv.models.Passageiro;
@@ -8,6 +9,7 @@ import group.vvv.models.Reserva;
 import group.vvv.models.Reserva.StatusReserva;
 import group.vvv.models.ReservaPassageiro;
 import group.vvv.models.viagem.Viagem;
+import group.vvv.services.PagamentoService;
 import group.vvv.services.CartaoService;
 import group.vvv.services.PassageiroService;
 import group.vvv.services.ReservaService;
@@ -50,6 +52,9 @@ public class ViagemWebController {
     @Autowired
     private TicketService ticketService;
 
+    @Autowired
+    private PagamentoService pagamentoService;
+
     @GetMapping("/detalhes/{id}")
     public String mostrarDetalhesViagem(@PathVariable Long id,
             @RequestParam(defaultValue = "0") int passageirosNormal,
@@ -70,7 +75,8 @@ public class ViagemWebController {
         BigDecimal total = BigDecimal.ZERO;
         total = total.add(viagem.getValor().multiply(new BigDecimal(passageirosNormal)));
         total = total
-                .add(viagem.getValor().multiply(new BigDecimal("0.6")).multiply(new BigDecimal(passageirosCrianca)));
+                .add(viagem.getValor().multiply(new BigDecimal("0.6"))
+                        .multiply(new BigDecimal(passageirosCrianca)));
         return total;
     }
 
@@ -101,9 +107,9 @@ public class ViagemWebController {
             @RequestParam("telefone[]") String[] telefones,
             @RequestParam("profissao[]") String[] profissoes,
             Model model) {
-    
+
         List<Passageiro> passageiros = new ArrayList<>();
-    
+
         try {
             for (int i = 0; i < nomes.length; i++) {
                 Passageiro passageiro = new Passageiro();
@@ -112,23 +118,23 @@ public class ViagemWebController {
                 passageiro.setCpf(cpfs[i]);
                 passageiro.setTelefone(telefones[i]);
                 passageiro.setProfissao(profissoes[i]);
-    
+
                 passageiroService.salvarPassageiro(passageiro);
                 passageiros.add(passageiro);
             }
-    
+
             List<Passageiro> criancas = passageiros.stream()
                     .filter(p -> p.getIdade() >= 2 && p.getIdade() <= 10)
                     .collect(Collectors.toList());
-    
+
             List<Passageiro> adultosResponsaveis = passageiros.stream()
                     .filter(p -> p.getIdade() >= 21)
                     .collect(Collectors.toList());
-    
+
             if (!criancas.isEmpty()) {
                 if (adultosResponsaveis.isEmpty()) {
-                    model.addAttribute("erro", 
-                        "Para viajar com crianças (2-10 anos) é necessário haver pelo menos um passageiro com 21 anos ou mais como responsável.");
+                    model.addAttribute("erro",
+                            "Para viajar com crianças (2-10 anos) é necessário haver pelo menos um passageiro com 21 anos ou mais como responsável.");
                     model.addAttribute("viagem", viagemService.getViagemById(id));
                     return "reservaCliente/cadastroPassageiros";
                 }
@@ -138,20 +144,20 @@ public class ViagemWebController {
                 model.addAttribute("viagemId", id);
                 return "reservaCliente/associarResponsaveisCliente";
             }
-    
+
             // Se não houver crianças, criar reserva diretamente
             Viagem viagem = viagemService.getViagemById(id);
             viagem.setNumReservasAssociadas(viagem.getNumReservasAssociadas() + 1);
-            
+
             Reserva reserva = criarReserva(viagem, passageiros, userSession.getCliente());
             reservaService.salvarReserva(reserva);
-            
+
             associarPassageirosReserva(reserva, passageiros);
-            
+
             viagemService.atualizarViagem(viagem);
-    
+
             return "redirect:/web/viagens/reserva/" + reserva.getId_reserva() + "/pagamento";
-    
+
         } catch (Exception e) {
             model.addAttribute("erro", "Erro ao processar passageiros: " + e.getMessage());
             model.addAttribute("viagem", viagemService.getViagemById(id));
@@ -228,7 +234,7 @@ public class ViagemWebController {
         reserva.setViagem(viagem);
         reserva.setData(new Date(System.currentTimeMillis()));
         reserva.setStatus(Reserva.StatusReserva.PENDENTE_PAGAMENTO);
-        reserva.setValor(calcularValorTotal(viagem, passageiros));
+        reserva.setValorTotal(calcularValorTotal(viagem, passageiros));
         reserva.setOrigem(viagem.getOrigem().getDescricaoCompleta());
         reserva.setDestino(viagem.getDestino().getDescricaoCompleta());
         reserva.setCliente(cliente);
@@ -274,17 +280,23 @@ public class ViagemWebController {
             @RequestParam String validade,
             @RequestParam String nomeTitular,
             @RequestParam TipoCartao tipoCartao,
+            @RequestParam(defaultValue = "1") Integer numParcelas,
             RedirectAttributes redirectAttributes) {
 
         try {
-
+            // Salva o cartão
             Cliente cliente = userSession.getCliente();
-            cartaoService.salvarCartao(numero, cvv, validade, nomeTitular, tipoCartao, cliente);
+            Cartao cartao = cartaoService.salvarCartao(numero, cvv, validade, nomeTitular, tipoCartao, cliente);
 
+            // Cria o pagamento e as parcelas
             Reserva reserva = reservaService.getReservaById(reservaId);
+            pagamentoService.criarPagamento(reserva, cartao, numParcelas);
+
+            // Atualiza status da reserva
             reserva.setStatus(StatusReserva.PENDENTE_AO_GERENTE_DE_NEGOCIOS_VIRTUAIS);
             reservaService.salvarReserva(reserva);
 
+            // Gera os tickets
             ticketService.gerarTickets(reserva);
 
             redirectAttributes.addFlashAttribute("mensagemSucesso",
