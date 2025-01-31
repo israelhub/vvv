@@ -23,11 +23,8 @@ public class Modal {
 
     @Column(name = "ano_fabricacao")
     private int ano_fabricacao;
-
-    @Column(name = "nome_empresa", nullable = false, length = 50)
-    private String nome_empresa;
-
-    @Column(name = "esta_em_manuntencao", nullable = false)
-    private boolean esta_em_manuntencao = false;
-
+    
+    @ManyToOne
+    @JoinColumn(name = "id_transportadora", nullable = false)
+    private Transportadora transportadora;
 }

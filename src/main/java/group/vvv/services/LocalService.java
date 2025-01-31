@@ -25,17 +25,31 @@ public class LocalService {
     @Autowired
     private PortoRepository portoRepository;
 
+    public List<Local> getLocais() {
+        return localRepository.findAll();
+    }
+
     public Local getLocalById(Long id) {
         return localRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Local não encontrado"));
     }
 
-    public List<Local> getLocais() {
-        return localRepository.findAll();
+    public void cadastrar(Local local) {
+        cidadeRepository.save(local.getId_cidade());
+
+        if (local.getId_aeroporto() != null) {
+            aeroportoRepository.save(local.getId_aeroporto());
+        } else if (local.getId_estacao() != null) {
+            estacaoRepository.save(local.getId_estacao());
+        } else if (local.getId_porto() != null) {
+            portoRepository.save(local.getId_porto());
+        }
+
+        localRepository.save(local);
     }
 
-    public void cadastrar(Local local) {
-        localRepository.save(local);
+    public void deletar(Long id) {
+        localRepository.deleteById(id);
     }
 
     public void cadastrarCidade(Cidade cidade) {

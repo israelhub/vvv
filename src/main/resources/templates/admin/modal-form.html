@@ -14,6 +14,8 @@
         </div>
 
         <form th:action="@{/web/administracao/modal}" th:object="${modal}" method="post">
+            <input type="hidden" th:field="*{id_modal}" th:if="${modal.id_modal != null}">
+    
             <div class="mb-3">
                 <label for="tipo" class="form-label">Tipo</label>
                 <input type="text" id="tipo" th:field="*{tipo}" class="form-control" required>
@@ -35,11 +37,20 @@
             </div>
 
             <div class="mb-3">
-                <label for="nome_empresa" class="form-label">Nome da Empresa</label>
-                <input type="text" id="nome_empresa" th:field="*{nome_empresa}" class="form-control" required>
+                <label for="transportadora" class="form-label">Transportadora</label>
+                <select class="form-control" name="transportadora" required>
+                    <option value="">Selecione uma transportadora</option>
+                    <option th:each="transp : ${transportadoras}" 
+                            th:value="${transp.idTransportadora}"
+                            th:text="${transp.nome}"
+                            th:selected="${modal.transportadora != null && modal.transportadora.idTransportadora == transp.idTransportadora}">
+                    </option>
+                </select>
             </div>
-
-            <button type="submit" class="btn btn-primary">Cadastrar Modal</button>
+        
+            <button type="submit" class="btn btn-primary" 
+                    th:text="${modal.id_modal != null ? 'Atualizar' : 'Cadastrar'}">
+            </button>
         </form>
     </div>
 </div>

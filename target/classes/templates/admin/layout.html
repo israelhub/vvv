@@ -52,11 +52,11 @@
           
           <li>
             <a th:href="@{/web/administracao/modal}"
-               th:class="${@funcionarioSession.funcionario != null && (@funcionarioSession.funcionario.cargo.name() == 'GERENTE' || @funcionarioSession.funcionario.cargo.name() == 'PADRAO')} ? '' : 'disabled'"
-               th:title="${@funcionarioSession.funcionario != null && !(@funcionarioSession.funcionario.cargo.name() == 'GERENTE' || @funcionarioSession.funcionario.cargo.name() == 'PADRAO')} ? 'Somente Gerentes e Funcionários podem acessar essa função' : ''">
-              <span class="material-icons">directions_bus</span>
-              Cadastrar Modal
-            </a>
+            th:class="${@funcionarioSession.funcionario != null && (@funcionarioSession.funcionario.cargo.name() == 'GERENTE' || @funcionarioSession.funcionario.cargo.name() == 'PADRAO')} ? '' : 'disabled'"
+            th:title="${@funcionarioSession.funcionario != null && !(@funcionarioSession.funcionario.cargo.name() == 'GERENTE' || @funcionarioSession.funcionario.cargo.name() == 'PADRAO')} ? 'Somente Gerentes e Funcionários podem acessar essa função' : ''">
+             <span class="material-icons">directions_bus</span>
+             Gerenciar Modais
+         </a>
           </li>
           
           <li>
@@ -64,7 +64,7 @@
                th:class="${@funcionarioSession.funcionario != null && (@funcionarioSession.funcionario.cargo.name() == 'GERENTE' || @funcionarioSession.funcionario.cargo.name() == 'PADRAO')} ? '' : 'disabled'"
                th:title="${@funcionarioSession.funcionario != null && !(@funcionarioSession.funcionario.cargo.name() == 'GERENTE' || @funcionarioSession.funcionario.cargo.name() == 'PADRAO')} ? 'Somente Gerentes e Funcionários podem acessar essa função' : ''">
               <span class="material-icons">place</span>
-              Cadastrar Local 
+              Gerenciar Locais
             </a>
           </li>
         

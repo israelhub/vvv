@@ -20,10 +20,14 @@ public class ModalService {
 
     public Modal getModalById(Long id) {
         return modalRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Modal não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Modal não encontrado"));
     }
 
     public List<Modal> getModais() {
         return modalRepository.findAll();
+    }
+    
+    public void deletar(Long id) {
+        modalRepository.deleteById(id);
     }
 }

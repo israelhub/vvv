@@ -6,7 +6,9 @@ C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\AdminController.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\ClienteWebController.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\FuncionarioWebController.java
+C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\LocalController.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\MinhasReservasController.java
+C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\ModalController.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\ModificarViagemController.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\PaginaInicialWebController.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\ReservaPresencialController.java
@@ -29,10 +31,11 @@ C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\viagem\Estacao.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\viagem\Estado.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\viagem\Local.java
+C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\viagem\ManutencaoModal.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\viagem\Modal.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\viagem\Porto.java
+C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\viagem\Transportadora.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\viagem\Viagem.java
-C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\viagem\ViagemModal.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\repositories\AeroportoRepository.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\repositories\CartaoRepository.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\repositories\CidadeRepository.java
@@ -51,7 +54,7 @@ C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\repositories\ReservaPassageiroRepository.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\repositories\ReservaRepository.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\repositories\TicketRepository.java
-C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\repositories\ViagemModalRepository.java
+C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\repositories\TransportadoraRepository.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\repositories\ViagemRepository.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\services\ApiService.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\services\CartaoService.java
@@ -65,5 +68,6 @@ C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\services\PontoDeVendaService.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\services\ReservaService.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\services\TicketService.java
+C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\services\TransportadoraService.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\services\ViagemService.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\VvvApplication.java

@@ -7,16 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import group.vvv.config.FuncionarioSession;
 import group.vvv.models.Funcionario;
 import group.vvv.services.FuncionarioService;
-import group.vvv.services.PontoDeVendaService;
-
 @Controller
 @RequestMapping("/web/funcionarios")
 public class FuncionarioWebController {
     @Autowired
     private FuncionarioService funcionarioService;
-
-    @Autowired
-    private PontoDeVendaService pontoDeVendaService;
 
     @Autowired
     private FuncionarioSession funcionarioSession;

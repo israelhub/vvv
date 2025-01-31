@@ -85,13 +85,27 @@ INSERT INTO passageiro (nome, data_nascimento, cpf, telefone, profissao) VALUES
 ('Ana Costa', '1992-06-15', '555.666.777-88', '11955444333', 'Dentista'),
 ('Mariana Lima', '1988-12-25', '999.888.777-66', '11944333222', 'Arquiteta');
 
--- Inserindo Modais
-INSERT INTO modal (tipo, modelo, capacidade, ano_fabricacao, nome_empresa, esta_em_manuntencao) VALUES 
-('AVIAO', 'Boeing 737', 180, 2018, 'LATAM', false),
-('ONIBUS', 'Mercedes Benz O500', 46, 2020, 'Viação União', false),
-('NAVIO', 'Costa Cruzeiros', 2000, 2015, 'Costa', false),
-('TREM', 'Alstom Pendolino', 400, 2019, 'CPTM', false),
-('AVIAO', 'Airbus A320', 150, 2017, 'GOL', false);
+-- Inserindo Transportadoras
+INSERT INTO transportadora (nome, cnpj) VALUES
+('LATAM', '12345678901234'),
+('GOL', '23456789012345'),
+('Viação União', '34567890123456'),
+('CPTM', '45678901234567'),
+('Costa', '56789012345678');
+
+-- Inserir modais
+INSERT INTO modal (tipo, modelo, capacidade, ano_fabricacao, id_transportadora) VALUES 
+('AVIAO', 'Boeing 737', 180, 2018, 1),      -- LATAM
+('ONIBUS', 'Mercedes Benz O500', 46, 2020, 3),  -- Viação União
+('NAVIO', 'Costa Cruzeiros', 2000, 2015, 5),  -- Costa
+('TREM', 'Alstom Pendolino', 400, 2019, 4),    -- CPTM
+('AVIAO', 'Airbus A320', 150, 2017, 2);       -- GOL
+
+-- Inserindo manutenções de modais
+INSERT INTO manuntencao_modal (id_modal, data_inicio, data_fim, descricao) VALUES
+(1, '2024-01-01', '2024-01-05', 'Manutenção preventiva do Boeing 737'),
+(2, '2024-02-01', '2024-02-03', 'Revisão do sistema de freios'),
+(3, '2024-03-01', NULL, 'Manutenção do casco em andamento');
 
 -- Inserindo Viagens
 INSERT INTO viagem (num_reservas_associadas, valor, id_origem, id_destino, id_modal, horario_chegada, horario_partida) VALUES 
@@ -129,12 +143,6 @@ INSERT INTO parcela (id_pagamento, numero_parcela, valor_parcela) VALUES
 INSERT INTO ticket (tipo_passagem, localizador, hora_partida, hora_chegada, id_reserva, id_passageiro) VALUES 
 ('EXECUTIVA', 'ABC123', '2024-03-20 08:00:00', '2024-03-20 10:00:00', 1, 1),
 ('ECONOMICA', 'DEF456', '2024-03-21 10:00:00', '2024-03-21 14:00:00', 2, 2);
-
--- Inserindo Viagem_Modal
-INSERT INTO viagem_modal (id_viagem, id_modal, tipo) VALUES 
-(1, 1, 'ORIGEM'),
-(2, 2, 'DESTINO'),
-(3, 3, 'ESCALA');
 
 -- Inserindo Reserva_Passageiro
 INSERT INTO reserva_passageiro (id_reserva, id_passageiro) VALUES 

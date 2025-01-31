@@ -57,7 +57,7 @@ CREATE TABLE ponto_funcionario (
 CREATE TABLE cidade (
         id_cidade BIGSERIAL PRIMARY KEY,
         nome VARCHAR(50) NOT NULL,
-        codigo CHAR(3) NOT NULL UNIQUE
+        codigo CHAR(3) NOT NULL 
 );
 
 -- Tabela: estado
@@ -97,6 +97,13 @@ CREATE TABLE local (
 
 CREATE TYPE tipo_local_enum AS ENUM ('ORIGEM', 'DESTINO', 'ESCALA');
 
+-- Tabela transportadora
+CREATE TABLE transportadora (
+    id_transportadora BIGSERIAL PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL,
+    cnpj VARCHAR(14) NOT NULL UNIQUE
+);
+
 -- Tabela Modal
 CREATE TABLE modal (
     id_modal BIGSERIAL PRIMARY KEY,
@@ -104,8 +111,16 @@ CREATE TABLE modal (
     modelo VARCHAR(50),
     capacidade INT NOT NULL,
     ano_fabricacao INT,
-    nome_empresa VARCHAR(50) NOT NULL,
-    esta_em_manuntencao BOOLEAN NOT NULL
+    id_transportadora BIGINT REFERENCES transportadora(id_transportadora)
+);
+
+-- Tabela manuntencao_modal 
+CREATE TABLE manuntencao_modal (
+    id_manuntencao BIGSERIAL PRIMARY KEY,
+    id_modal BIGINT REFERENCES modal(id_modal) ON DELETE CASCADE,
+    data_inicio DATE NOT NULL,
+    data_fim DATE,
+    descricao TEXT NOT NULL
 );
 
 -- Tabela: viagem
@@ -113,9 +128,9 @@ CREATE TABLE viagem (
         id_viagem BIGSERIAL PRIMARY KEY,
         num_reservas_associadas INT,
         valor NUMERIC(10, 2) NOT NULL,
-        id_origem BIGINT REFERENCES local (id_local),
-        id_destino BIGINT REFERENCES local(id_local),
-        id_modal BIGINT REFERENCES modal(id_modal),
+        id_origem BIGINT REFERENCES local (id_local) ON DELETE CASCADE,
+        id_destino BIGINT REFERENCES local(id_local) ON DELETE CASCADE,
+        id_modal BIGINT REFERENCES modal(id_modal) ON DELETE CASCADE,
         horario_chegada TIMESTAMP NOT NULL,
         horario_partida TIMESTAMP NOT NULL
 );
@@ -124,20 +139,12 @@ CREATE TABLE viagem (
 CREATE TABLE escala (
         id_escala BIGSERIAL PRIMARY KEY,
         id_viagem BIGINT REFERENCES viagem(id_viagem) ON DELETE CASCADE,
-        id_origem BIGINT REFERENCES local(id_local),
-        id_destino BIGINT REFERENCES local(id_local),
-        id_modal BIGINT REFERENCES modal(id_modal),
+        id_origem BIGINT REFERENCES local(id_local) ON DELETE CASCADE,
+        id_destino BIGINT REFERENCES local(id_local) ON DELETE CASCADE,
+        id_modal BIGINT REFERENCES modal(id_modal) ON DELETE CASCADE,
         horario_partida TIMESTAMP NOT NULL,
         horario_chegada TIMESTAMP NOT NULL,
         ordem INT NOT NULL
-);
-
--- Tabela Viagem_Modal (Relacionamento entre viagem e modal)
-CREATE TABLE viagem_modal (
-    id_viagem BIGINT REFERENCES viagem(id_viagem),
-    id_modal BIGINT REFERENCES modal(id_modal),
-    tipo tipo_local_enum NOT NULL,
-    PRIMARY KEY (id_viagem, id_modal)
 );
 
 CREATE TYPE status_reserva_enum AS ENUM ('PENDENTE_PAGAMENTO', 'CONFIRMADA', 'CANCELADA', 'PENDENTE_AO_GERENTE_DE_NEGOCIOS_VIRTUAIS');
@@ -152,7 +159,7 @@ CREATE TABLE reserva (
     destino VARCHAR(50),
     id_cliente BIGINT REFERENCES cliente (id_cliente),
     id_funcionario BIGINT REFERENCES funcionario (id_funcionario),
-    id_viagem BIGINT NOT NULL REFERENCES viagem (id_viagem)
+    id_viagem BIGINT NOT NULL REFERENCES viagem (id_viagem) ON DELETE CASCADE
 );
 
 CREATE TABLE passageiro (
@@ -166,7 +173,7 @@ CREATE TABLE passageiro (
 );
 
 CREATE TABLE reserva_passageiro (
-    id_reserva BIGINT NOT NULL REFERENCES reserva(id_reserva),
+    id_reserva BIGINT NOT NULL REFERENCES reserva(id_reserva) ON DELETE CASCADE,
     id_passageiro BIGINT NOT NULL REFERENCES passageiro(id_passageiro),
     PRIMARY KEY (id_reserva, id_passageiro)
 );
@@ -187,7 +194,7 @@ CREATE TYPE status_pagamento_enum AS ENUM ('PENDENTE', 'AUTORIZADO', 'NEGADO');
 -- Criar tabela pagamento
 CREATE TABLE pagamento (
     id BIGSERIAL PRIMARY KEY,
-    id_reserva BIGINT NOT NULL REFERENCES reserva(id_reserva),
+    id_reserva BIGINT NOT NULL REFERENCES reserva(id_reserva) ON DELETE CASCADE,
     id_cartao BIGINT NOT NULL REFERENCES cartao(id),
     num_parcelas INT NOT NULL,
     status_pagamento status_pagamento_enum NOT NULL
@@ -196,7 +203,7 @@ CREATE TABLE pagamento (
 -- Criar tabela parcela
 CREATE TABLE parcela (
     id BIGSERIAL PRIMARY KEY,
-    id_pagamento BIGINT NOT NULL REFERENCES pagamento(id),
+    id_pagamento BIGINT NOT NULL REFERENCES pagamento(id) ON DELETE CASCADE,
     numero_parcela INT NOT NULL,
     valor_parcela NUMERIC(10, 2) NOT NULL
 );
@@ -208,6 +215,6 @@ CREATE TABLE ticket (
         localizador VARCHAR(50),
         hora_partida TIMESTAMP NOT NULL,
         hora_chegada TIMESTAMP NOT NULL,
-        id_reserva BIGINT NOT NULL REFERENCES reserva (id_reserva),
+        id_reserva BIGINT NOT NULL REFERENCES reserva (id_reserva) ON DELETE CASCADE,
         id_passageiro BIGINT NOT NULL REFERENCES passageiro (id_passageiro)
 );

@@ -7,28 +7,20 @@ import group.vvv.models.PontoFuncionario;
 import group.vvv.models.Reserva;
 import group.vvv.models.viagem.Aeroporto;
 import group.vvv.models.viagem.Cidade;
-import group.vvv.models.viagem.Escala;
 import group.vvv.models.viagem.Estacao;
 import group.vvv.models.viagem.Local;
 import group.vvv.models.viagem.Modal;
 import group.vvv.models.viagem.Porto;
-import group.vvv.models.viagem.Viagem;
 import group.vvv.services.FuncionarioService;
 import group.vvv.services.LocalService;
 import group.vvv.services.ModalService;
 import group.vvv.services.PontoDeVendaService;
 import group.vvv.services.ReservaService;
-import group.vvv.services.ViagemService;
 
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -59,98 +51,6 @@ public class AdminController {
     @GetMapping
     public String index() {
         return "admin/layout";
-    }
-
-    // Modal
-    @GetMapping("/modal")
-    public String modalForm(Model model, RedirectAttributes ra) {
-        if (funcionarioSession == null || funcionarioSession.getFuncionario() == null ||
-                funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.GERENTE
-                        && funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.PADRAO) {
-            ra.addFlashAttribute("mensagem", "Só o Gerente e o Funcionário pode acessar essa página");
-            ra.addFlashAttribute("tipoMensagem", "error");
-            return "redirect:/web/administracao";
-        }
-        model.addAttribute("modal", new Modal());
-        return "admin/modal-form";
-    }
-
-    @PostMapping("/modal")
-    public String salvarModal(@ModelAttribute Modal modal, RedirectAttributes ra) {
-        try {
-            modalService.cadastrar(modal);
-            ra.addFlashAttribute("mensagem", "Modal cadastrado com sucesso!");
-            ra.addFlashAttribute("tipoMensagem", "success");
-        } catch (Exception e) {
-            ra.addFlashAttribute("mensagem", "Erro ao cadastrar modal: " + e.getMessage());
-            ra.addFlashAttribute("tipoMensagem", "error");
-        }
-        return "redirect:/web/administracao/modal";
-    }
-
-    // Local
-    @GetMapping("/local")
-    public String localForm(Model model, RedirectAttributes ra) {
-        if (funcionarioSession == null || funcionarioSession.getFuncionario() == null ||
-                funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.GERENTE &&
-                        funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.PADRAO) {
-            ra.addFlashAttribute("mensagem", "Só o Gerente e o Funcionário pode acessar essa página");
-            ra.addFlashAttribute("tipoMensagem", "error");
-            return "redirect:/web/administracao";
-        }
-        model.addAttribute("local", new Local());
-        model.addAttribute("cidades", localService.getCidades());
-        return "admin/local-form";
-    }
-
-    @PostMapping("/local")
-    public String cadastrarLocal(@RequestParam String nomeCidade,
-            @RequestParam String codigoCidade,
-            @RequestParam String tipo,
-            @RequestParam String nomeInfraestrutura,
-            @RequestParam(required = false) String codigoAeroporto,
-            RedirectAttributes ra) {
-        try {
-
-            Cidade cidade = new Cidade();
-            cidade.setNome(nomeCidade);
-            cidade.setCodigo(codigoCidade);
-            localService.cadastrarCidade(cidade);
-
-            Local local = new Local();
-            local.setId_cidade(cidade);
-
-            switch (tipo) {
-                case "aeroporto":
-                    Aeroporto aeroporto = new Aeroporto();
-                    aeroporto.setNome(nomeInfraestrutura);
-                    aeroporto.setCodigo(Integer.parseInt(codigoAeroporto));
-                    localService.cadastrarAeroporto(aeroporto);
-                    local.setId_aeroporto(aeroporto);
-                    break;
-                case "estacao":
-                    Estacao estacao = new Estacao();
-                    estacao.setNome(nomeInfraestrutura);
-                    localService.cadastrarEstacao(estacao);
-                    local.setId_estacao(estacao);
-                    break;
-                case "porto":
-                    Porto porto = new Porto();
-                    porto.setNome(nomeInfraestrutura);
-                    localService.cadastrarPorto(porto);
-                    local.setId_porto(porto);
-                    break;
-            }
-
-            localService.cadastrar(local);
-
-            ra.addFlashAttribute("mensagem", "Local cadastrado com sucesso!");
-            ra.addFlashAttribute("tipoMensagem", "success");
-        } catch (Exception e) {
-            ra.addFlashAttribute("mensagem", "Erro ao cadastrar local: " + e.getMessage());
-            ra.addFlashAttribute("tipoMensagem", "error");
-        }
-        return "redirect:/web/administracao/local";
     }
 
     // Ponto de Venda
