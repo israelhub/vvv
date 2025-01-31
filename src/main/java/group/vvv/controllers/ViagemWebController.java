@@ -229,8 +229,8 @@ public class ViagemWebController {
         reserva.setData(new Date(System.currentTimeMillis()));
         reserva.setStatus(Reserva.StatusReserva.PENDENTE_PAGAMENTO);
         reserva.setValor(calcularValorTotal(viagem, passageiros));
-        reserva.setOrigem(viagem.getOrigemLocal().getLocal().getDescricaoCompleta());
-        reserva.setDestino(viagem.getDestinoLocal().getLocal().getDescricaoCompleta());
+        reserva.setOrigem(viagem.getOrigem().getDescricaoCompleta());
+        reserva.setDestino(viagem.getDestino().getDescricaoCompleta());
         reserva.setCliente(cliente);
         return reserva;
     }

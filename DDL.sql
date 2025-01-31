@@ -12,7 +12,7 @@ CREATE TABLE cliente (
         numero_rua VARCHAR(10),
         uf CHAR(2),
         telefone VARCHAR(15) NOT NULL
-    );
+);
 
 CREATE TYPE cargo_enum AS ENUM ('PADRAO', 'GERENTE', 'GERENTE_DE_NEGOCIOS_VIRTUAIS');
 
@@ -27,8 +27,7 @@ CREATE TABLE funcionario (
         numero_rua VARCHAR(10),
         cargo cargo_enum NOT NULL,
         login_inicial_realizado BOOLEAN DEFAULT FALSE
-    );
-
+);
 
 -- Tabela Ponto de Venda
 CREATE TABLE ponto_de_venda (
@@ -40,7 +39,7 @@ CREATE TABLE ponto_de_venda (
         numero_rua VARCHAR(10),
         telefone VARCHAR(15),
         id_gerente BIGINT REFERENCES funcionario (id_funcionario)
-    );
+);
 
 CREATE TYPE dia_semana_enum AS ENUM ('SEGUNDA', 'TERCA', 'QUARTA', 'QUINTA', 'SEXTA', 'SABADO', 'DOMINGO');
 
@@ -54,76 +53,49 @@ CREATE TABLE ponto_funcionario (
     PRIMARY KEY (id_funcionario, id_ponto_de_venda, dia_semana)
 );
 
--- Tabela: viagem
-CREATE TABLE viagem (
-        id_viagem SERIAL PRIMARY KEY,
-        num_reservas_associadas INT,
-        valor NUMERIC(10, 2) NOT NULL,
-        horario_partida TIME NOT NULL,
-        horario_chegada TIME NOT NULL,
-        data_partida DATE NOT NULL,
-        data_chegada DATE NOT NULL
-    );
-
-
 -- Tabela: cidade
 CREATE TABLE cidade (
-        id_cidade SERIAL PRIMARY KEY,
+        id_cidade BIGSERIAL PRIMARY KEY,
         nome VARCHAR(50) NOT NULL,
         codigo CHAR(3) NOT NULL UNIQUE
-    );
+);
 
 -- Tabela: estado
 CREATE TABLE estado (
-        id_estado SERIAL PRIMARY KEY,
+        id_estado BIGSERIAL PRIMARY KEY,
         sigla CHAR(2) NOT NULL UNIQUE,
         nome VARCHAR(50) NOT NULL
-    );
-
-
+);
 
 -- Tabela: aeroporto
 CREATE TABLE aeroporto (
-        id_aeroporto SERIAL PRIMARY KEY,
+        id_aeroporto BIGSERIAL PRIMARY KEY,
         nome VARCHAR(50) NOT NULL,
         codigo INT NOT NULL UNIQUE
-    );
-
+);
 
 -- Tabela: estacao
 CREATE TABLE estacao (
-        id_estacao SERIAL PRIMARY KEY,
+        id_estacao BIGSERIAL PRIMARY KEY,
         nome VARCHAR(60) NOT NULL
-    );
-
+);
 
 -- Tabela: porto
 CREATE TABLE porto (
-        id_porto SERIAL PRIMARY KEY,
+        id_porto BIGSERIAL PRIMARY KEY,
         nome VARCHAR(60) NOT NULL
-    );
-
+);
 
 -- Tabela: local (ligação com cidade e pontos específicos)
 CREATE TABLE local (
-        id_local SERIAL PRIMARY KEY,
-        id_cidade INT NOT NULL REFERENCES cidade (id_cidade),
-        id_aeroporto INT REFERENCES aeroporto (id_aeroporto),
-        id_estacao INT REFERENCES estacao (id_estacao),
-        id_porto INT REFERENCES porto (id_porto)
-    );
-
-
-CREATE TYPE tipo_local_enum AS ENUM ('ORIGEM', 'DESTINO', 'ESCALA');
-
--- Tabela: viagem_local (relação entre viagem e local)
-CREATE TABLE viagem_local (
-    id_viagem INT NOT NULL REFERENCES viagem(id_viagem),
-    id_local INT NOT NULL REFERENCES local(id_local),
-    tipo tipo_local_enum NOT NULL,
-    PRIMARY KEY (id_viagem, id_local)
+        id_local BIGSERIAL PRIMARY KEY,
+        id_cidade BIGINT NOT NULL REFERENCES cidade (id_cidade),
+        id_aeroporto BIGINT REFERENCES aeroporto (id_aeroporto),
+        id_estacao BIGINT REFERENCES estacao (id_estacao),
+        id_porto BIGINT REFERENCES porto (id_porto)
 );
 
+CREATE TYPE tipo_local_enum AS ENUM ('ORIGEM', 'DESTINO', 'ESCALA');
 
 -- Tabela Modal
 CREATE TABLE modal (
@@ -136,16 +108,40 @@ CREATE TABLE modal (
     esta_em_manuntencao BOOLEAN NOT NULL
 );
 
+-- Tabela: viagem
+CREATE TABLE viagem (
+        id_viagem BIGSERIAL PRIMARY KEY,
+        num_reservas_associadas INT,
+        valor NUMERIC(10, 2) NOT NULL,
+        id_origem BIGINT REFERENCES local (id_local),
+        id_destino BIGINT REFERENCES local(id_local),
+        id_modal BIGINT REFERENCES modal(id_modal),
+        horario_chegada TIMESTAMP NOT NULL,
+        horario_partida TIMESTAMP NOT NULL
+);
+
+
+CREATE TABLE escala (
+        id_escala BIGSERIAL PRIMARY KEY,
+        id_viagem BIGINT REFERENCES viagem(id_viagem) ON DELETE CASCADE,
+        id_origem BIGINT REFERENCES local(id_local),
+        id_destino BIGINT REFERENCES local(id_local),
+        id_modal BIGINT REFERENCES modal(id_modal),
+        horario_partida TIMESTAMP NOT NULL,
+        horario_chegada TIMESTAMP NOT NULL,
+        ordem INT NOT NULL
+);
+
 -- Tabela Viagem_Modal (Relacionamento entre viagem e modal)
-CREATE TYPE tipo_enum AS ENUM ('ORIGEM', 'DESTINO', 'ESCALA');
 CREATE TABLE viagem_modal (
     id_viagem BIGINT REFERENCES viagem(id_viagem),
     id_modal BIGINT REFERENCES modal(id_modal),
-    tipo tipo_enum NOT NULL,
+    tipo tipo_local_enum NOT NULL,
     PRIMARY KEY (id_viagem, id_modal)
 );
 
 CREATE TYPE status_reserva_enum AS ENUM ('PENDENTE_PAGAMENTO', 'CONFIRMADA', 'CANCELADA', 'PENDENTE_AO_GERENTE_DE_NEGOCIOS_VIRTUAIS');
+
 -- Tabela Reserva
 CREATE TABLE reserva (
     id_reserva BIGSERIAL PRIMARY KEY,
@@ -185,7 +181,7 @@ CREATE TABLE cartao (
         nome_titular VARCHAR(60) NOT NULL,
         tipo tipo_cartao_enum NOT NULL,
         id_cliente BIGINT REFERENCES cliente (id_cliente)
-    );
+);
 
 -- Tabela Ticket
 CREATE TABLE ticket (
@@ -196,4 +192,4 @@ CREATE TABLE ticket (
         hora_chegada TIMESTAMP NOT NULL,
         id_reserva BIGINT NOT NULL REFERENCES reserva (id_reserva),
         id_passageiro BIGINT NOT NULL REFERENCES passageiro (id_passageiro)
-    );
+);

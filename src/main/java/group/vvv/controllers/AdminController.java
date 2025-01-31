@@ -7,6 +7,7 @@ import group.vvv.models.PontoFuncionario;
 import group.vvv.models.Reserva;
 import group.vvv.models.viagem.Aeroporto;
 import group.vvv.models.viagem.Cidade;
+import group.vvv.models.viagem.Escala;
 import group.vvv.models.viagem.Estacao;
 import group.vvv.models.viagem.Local;
 import group.vvv.models.viagem.Modal;
@@ -21,10 +22,13 @@ import group.vvv.services.ViagemService;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -39,9 +43,6 @@ public class AdminController {
 
     @Autowired
     private LocalService localService;
-
-    @Autowired
-    private ViagemService viagemService;
 
     @Autowired
     private PontoDeVendaService pontoDeVendaService;
@@ -63,12 +64,13 @@ public class AdminController {
     // Modal
     @GetMapping("/modal")
     public String modalForm(Model model, RedirectAttributes ra) {
-        if (funcionarioSession == null || funcionarioSession.getFuncionario() == null || 
-        funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.GERENTE && funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.PADRAO) {
-        ra.addFlashAttribute("mensagem", "Só o Gerente e o Funcionário pode acessar essa página");
-        ra.addFlashAttribute("tipoMensagem", "error");
-        return "redirect:/web/administracao";
-    }
+        if (funcionarioSession == null || funcionarioSession.getFuncionario() == null ||
+                funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.GERENTE
+                        && funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.PADRAO) {
+            ra.addFlashAttribute("mensagem", "Só o Gerente e o Funcionário pode acessar essa página");
+            ra.addFlashAttribute("tipoMensagem", "error");
+            return "redirect:/web/administracao";
+        }
         model.addAttribute("modal", new Modal());
         return "admin/modal-form";
     }
@@ -89,9 +91,9 @@ public class AdminController {
     // Local
     @GetMapping("/local")
     public String localForm(Model model, RedirectAttributes ra) {
-        if (funcionarioSession == null || funcionarioSession.getFuncionario() == null || 
-            funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.GERENTE && 
-            funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.PADRAO) {
+        if (funcionarioSession == null || funcionarioSession.getFuncionario() == null ||
+                funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.GERENTE &&
+                        funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.PADRAO) {
             ra.addFlashAttribute("mensagem", "Só o Gerente e o Funcionário pode acessar essa página");
             ra.addFlashAttribute("tipoMensagem", "error");
             return "redirect:/web/administracao";
@@ -151,57 +153,12 @@ public class AdminController {
         return "redirect:/web/administracao/local";
     }
 
-    // Viagem
-    @GetMapping("/viagem") 
-    public String viagemForm(Model model, RedirectAttributes ra) {
-        if (funcionarioSession == null || funcionarioSession.getFuncionario() == null || 
-            funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.GERENTE && 
-            funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.PADRAO) {
-            ra.addFlashAttribute("mensagem", "Só o Gerente e o Funcionário pode acessar essa página");
-            ra.addFlashAttribute("tipoMensagem", "error");
-            return "redirect:/web/administracao";
-        }
-        model.addAttribute("viagem", new Viagem());
-        model.addAttribute("locais", localService.getLocais());
-        model.addAttribute("modais", modalService.getModais());
-        return "admin/viagem-form";
-    }
-
-    @PostMapping("/viagem")
-    public String cadastrarViagem(@RequestParam Long origemLocal,
-            @RequestParam Long destinoLocal,
-            @RequestParam(required = false) List<Long> escalaLocal,
-            @RequestParam Long modalOrigem,
-            @RequestParam(required = false) List<Long> modalEscala,
-            @RequestParam LocalTime horarioPartida,
-            @RequestParam LocalTime horarioChegada,
-            @RequestParam Date dataPartida,
-            @RequestParam Date dataChegada,
-            @RequestParam BigDecimal valor,
-            RedirectAttributes ra) {
-        try {
-            // Usando o viagemService para criar a viagem
-            Viagem novaViagem = viagemService.criarViagem(origemLocal, destinoLocal, escalaLocal,
-                    modalOrigem, modalEscala,
-                    horarioPartida, horarioChegada,
-                    dataPartida, dataChegada, valor);
-
-            ra.addFlashAttribute("mensagem", "Viagem cadastrada com sucesso! ID: " + novaViagem.getId_viagem());
-            ra.addFlashAttribute("tipoMensagem", "success");
-
-        } catch (Exception e) {
-            ra.addFlashAttribute("mensagem", "Erro ao cadastrar viagem: " + e.getMessage());
-            ra.addFlashAttribute("tipoMensagem", "error");
-        }
-        return "redirect:/web/administracao/viagem";
-    }
-
     // Ponto de Venda
     @GetMapping("/ponto-de-venda")
     public String pontoVendaForm(Model model, RedirectAttributes ra) {
-        if (funcionarioSession == null || funcionarioSession.getFuncionario() == null || 
-            funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.GERENTE && 
-            funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.PADRAO) {
+        if (funcionarioSession == null || funcionarioSession.getFuncionario() == null ||
+                funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.GERENTE &&
+                        funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.PADRAO) {
             ra.addFlashAttribute("mensagem", "Só o Gerente e o Funcionário pode acessar essa página");
             ra.addFlashAttribute("tipoMensagem", "error");
             return "redirect:/web/administracao";
@@ -262,13 +219,13 @@ public class AdminController {
 
     @GetMapping("/funcionario")
     public String funcionarioForm(Model model, RedirectAttributes ra) {
-        if (funcionarioSession == null || funcionarioSession.getFuncionario() == null || 
-            funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.GERENTE) {
+        if (funcionarioSession == null || funcionarioSession.getFuncionario() == null ||
+                funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.GERENTE) {
             ra.addFlashAttribute("mensagem", "Só o Gerente pode acessar essa página");
             ra.addFlashAttribute("tipoMensagem", "error");
             return "redirect:/web/administracao";
         }
-        
+
         model.addAttribute("pontosDeVenda", pontoDeVendaService.listarTodos());
         return "admin/cadastroFuncionario-form";
     }

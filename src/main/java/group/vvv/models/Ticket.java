@@ -1,6 +1,6 @@
 package group.vvv.models;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,10 +18,10 @@ public class Ticket {
     private String localizador;
     
     @Column(nullable = false)
-    private LocalTime horaPartida;
+    private LocalDateTime horaPartida;
     
     @Column(nullable = false)
-    private LocalTime horaChegada;
+    private LocalDateTime horaChegada;
     
     @ManyToOne
     @JoinColumn(name = "id_reserva")
@@ -31,4 +31,3 @@ public class Ticket {
     @JoinColumn(name = "id_passageiro")
     private Passageiro passageiro;
 }
-

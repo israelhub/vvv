@@ -41,23 +41,5 @@ public class ApiService {
         return List.of(restTemplate.getForObject(url, Cidade[].class));
     }
 
-    public List<Aeroporto> getAeroportosPorEstado(String estadoSigla) {
-        String url = "https://sistemas.anac.gov.br/dadosabertos/Aerodromos/Aer%C3%B3dromos%20P%C3%BAblicos/Lista%20de%20aer%C3%B3dromos%20p%C3%BAblicos/AerodromosPublicos.json";
-        Aeroporto[] aeroportos = restTemplate.getForObject(url, Aeroporto[].class);
-        return Arrays.stream(aeroportos)
-                     .filter(aeroporto -> aeroporto.getEstado().equalsIgnoreCase(estadoSigla))
-                     .collect(Collectors.toList());
-    }
-
-    /*
-     * public Porto[] getPortos() {
-     * String url = "URL_DA_API_DE_PORTOS";
-     * return restTemplate.getForObject(url, Porto[].class);
-     * }
-     * 
-     * public Estacao[] getEstacoes() {
-     * String url = "URL_DA_API_DE_ESTACOES";
-     * return restTemplate.getForObject(url, Estacao[].class);
-     * }
-     */
-/* } */
+} 
+*/

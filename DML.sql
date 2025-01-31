@@ -1,82 +1,145 @@
--- Inserir dados na tabela cliente
+-- Inserção de dados básicos
 INSERT INTO cliente (nome, data_nascimento, email, senha, cpf, profissao, cep, rua, numero_rua, uf, telefone)
 VALUES 
-('João Silva', '1980-05-15', 'joao.silva@example.com', 'senha123', '123.456.789-00', 'Engenheiro', '12345-678', 'Rua A', '123', 'SP', '(11) 91234-5678'),
-('Maria Oliveira', '1992-07-22', 'maria.oliveira@example.com', 'senha456', '987.654.321-00', 'Médica', '98765-432', 'Rua B', '456', 'RJ', '(21) 99876-5432');
+('João Silva', '1990-05-15', 'joao@email.com', 'senha123', '123.456.789-00', 'Engenheiro', '12345-678', 'Rua das Flores', '123', 'SP', '(11)99999-9999'),
+('Maria Santos', '1985-08-20', 'maria@email.com', 'senha123', '987.654.321-00', 'Médica', '87654-321', 'Av Principal', '456', 'RJ', '(21)88888-8888');
 
--- Inserir dados na tabela funcionario
 INSERT INTO funcionario (nome, email, senha, cep, rua, numero_rua, cargo, login_inicial_realizado)
 VALUES 
-('Carlos Pereira', 'carlos.pereira@example.com', 'senha789', '54321-987', 'Rua C', '789', 'GERENTE', TRUE),
-('Ana Costa', 'ana.costa@example.com', 'senha321', '67890-123', 'Rua D', '101', 'PADRAO', FALSE),
-('Pedro Santos', 'pedro.santos@example.com', 'senha123', '09876-543', 'Rua E', '112', 'GERENTE_DE_NEGOCIOS_VIRTUAIS', TRUE);
+('Carlos Gerente', 'carlos@empresa.com', 'senha123', '13579-246', 'Rua Comercial', '789', 'GERENTE', TRUE),
+('Ana Vendedora', 'ana@empresa.com', 'senha123', '24680-135', 'Rua do Comércio', '012', 'PADRAO', FALSE),
+('Pedro GNV', 'pedro@empresa.com', 'senha123', '12345-678', 'Rua das Flores', '123', 'GERENTE_DE_NEGOCIOS_VIRTUAIS', TRUE);  
 
--- Inserir dados na tabela ponto_de_venda
-INSERT INTO ponto_de_venda (nome, cnpj, cep, rua, numero_rua, telefone, id_gerente)
-VALUES 
-('Loja 1', '12345678000123', '11223-344', 'Avenida Principal', '50', '(11) 92345-6789', 1),
-('Loja 2', '98765432000198', '22334-455', 'Avenida Secundária', '100', '(21) 93456-7890', 2);
-
--- Inserir dados na tabela ponto_funcionario
-INSERT INTO ponto_funcionario (id_funcionario, id_ponto_de_venda, dia_semana, horario_inicial, horario_final)
-VALUES 
-(1, 1, 'SEGUNDA', '08:00:00', '17:00:00'),
-(2, 2, 'TERCA', '09:00:00', '18:00:00');
-
--- Inserir dados na tabela viagem
-INSERT INTO viagem (num_reservas_associadas, valor, horario_partida, horario_chegada, data_partida, data_chegada)
-VALUES 
-(0, 1, '08:00:00', '12:00:00', '2025-02-01', '2025-02-01');
-
--- Inserir dados na tabela cidade
 INSERT INTO cidade (nome, codigo)
 VALUES 
-('São Paulo', 'SP1'),
-('Rio de Janeiro', 'RJ2');
+('São Paulo', 'SPO'),
+('Rio de Janeiro', 'RIO'),
+('Salvador', 'SAL'),
+('Recife', 'REC'),
+('Manaus', 'MAO'),
+('Brasília', 'BSB'),
+('Porto Alegre', 'POA'),
+('Curitiba', 'CWB'),
+('Fortaleza', 'FOR'),
+('Belo Horizonte', 'BHZ');
 
--- Inserir dados na tabela estado
-INSERT INTO estado (nome, sigla)
+INSERT INTO estado (sigla, nome)
 VALUES 
-('São Paulo', 'SP'),
-('Rio de Janeiro', 'RJ');
+('SP', 'São Paulo'),
+('RJ', 'Rio de Janeiro'),
+('BA', 'Bahia'),
+('PE', 'Pernambuco'),
+('AM', 'Amazonas'),
+('DF', 'Distrito Federal'),
+('RS', 'Rio Grande do Sul'),
+('PR', 'Paraná'),
+('CE', 'Ceará'),
+('MG', 'Minas Gerais');
 
--- Inserir dados na tabela aeroporto
 INSERT INTO aeroporto (nome, codigo)
 VALUES 
 ('Aeroporto de Guarulhos', 1001),
-('Aeroporto Santos Dumont', 2002);
+('Aeroporto Santos Dumont', 1002),
+('Aeroporto Internacional de Salvador', 1003),
+('Aeroporto Internacional do Recife', 1004),
+('Aeroporto Internacional de Manaus', 1005),
+('Aeroporto Internacional de Brasília', 1006),
+('Aeroporto Internacional de Porto Alegre', 1007),
+('Aeroporto Internacional de Curitiba', 1008),
+('Aeroporto Internacional de Fortaleza', 1009),
+('Aeroporto Internacional de Confins', 1010);
 
--- Inserir dados na tabela estacao
 INSERT INTO estacao (nome)
 VALUES 
 ('Estação Central'),
-('Estação Rodoviária');
+('Terminal Rodoviário'),
+('Terminal Rodoviário de Salvador'),
+('Terminal Integrado de Recife'),
+('Terminal Central de Manaus'),
+('Rodoviária de Brasília'),
+('Estação Rodoviária de Porto Alegre'),
+('Terminal Rodoviário de Curitiba'),
+('Terminal Rodoviário de Fortaleza'),
+('Terminal Rodoviário de Belo Horizonte');
 
--- Inserir dados na tabela porto
 INSERT INTO porto (nome)
 VALUES 
 ('Porto de Santos'),
-('Porto do Rio');
+('Porto do Rio'),
+('Porto de Salvador'),
+('Porto do Recife'),
+('Porto de Manaus'),
+('Porto de Porto Alegre'),
+('Porto de Paranaguá'),
+('Porto do Mucuripe'),
+('Terminal Portuário de Tubarão');
 
--- Inserir dados na tabela local
-INSERT INTO local (id_cidade, id_aeroporto)
+-- Inserção em tabelas com dependências
+INSERT INTO ponto_de_venda (nome, cnpj, cep, rua, numero_rua, telefone, id_gerente)
+VALUES 
+('Loja Centro', '12345678901234', '11111-111', 'Rua Central', '100', '(11)1111-1111', 1),
+('Loja Shopping', '56789012345678', '22222-222', 'Av Shopping', '200', '(11)2222-2222', 1);
+
+INSERT INTO local (id_cidade, id_aeroporto, id_estacao, id_porto)
+VALUES 
+(1, 1, 1, 1),
+(2, 2, 2, 2),
+(3, 3, 3, 3),  -- Salvador
+(4, 4, 4, 4),  -- Recife
+(5, 5, 5, 5),  -- Manaus
+(6, 6, 6, null),  -- Brasília
+(7, 7, 7, 6),  -- Porto Alegre
+(8, 8, 8, 7),  -- Curitiba
+(9, 9, 9, 8),  -- Fortaleza
+(10, 10, 10, 9);  -- Belo Horizonte
+
+INSERT INTO modal (tipo, modelo, capacidade, ano_fabricacao, nome_empresa, esta_em_manuntencao)
+VALUES 
+('AVIAO', 'Boeing 737', 180, 2015, 'LATAM', FALSE),
+('ONIBUS', 'Mercedes Benz', 45, 2018, 'Viação União', FALSE);
+
+INSERT INTO viagem (num_reservas_associadas, valor, id_origem, id_destino, id_modal, horario_chegada, horario_partida)
+VALUES 
+(0, 500.00, 1, 2, 1, '2024-03-20 14:00:00', '2024-03-20 12:00:00'),
+(0, 300.00, 2, 1, 1, '2024-03-21 16:00:00', '2024-03-21 14:00:00');
+
+-- Inserção em tabelas associativas
+INSERT INTO ponto_funcionario (id_funcionario, id_ponto_de_venda, dia_semana, horario_inicial, horario_final)
+VALUES 
+(2, 1, 'SEGUNDA', '08:00:00', '17:00:00'),
+(2, 1, 'TERCA', '08:00:00', '17:00:00');
+
+INSERT INTO viagem_modal (id_viagem, id_modal, tipo)
+VALUES 
+(1, 1, 'ORIGEM'),
+(2, 2, 'ORIGEM');
+
+INSERT INTO passageiro (nome, data_nascimento, cpf, telefone, profissao)
+VALUES 
+('Pedro Viajante', '1995-03-10', '111.222.333-44', '(11)77777-7777', 'Advogado'),
+('Julia Turista', '1992-07-15', '444.555.666-77', '(21)66666-6666', 'Professora');
+
+INSERT INTO reserva (data, status, valor, origem, destino, id_cliente, id_funcionario, id_viagem)
+VALUES 
+('2024-03-19', 'CONFIRMADA', 500.00, 'São Paulo', 'Rio de Janeiro', 1, 2, 1),
+('2024-03-20', 'PENDENTE_PAGAMENTO', 300.00, 'Rio de Janeiro', 'São Paulo', 2, 2, 2);
+
+INSERT INTO reserva_passageiro (id_reserva, id_passageiro)
 VALUES 
 (1, 1),
 (2, 2);
 
--- Inserir dados na tabela viagem_local
-INSERT INTO viagem_local (id_viagem, id_local, tipo)
+INSERT INTO cartao (numero_encriptado, cvv_encriptado, validade, nome_titular, tipo, id_cliente)
 VALUES 
-(1, 1, 'ORIGEM'),
-(1, 2, 'DESTINO');
+('encrypted_123', 'encrypted_456', '12/2025', 'JOAO SILVA', 'CREDITO', 1),
+('encrypted_789', 'encrypted_012', '06/2026', 'MARIA SANTOS', 'DEBITO', 2);
 
--- Inserir dados na tabela modal
-INSERT INTO modal (tipo, modelo, capacidade, ano_fabricacao, nome_empresa, esta_em_manuntencao)
+INSERT INTO ticket (tipo_passagem, localizador, hora_partida, hora_chegada, id_reserva, id_passageiro)
 VALUES 
-('Ônibus', 'Volvo X', 50, 2019, 'Viações Unidas', FALSE),
-('Avião', 'Boeing 737', 180, 2020, 'Companhia Aérea', TRUE);
+('EXECUTIVA', 'ABC123', '2024-03-20 12:00:00', '2024-03-20 14:00:00', 1, 1),
+('ECONOMICA', 'DEF456', '2024-03-21 14:00:00', '2024-03-21 16:00:00', 2, 2);
 
--- Inserir dados na tabela viagem_modal
-INSERT INTO viagem_modal (id_viagem, id_modal, tipo)
+INSERT INTO escala (id_viagem, id_origem, id_destino, id_modal, horario_partida, horario_chegada, ordem)
 VALUES 
-(1, 1, 'ORIGEM');
+(1, 1, 2, 1, '2024-03-20 12:00:00', '2024-03-20 14:00:00', 1),
+(2, 2, 1, 2, '2024-03-21 14:00:00', '2024-03-21 16:00:00', 1);

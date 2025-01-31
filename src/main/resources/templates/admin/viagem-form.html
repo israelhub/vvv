@@ -1,6 +1,5 @@
-
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/layout}">
 <head>
@@ -8,117 +7,171 @@
 </head>
 <div layout:fragment="content">
     <div class="container mt-5">
-        <h2>Cadastro de Viagem</h2>
-
-        <div th:if="${mensagem}" th:class="${'alert alert-' + tipoMensagem}" role="alert">
+        <div th:if="${mensagem}" th:class="${'alert alert-' + (tipoMensagem == 'error' ? 'danger' : 'success')}" role="alert">
             <span th:text="${mensagem}"></span>
         </div>
 
-        <form th:action="@{/web/administracao/viagem}" th:object="${viagem}" method="post">
-            <!-- Origem/Destino -->
-            <div class="mb-3">
-                <label for="origemLocal" class="form-label">Local de Origem</label>
-                <select id="origemLocal" name="origemLocal" class="form-control" required>
-                    <option value="">Selecione um local</option>
-                    <option th:each="local : ${locais}" 
-                            th:value="${local.id_local}" 
-                            th:text="${local.descricaoCompleta}">
-                    </option>
-                </select>
-            </div>
+        <h2 class="mb-4">Cadastrar Nova Viagem</h2>
 
-            <div class="mb-3">
-                <label for="destinoLocal" class="form-label">Local de Destino</label>
-                <select id="destinoLocal" name="destinoLocal" class="form-control" required>
-                    <option value="">Selecione um local</option>
-                    <option th:each="local : ${locais}"
-                            th:value="${local.id_local}"
-                            th:text="${local.descricaoCompleta}">
-                    </option>
-                </select>
-            </div>
-
-            <!-- Modal -->
-            <div class="mb-3">
-                <label for="modalOrigem" class="form-label">Modal de Origem</label>
-                <select id="modalOrigem" name="modalOrigem" class="form-control" required>
-                    <option value="">Selecione um modal</option>
-                    <option th:each="modal : ${modais}"
-                            th:value="${modal.id_modal}"
-                            th:text="${modal.tipo + ' - ' + modal.modelo}">
-                    </option>
-                </select>
-            </div>
-
-            <!-- Escalas (usando lista no controller) -->
-            <div th:each="escala,stat : ${escalas}" class="mb-3">
-                <h4>Escala [[${stat.index + 1}]]</h4>
-                
-                <div class="mb-3">
-                    <label th:for="${'escalaLocal' + stat.index}" class="form-label">Local</label>
-                    <select th:id="${'escalaLocal' + stat.index}" 
-                            th:name="escalaLocal"
-                            class="form-control">
-                        <option value="">Selecione um local</option>
-                        <option th:each="local : ${locais}"
-                                th:value="${local.id_local}"
-                                th:text="${local.descricaoCompleta}">
-                        </option>
-                    </select>
+        <form th:action="@{/web/administracao/viagem}" method="post" class="needs-validation" novalidate>
+            <!-- Trecho Principal -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Trecho Principal</h4>
                 </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Origem</label>
+                            <select name="origemId" class="form-select" required>
+                                <option value="">Selecione a origem</option>
+                                <option th:each="local : ${locais}"
+                                        th:value="${local.id_local}"
+                                        th:text="${local.descricaoCompleta}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Destino</label>
+                            <select name="destinoId" class="form-select" required>
+                                <option value="">Selecione o destino</option>
+                                <option th:each="local : ${locais}"
+                                        th:value="${local.id_local}"
+                                        th:text="${local.descricaoCompleta}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
 
-                <div class="mb-3">
-                    <label th:for="${'modalEscala' + stat.index}" class="form-label">Modal</label>
-                    <select th:id="${'modalEscala' + stat.index}"
-                            th:name="modalEscala"
-                            class="form-control">
-                        <option value="">Selecione um modal</option>
-                        <option th:each="modal : ${modais}"
-                                th:value="${modal.id_modal}"
-                                th:text="${modal.tipo + ' - ' + modal.modelo}">
-                        </option>
-                    </select>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Modal</label>
+                            <select name="modalId" class="form-select" required>
+                                <option value="">Selecione o modal</option>
+                                <option th:each="modal : ${modais}"
+                                        th:value="${modal.id_modal}"
+                                        th:text="${modal.tipo + ' - ' + modal.modelo}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Horário Partida</label>
+                            <input type="datetime-local" name="horarioPartida" class="form-control" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Horário Chegada</label>
+                            <input type="datetime-local" name="horarioChegada" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Valor</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                <input type="number" name="valor" class="form-control" step="0.01" required>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="mb-3">
-                <a th:href="@{/web/administracao/viagem/addEscala}" 
-                   class="btn btn-secondary">Adicionar Escala</a>
-            </div>
+            <!-- Escalas -->
+            <div id="escalasContainer"></div>
+            
+            <button type="button" id="addEscala" class="btn btn-secondary mb-3">Adicionar Escala</button>
 
-            <!-- Horários e Datas -->
-            <div class="mb-3">
-                <label for="horarioPartida" class="form-label">Horário de Partida</label>
-                <input type="time" id="horarioPartida" name="horarioPartida" 
-                       class="form-control" required>
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">Cadastrar Viagem</button>
+                <a href="/web/administracao" class="btn btn-secondary">Voltar</a>
             </div>
-
-            <div class="mb-3">
-                <label for="horarioChegada" class="form-label">Horário de Chegada</label>
-                <input type="time" id="horarioChegada" name="horarioChegada"
-                       class="form-control" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="dataPartida" class="form-label">Data de Partida</label>
-                <input type="date" id="dataPartida" name="dataPartida"
-                       class="form-control" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="dataChegada" class="form-label">Data de Chegada</label>
-                <input type="date" id="dataChegada" name="dataChegada"
-                       class="form-control" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="valor" class="form-label">Valor</label>
-                <input type="number" id="valor" name="valor"
-                       class="form-control" step="0.01" min="0" required>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Cadastrar Viagem</button>
         </form>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const escalasContainer = document.getElementById('escalasContainer');
+            const addEscalaButton = document.getElementById('addEscala');
+            let escalaCount = 0;
+
+            addEscalaButton.addEventListener('click', function() {
+                escalaCount++;
+                const escalaHtml = `
+                    <div class="card mb-4 escala-form">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h4>Escala ${escalaCount}</h4>
+                            <button type="button" class="btn-close remove-escala" aria-label="Close"></button>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Origem</label>
+                                    <select name="escalaOrigem" class="form-select" required>
+                                        <option value="">Selecione a origem</option>
+                                        ${Array.from(document.querySelector('select[name="origemId"]').options)
+                                            .map(opt => `<option value="${opt.value}">${opt.text}</option>`)
+                                            .join('')}
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Destino</label>
+                                    <select name="escalaDestino" class="form-select" required>
+                                        <option value="">Selecione o destino</option>
+                                        ${Array.from(document.querySelector('select[name="destinoId"]').options)
+                                            .map(opt => `<option value="${opt.value}">${opt.text}</option>`)
+                                            .join('')}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Modal</label>
+                                    <select name="escalaModal" class="form-select" required>
+                                        <option value="">Selecione o modal</option>
+                                        ${Array.from(document.querySelector('select[name="modalId"]').options)
+                                            .map(opt => `<option value="${opt.value}">${opt.text}</option>`)
+                                            .join('')}
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Horário Partida</label>
+                                    <input type="datetime-local" name="escalaHorarioPartida" class="form-control" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Horário Chegada</label>
+                                    <input type="datetime-local" name="escalaHorarioChegada" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                const escalaElement = document.createElement('div');
+                escalaElement.innerHTML = escalaHtml;
+                escalasContainer.appendChild(escalaElement);
+
+                escalaElement.querySelector('.remove-escala').addEventListener('click', function() {
+                    escalasContainer.removeChild(escalaElement);
+                    atualizarNumeracaoEscalas();
+                });
+            });
+
+            function atualizarNumeracaoEscalas() {
+                document.querySelectorAll('.escala-form h4').forEach((header, index) => {
+                    header.textContent = `Escala ${index + 1}`;
+                });
+            }
+
+            // Form validation
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            });
+        });
+    </script>
 </div>
 </html>

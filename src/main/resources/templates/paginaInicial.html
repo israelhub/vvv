@@ -1,3 +1,4 @@
+icial.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -69,12 +70,12 @@
                             <div class="viagem-rota">
                                 <div class="origem">
                                     <span class="label">Origem</span>
-                                    <strong th:text="${viagem.origemLocal?.local?.descricaoCompleta}"></strong>
+                                    <strong th:text="${viagem.origem.descricaoCompleta}"></strong>
                                 </div>
                                 <div class="icon">→</div>
                                 <div class="destino">
                                     <span class="label">Destino</span>
-                                    <strong th:text="${viagem.destinoLocal?.local?.descricaoCompleta}"></strong>
+                                    <strong th:text="${viagem.destino.descricaoCompleta}"></strong>
                                 </div>
                             </div>
                             <div class="viagem-footer">

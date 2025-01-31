@@ -25,6 +25,11 @@ public class LocalService {
     @Autowired
     private PortoRepository portoRepository;
 
+    public Local getLocalById(Long id) {
+        return localRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Local não encontrado"));
+    }
+
     public List<Local> getLocais() {
         return localRepository.findAll();
     }

@@ -18,6 +18,11 @@ public class ModalService {
         modalRepository.save(modal);
     }
 
+    public Modal getModalById(Long id) {
+        return modalRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Modal não encontrado"));
+    }
+
     public List<Modal> getModais() {
         return modalRepository.findAll();
     }

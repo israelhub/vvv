@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import group.vvv.models.Cartao;
 import group.vvv.models.Cliente;
-import group.vvv.models.Funcionario;
 import group.vvv.models.Cartao.TipoCartao;
 import group.vvv.repositories.CartaoRepository;
 

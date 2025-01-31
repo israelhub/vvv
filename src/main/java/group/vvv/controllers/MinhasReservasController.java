@@ -109,7 +109,7 @@ public class MinhasReservasController {
     }
     
     private void addTicketContent(Document document, Ticket ticket, 
-        Font titleFont, Font headerFont, Font normalFont) throws DocumentException {
+    Font titleFont, Font headerFont, Font normalFont) throws DocumentException {
         
         Paragraph header = new Paragraph();
         header.setAlignment(Element.ALIGN_CENTER);
@@ -141,8 +141,7 @@ public class MinhasReservasController {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         
         addTableRow(table, "Data Partida:", 
-            ticket.getReserva().getViagem().getDataPartida().toLocalDate().format(dateFormatter),
-            headerFont, normalFont);
+        ticket.getHoraPartida().format(dateFormatter), headerFont, normalFont);
             
         addTableRow(table, "Horário Partida:",
             ticket.getHoraPartida().format(timeFormatter),

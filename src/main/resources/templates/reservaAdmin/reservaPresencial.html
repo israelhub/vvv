@@ -14,11 +14,23 @@
                 <h3>Detalhes da Viagem</h3>
             </div>
             <div class="card-body">
-                <p><strong>Origem:</strong> <span th:text="${viagem.origemLocal?.local?.descricaoCompleta}"></span></p>
-                <p><strong>Destino:</strong> <span th:text="${viagem.destinoLocal?.local?.descricaoCompleta}"></span></p>
-                <p><strong>Data Partida:</strong> <span th:text="${#dates.format(viagem.dataPartida, 'dd/MM/yyyy')}"></span></p>
-                <p><strong>Hora Partida:</strong> <span th:text="${viagem.horarioPartida}"></span></p>
+                <p><strong>Origem:</strong> <span th:text="${viagem.origem.descricaoCompleta}"></span></p>
+                <p><strong>Destino:</strong> <span th:text="${viagem.destino.descricaoCompleta}"></span></p>
+                <p><strong>Data e Hora Partida:</strong> <span th:text="${#temporals.format(viagem.horarioPartida, 'dd/MM/yyyy HH:mm')}"></span></p>
+                <p><strong>Data e Hora Chegada:</strong> <span th:text="${#temporals.format(viagem.horarioChegada, 'dd/MM/yyyy HH:mm')}"></span></p>
                 <p><strong>Valor:</strong> <span th:text="${'R$ ' + #numbers.formatDecimal(viagem.valor, 1, 'POINT', 2, 'COMMA')}"></span></p>
+                
+                <!-- Seção de Escalas -->
+                <div th:if="${not #lists.isEmpty(viagem.escalas)}">
+                    <h4 class="mt-3">Escalas:</h4>
+                    <div th:each="escala : ${viagem.escalas}" class="ms-3 mt-2">
+                        <p>
+                            <strong>Local:</strong> <span th:text="${escala.origem.descricaoCompleta}"></span><br>
+                            <strong>Partida:</strong> <span th:text="${#temporals.format(escala.horarioPartida, 'dd/MM/yyyy HH:mm')}"></span><br>
+                            <strong>Chegada:</strong> <span th:text="${#temporals.format(escala.horarioChegada, 'dd/MM/yyyy HH:mm')}"></span>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
 

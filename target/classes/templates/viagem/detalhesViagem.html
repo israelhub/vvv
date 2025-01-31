@@ -10,24 +10,40 @@
     <div class="viagem-detalhes">
         <div>
             <h2>Origem</h2>
-            <p th:text="${viagem.origemLocal?.local?.descricaoCompleta}"></p>
+            <p th:text="${viagem.origem.descricaoCompleta}"></p>
+            <p>
+                <strong>Horário de Partida:</strong>
+                <span th:text="${#temporals.format(viagem.horarioPartida, 'dd/MM/yyyy HH:mm')}"></span>
+            </p>
         </div>
+        
         <div>
             <h2>Destino</h2>
-            <p th:text="${viagem.destinoLocal?.local?.descricaoCompleta}"></p>
+            <p th:text="${viagem.destino.descricaoCompleta}"></p>
+            <p>
+                <strong>Horário de Chegada:</strong>
+                <span th:text="${#temporals.format(viagem.horarioChegada, 'dd/MM/yyyy HH:mm')}"></span>
+            </p>
         </div>
+
         <div th:if="${not #lists.isEmpty(viagem.escalas)}">
-            <h2>Pontos de Escala</h2>
-            <ul>
-                <li th:each="escala : ${viagem.escalas}" th:text="${escala.local.descricaoCompleta}"></li>
-            </ul>
+            <h2>Escalas</h2>
+            <div th:each="escala : ${viagem.escalas}" class="escala-item">
+                <p>
+                    <strong>Local:</strong> 
+                    <span th:text="${escala.origem.descricaoCompleta}"></span>
+                </p>
+                <p>
+                    <strong>Partida:</strong>
+                    <span th:text="${#temporals.format(escala.horarioPartida, 'dd/MM/yyyy HH:mm')}"></span>
+                </p>
+                <p>
+                    <strong>Chegada:</strong>
+                    <span th:text="${#temporals.format(escala.horarioChegada, 'dd/MM/yyyy HH:mm')}"></span>
+                </p>
+            </div>
         </div>
-        <div>
-            <h2>Modais Utilizados</h2>
-            <ul>
-                <li th:each="viagemModal : ${viagem.modais}" th:text="${viagemModal.modal.tipo + ' - ' + viagemModal.modal.modelo}"></li>
-            </ul>
-        </div>
+
         <div class="simulador-precos">
             <h2>Simular Preços</h2>
             <form th:action="@{/web/viagens/detalhes/{id}(id=${viagem.id_viagem})}" method="get" class="form-simulador">

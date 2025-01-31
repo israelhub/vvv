@@ -86,6 +86,19 @@ public class ReservaPresencialController {
         try {
             List<Passageiro> passageiros = new ArrayList<>();
             boolean hasChildren = false;
+            boolean hasAdult = false;
+
+            if (nomes.length == 1) {
+                Passageiro unicoPassageiro = new Passageiro();
+                unicoPassageiro.setData_nascimento(Date.valueOf(datasNascimento[0]));
+
+                if (unicoPassageiro.getIdade() >= 2 && unicoPassageiro.getIdade() <= 10) {
+                    ra.addFlashAttribute("mensagem",
+                            "Não é permitido fazer reserva apenas para uma criança. É necessário ter pelo menos um passageiro adulto como responsável.");
+                    ra.addFlashAttribute("tipoMensagem", "error");
+                    return "redirect:/web/pontos-de-venda/reservas/viagem/" + id;
+                }
+            }
 
             for (int i = 0; i < nomes.length; i++) {
                 Passageiro passageiro = new Passageiro();
@@ -100,6 +113,7 @@ public class ReservaPresencialController {
                         Passageiro responsavel = passageiroService.getPassageiroByCpf(responsaveisCpf[i]);
                         passageiro.setResponsavel(responsavel);
                     } catch (Exception e) {
+                        // Trata exceção se necessário
                     }
                 }
 
@@ -108,6 +122,9 @@ public class ReservaPresencialController {
 
                 if (passageiro.getIdade() >= 2 && passageiro.getIdade() <= 10) {
                     hasChildren = true;
+                }
+                if (passageiro.getIdade() > 10) {
+                    hasAdult = true;
                 }
             }
 
@@ -300,7 +317,7 @@ public class ReservaPresencialController {
                 DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
                 addTicketRow(table, "Data",
-                        ticket.getReserva().getViagem().getDataPartida().toLocalDate().format(dateFormatter),
+                        ticket.getHoraPartida().toLocalDate().format(dateFormatter),
                         headerFont, normalFont);
                 addTicketRow(table, "Horário Partida",
                         ticket.getHoraPartida().format(timeFormatter), headerFont, normalFont);
@@ -371,8 +388,8 @@ public class ReservaPresencialController {
         reserva.setData(new Date(System.currentTimeMillis()));
         reserva.setStatus(StatusReserva.PENDENTE_PAGAMENTO);
         reserva.setValor(calcularValorTotal(viagem, passageiros));
-        reserva.setOrigem(viagem.getOrigemLocal().getLocal().getDescricaoCompleta());
-        reserva.setDestino(viagem.getDestinoLocal().getLocal().getDescricaoCompleta());
+        reserva.setOrigem(viagem.getOrigem().getDescricaoCompleta());
+        reserva.setDestino(viagem.getDestino().getDescricaoCompleta());
         reserva.setFuncionario(funcionario);
         return reserva;
     }

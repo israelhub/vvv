@@ -1,7 +1,5 @@
 package group.vvv.services;
 
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,7 +24,6 @@ public class TicketService {
         return ticketRepository.findByReservaId(idReserva);
     }
     
-    
     public void gerarTickets(Reserva reserva) {
         List<ReservaPassageiro> passageiros = reservaService.getPassageiros(reserva);
         
@@ -34,8 +31,11 @@ public class TicketService {
             Ticket ticket = new Ticket();
             ticket.setTipoPassagem(determinarTipoPassagem(rp.getPassageiro()));
             ticket.setLocalizador(gerarLocalizador());
+            
+            // Usando os novos campos LocalDateTime da viagem
             ticket.setHoraPartida(reserva.getViagem().getHorarioPartida());
             ticket.setHoraChegada(reserva.getViagem().getHorarioChegada());
+            
             ticket.setReserva(reserva);
             ticket.setPassageiro(rp.getPassageiro());
             
