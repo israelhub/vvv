@@ -1,13 +1,6 @@
 
 issues.txt
 
-# Arquivos de compilação e build
-target/
-build/
-!**/src/main/**/target/
-!**/src/test/**/target/
-*.class
-
 # Arquivos de configuração sensíveis
 .env
 application.properties
@@ -49,7 +42,9 @@ Thumbs.db
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 !.mvn/wrapper/maven-wrapper.properties
-target/
+
+# Ignorar target mas permitir o jar específico
+
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{admin/layout}"
+>
+  <head>
+    <title>Gerenciar Locais</title>
+  </head>
+  <div layout:fragment="content">
+    <div class="container mt-5">
+      <h2>Gerenciar Locais</h2>
+
+      <div class="mb-4">
+        <a href="/web/administracao/local/novo" class="btn btn-primary">
+          <i class="fas fa-plus"></i> Novo Local
+        </a>
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cidade</th>
+            <th>Código</th>
+            <th>Tipo de Infraestrutura</th>
+            <th>Nome Infraestrutura</th>
+            <th>Código Aeroporto</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="local : ${locais}">
+            <td th:text="${local.id_local}"></td>
+            <td th:text="${local.id_cidade?.nome}"></td>
+            <td th:text="${local.id_cidade?.codigo}"></td>
+            <td th:text="${
+              local.id_aeroporto != null ? 'Aeroporto' : 
+              (local.id_estacao != null ? 'Estação' : 
+              (local.id_porto != null ? 'Porto' : ''))
+            }"></td>
+            <td th:text="${
+              local.id_aeroporto != null ? local.id_aeroporto.nome :
+              (local.id_estacao != null ? local.id_estacao.nome :
+              (local.id_porto != null ? local.id_porto.nome : ''))
+            }"></td>
+            <td th:text="${local.id_aeroporto?.codigo}"></td>
+            <td>
+              <a
+                th:href="@{/web/administracao/local/editar/{id}(id=${local.id_local})}"
+                class="btn btn-sm btn-warning"
+              >
+                <i class="fas fa-edit"></i> Editar
+              </a>
+              <form
+                th:action="@{/web/administracao/local/{id}(id=${local.id_local})}"
+                method="POST"
+                style="display: inline"
+                onsubmit="return confirm('Tem certeza que deseja excluir este local?');"
+              >
+                <input type="hidden" name="_method" value="DELETE" />
+                <button type="submit" class="btn btn-sm btn-danger">
+                  <i class="fas fa-trash"></i> Excluir
+                </button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</html>

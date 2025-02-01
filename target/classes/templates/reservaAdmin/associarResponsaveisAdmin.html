@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+    <title>Associar Responsáveis</title>
+</head>
+<div layout:fragment="content">
+    <div class="container mt-5">
+        <h2>Associar Responsáveis aos Passageiros</h2>
+        
+        <form th:action="@{/web/pontos-de-venda/reservas/viagem/{id}/responsaveis(id=${reservaId})}" method="post">
+            <div th:each="crianca : ${criancas}" class="mb-3">
+                <label th:text="${'Responsável para ' + crianca.nome}" class="form-label"></label>
+                <select th:name="'responsaveis[' + ${crianca.id_passageiro} + ']'" class="form-control" required>
+                    <option value="">Selecione um responsável</option>
+                    <option th:each="adulto : ${adultos}" 
+                            th:value="${adulto.id_passageiro}"
+                            th:text="${adulto.nome}">
+                    </option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Confirmar</button>
+            <a href="/web/administracao" class="btn btn-secondary">Voltar</a>
+        </form>
+    </div>
+</div>
+</html>

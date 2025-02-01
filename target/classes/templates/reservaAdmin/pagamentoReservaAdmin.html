@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+    <title>Pagamento</title>
+</head>
+<div layout:fragment="content">
+    <div class="container mt-5">
+        <h2>Pagamento da Reserva</h2>
+        
+        <form th:action="@{/web/pontos-de-venda/reservas/viagem/{id}/pagamento(id=${reserva.id_reserva})}" method="post">
+            <input type="hidden" name="reservaId" th:value="${reserva.id_reserva}">
+            
+            <div class="mb-3">
+                <label class="form-label">Tipo de Cartão</label>
+                <select name="tipoCartao" id="tipoCartao" class="form-control" required>
+                    <option value="CREDITO">Crédito</option>
+                    <option value="DEBITO">Débito</option>
+                </select>
+            </div>
+            
+            <div class="mb-3">  
+                <label class="form-label">Número do Cartão</label>
+                <input type="text" name="numero" class="form-control" required>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">CVV</label>
+                <input type="text" name="cvv" class="form-control" required>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Validade</label>
+                <input type="text" name="validade" class="form-control" required>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Nome do Titular</label>
+                <input type="text" name="nomeTitular" class="form-control" required>
+            </div>
+
+            <div class="mb-3" id="parcelasDiv">
+                <label class="form-label">Número de Parcelas</label>
+                <select name="numParcelas" class="form-control">
+                    <option value="1">1x sem juros</option>
+                    <option value="2">2x sem juros</option>
+                    <option value="3">3x sem juros</option>
+                    <option value="4">4x sem juros</option>
+                    <option value="5">5x com juros (5%)</option>
+                    <option value="6">6x com juros (5%)</option>
+                    <option value="7">7x com juros (5%)</option>
+                    <option value="8">8x com juros (5%)</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Confirmar Pagamento</button>
+            <a href="/web/administracao" class="btn btn-secondary">Voltar</a>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('tipoCartao').addEventListener('change', function() {
+            const parcelasDiv = document.getElementById('parcelasDiv');
+            parcelasDiv.style.display = this.value === 'CREDITO' ? 'block' : 'none';
+            if (this.value === 'DEBITO') {
+                document.querySelector('select[name="numParcelas"]').value = "1";
+            }
+        });
+    </script>
+</div>
+</html>

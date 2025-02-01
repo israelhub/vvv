@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{admin/layout}"
+>
+  <head>
+    <title>Gerenciar Modais</title>
+  </head>
+  <div layout:fragment="content">
+    <div class="container mt-5">
+      <h2>Gerenciar Modais</h2>
+
+      <div class="mb-4">
+        <a href="/web/administracao/modal/novo" class="btn btn-primary">
+          <i class="fas fa-plus"></i> Novo Modal
+        </a>
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tipo</th>
+            <th>Modelo</th>
+            <th>Capacidade</th>
+            <th>Ano</th>
+            <th>Nome Empresa</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="modal : ${modais}">
+            <td th:text="${modal.id_modal}"></td>
+            <td th:text="${modal.tipo}"></td>
+            <td th:text="${modal.modelo}"></td>
+            <td th:text="${modal.capacidade}"></td>
+            <td th:text="${modal.ano_fabricacao}"></td>
+            <td th:text="${modal.transportadora?.nome}"></td>
+            <td>
+              <a
+                th:href="@{/web/administracao/modal/editar/{id}(id=${modal.id_modal})}"
+                class="btn btn-sm btn-warning"
+              >
+                <i class="fas fa-edit"></i> Editar
+              </a>
+              <form
+                th:action="@{/web/administracao/modal/{id}(id=${modal.id_modal})}"
+                method="POST"
+                style="display: inline"
+                onsubmit="return confirm('Tem certeza que deseja excluir este modal?');"
+              >
+                <input type="hidden" name="_method" value="DELETE" />
+                <button type="submit" class="btn btn-sm btn-danger">
+                  <i class="fas fa-trash"></i> Excluir
+                </button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</html>

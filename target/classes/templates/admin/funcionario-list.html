@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+    <title>Lista de Funcionários</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container mt-5">
+            <h2>Lista de Funcionários</h2>
+            
+            
+            <a href="/web/administracao/funcionario" class="btn btn-primary mb-3"> <i class="fas fa-plus"></i> Novo Funcionário</a>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Cargo</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="funcionario : ${funcionarios}">
+                        <td th:text="${funcionario.nome}"></td>
+                        <td th:text="${funcionario.email}"></td>
+                        <td th:text="${funcionario.cargo}"></td>
+                        <td>
+                            <a th:href="@{/web/administracao/funcionario/editar/{id}(id=${funcionario.id_funcionario})}" 
+                               class="btn btn-sm btn-warning">Editar</a>
+                            <form th:action="@{/web/administracao/funcionario/{id}(id=${funcionario.id_funcionario})}" 
+                                  method="post" style="display: inline;">
+                                <input type="hidden" name="_method" value="DELETE"/>
+                                <button type="submit" class="btn btn-sm btn-danger" 
+                                        onclick="return confirm('Tem certeza que deseja excluir este funcionário?')">
+                                    Excluir
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
