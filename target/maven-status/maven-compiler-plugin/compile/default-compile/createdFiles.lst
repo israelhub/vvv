@@ -1,7 +1,6 @@
 group\vvv\config\WebConfig.class
 group\vvv\repositories\ParcelaRepository.class
 group\vvv\repositories\EstacaoRepository.class
-group\vvv\controllers\ViagemWebController.class
 group\vvv\repositories\ReservaPassageiroRepository.class
 group\vvv\repositories\LocalRepository.class
 group\vvv\models\Cartao.class
@@ -10,6 +9,7 @@ group\vvv\models\PontoFuncionario$PontoFuncionarioId.class
 group\vvv\models\Ticket.class
 group\vvv\services\ViagemService.class
 group\vvv\models\viagem\Local.class
+group\vvv\controllers\ReservaWebController.class
 group\vvv\controllers\FuncionarioWebController.class
 group\vvv\services\ModalService.class
 group\vvv\services\TicketService.class

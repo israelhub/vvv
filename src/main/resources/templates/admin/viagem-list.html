@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+    <title>Gerenciar Viagens</title>
+</head>
+<div layout:fragment="content">
+    <div class="container mt-5">
+        <h2>Gerenciar Viagens</h2>
+
+        <div class="mb-4">
+            <a href="/web/administracao/viagem" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nova Viagem
+            </a>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Origem</th>
+                    <th>Destino</th>
+                    <th>Modal</th>
+                    <th>Data/Hora Partida</th>
+                    <th>Data/Hora Chegada</th>
+                    <th>Valor</th>
+                    <th>Reservas</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="viagem : ${viagens}">
+                    <td th:text="${viagem.id_viagem}"></td>
+                    <td th:text="${viagem.origem.descricaoCompleta}"></td>
+                    <td th:text="${viagem.destino.descricaoCompleta}"></td>
+                    <td th:text="${viagem.modal.tipo + ' - ' + viagem.modal.modelo}"></td>
+                    <td th:text="${#temporals.format(viagem.horarioPartida, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td th:text="${#temporals.format(viagem.horarioChegada, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td th:text="${'R$ ' + #numbers.formatDecimal(viagem.valor, 1, 'POINT', 2, 'COMMA')}"></td>
+                    <td th:text="${viagem.numReservasAssociadas}"></td>
+                    <td>
+                        <a th:href="@{/web/administracao/viagem/editar/{id}(id=${viagem.id_viagem})}" 
+                           class="btn btn-sm btn-warning">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                        <form th:action="@{/web/administracao/viagem/{id}(id=${viagem.id_viagem})}" 
+                              method="POST" 
+                              style="display: inline"
+                              onsubmit="return confirm('Tem certeza que deseja excluir esta viagem?');">
+                            <input type="hidden" name="_method" value="DELETE" />
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash"></i> Excluir
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</html>

@@ -6,15 +6,14 @@
     <title>Cadastro de Viagem</title>
 </head>
 <div layout:fragment="content">
-    <div class="container mt-5">
-        <div th:if="${mensagem}" th:class="${'alert alert-' + (tipoMensagem == 'error' ? 'danger' : 'success')}" role="alert">
-            <span th:text="${mensagem}"></span>
-        </div>
 
-        <h2 class="mb-4">Cadastrar Nova Viagem</h2>
+        <h2 class="mb-4" th:text="${editando ? 'Editar Viagem' : 'Cadastrar Nova Viagem'}">Cadastrar Nova Viagem</h2>
 
-        <form th:action="@{/web/administracao/viagem}" method="post" class="needs-validation" novalidate>
-            <!-- Trecho Principal -->
+        <form th:action="@{${editando ? '/web/administracao/viagem/editar/' + viagem.id_viagem : '/web/administracao/viagem'}}"
+              method="post" class="needs-validation" novalidate>
+
+            <input type="hidden" th:if="${editando}" th:field="${viagem.id_viagem}" />
+
             <div class="card mb-4">
                 <div class="card-header">
                     <h4>Trecho Principal</h4>
@@ -27,7 +26,8 @@
                                 <option value="">Selecione a origem</option>
                                 <option th:each="local : ${locais}"
                                         th:value="${local.id_local}"
-                                        th:text="${local.descricaoCompleta}">
+                                        th:text="${local.descricaoCompleta}"
+                                        th:selected="${editando && viagem.origem != null && viagem.origem.id_local == local.id_local}">
                                 </option>
                             </select>
                         </div>
@@ -37,7 +37,8 @@
                                 <option value="">Selecione o destino</option>
                                 <option th:each="local : ${locais}"
                                         th:value="${local.id_local}"
-                                        th:text="${local.descricaoCompleta}">
+                                        th:text="${local.descricaoCompleta}"
+                                        th:selected="${editando && viagem.destino != null && viagem.destino.id_local == local.id_local}">
                                 </option>
                             </select>
                         </div>
@@ -46,22 +47,24 @@
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Modal</label>
-                            <select name="modalId" class="form-select" required>
+                            <select name="modalId" class="form-select" required>  
                                 <option value="">Selecione o modal</option>
                                 <option th:each="modal : ${modais}"
                                         th:value="${modal.id_modal}"
-                                        th:text="${modal.tipo + ' - ' + modal.modelo}">
+                                        th:text="${modal.tipo + ' - ' + modal.modelo}"
+                                        th:selected="${editando && viagem.modal != null && viagem.modal.id_modal == modal.id_modal}">
                                 </option>
                             </select>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Horário Partida</label>
-                            <input type="datetime-local" name="horarioPartida" class="form-control" required>
+                            <input type="datetime-local" name="horarioPartida" class="form-control" required
+                            th:value="${editando ? #temporals.format(viagem.horarioPartida, 'yyyy-MM-dd''T''HH:mm') : ''}">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Horário Chegada</label>
-                            <input type="datetime-local" name="horarioChegada" class="form-control" required>
-                        </div>
+                            <input type="datetime-local" name="horarioChegada" class="form-control" required
+                            th:value="${editando ? #temporals.format(viagem.horarioChegada, 'yyyy-MM-dd''T''HH:mm') : ''}">                        
                     </div>
 
                     <div class="row">
@@ -69,21 +72,85 @@
                             <label class="form-label">Valor</label>
                             <div class="input-group">
                                 <span class="input-group-text">R$</span>
-                                <input type="number" name="valor" class="form-control" step="0.01" required>
-                            </div>
+                                <input type="number" name="valor" class="form-control" step="0.01" required
+                                th:value="${editando ? viagem.valor : ''}">                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Escalas -->
-            <div id="escalasContainer"></div>
+<!-- Escalas -->
+<div id="escalasContainer">
+
+    <div th:if="${editando && viagem.escalas != null}" th:each="escala, iterStat : ${viagem.escalas}" class="card mb-4 escala-form">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 th:text="'Escala ' + ${iterStat.count}">Escala</h4>
+        <button type="button" class="btn-close remove-escala" aria-label="Close"></button>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Origem</label>
+                <select th:name="'escalaOrigem[' + ${iterStat.index} + ']'" class="form-select" required>
+                    <option value="">Selecione a origem</option>
+                    <option th:each="local : ${locais}"
+                            th:value="${local.id_local}"
+                            th:text="${local.descricaoCompleta}"
+                            th:selected="${escala.origem != null && escala.origem.id_local == local.id_local}">
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Destino</label>
+                <select th:name="'escalaDestino[' + ${iterStat.index} + ']'" class="form-select" required>
+                    <option value="">Selecione o destino</option>
+                    <option th:each="local : ${locais}"
+                            th:value="${local.id_local}"
+                            th:text="${local.descricaoCompleta}"
+                            th:selected="${escala.destino != null && escala.destino.id_local == local.id_local}">
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Modal</label>
+                <select th:name="'escalaModal[' + ${iterStat.index} + ']'" class="form-select" required>
+                    <option value="">Selecione o modal</option>
+                    <option th:each="modal : ${modais}"
+                            th:value="${modal.id_modal}"
+                            th:text="${modal.tipo + ' - ' + modal.modelo}"
+                            th:selected="${escala.modal != null && escala.modal.id_modal == modal.id_modal}">
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Horário Partida</label>
+                <input type="datetime-local" 
+                       th:name="'escalaHorarioPartida[' + ${iterStat.index} + ']'" 
+                       class="form-control" 
+                       required
+                       th:value="${#temporals.format(escala.horarioPartida, 'yyyy-MM-dd''T''HH:mm')}">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Horário Chegada</label>
+                <input type="datetime-local" 
+                       th:name="'escalaHorarioChegada[' + ${iterStat.index} + ']'" 
+                       class="form-control" 
+                       required
+                       th:value="${#temporals.format(escala.horarioChegada, 'yyyy-MM-dd''T''HH:mm')}">
+            </div>
+        </div>
+    </div>
+</div>
             
             <button type="button" id="addEscala" class="btn btn-secondary mb-3">Adicionar Escala</button>
 
             <div class="mt-4">
-                <button type="submit" class="btn btn-primary">Cadastrar Viagem</button>
-                <a href="/web/administracao" class="btn btn-secondary">Voltar</a>
+                <button type="submit" class="btn btn-primary" th:text="${editando ? 'Atualizar' : 'Cadastrar'}">
+                    Cadastrar
+                </button>
+                <a href="/web/administracao/viagem/lista" class="btn btn-secondary">Voltar</a>
             </div>
         </form>
     </div>

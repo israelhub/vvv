@@ -26,6 +26,10 @@ public class ViagemService {
             .orElseThrow(() -> new RuntimeException("Viagem não encontrada"));
     }
 
+    public void deletarViagem(Long id) {
+        viagemRepository.deleteById(id);
+    }
+
     public void atualizarViagem(Viagem viagem) {
         viagemRepository.save(viagem);
     }

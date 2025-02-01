@@ -19,7 +19,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" th:href="@{/admin.css}" />
+    <link rel="stylesheet" th:href="@{/layout.css}" />
   </head>
   <body>
     <div class="admin-container">
@@ -69,11 +69,11 @@
           </li>
         
           <li>
-            <a th:href="@{/web/administracao/viagem}"
+            <a th:href="@{/web/administracao/viagem/lista}"
                th:class="${@funcionarioSession.funcionario != null && (@funcionarioSession.funcionario.cargo.name() == 'GERENTE' || @funcionarioSession.funcionario.cargo.name() == 'PADRAO')} ? '' : 'disabled'"
                th:title="${@funcionarioSession.funcionario != null && !(@funcionarioSession.funcionario.cargo.name() == 'GERENTE' || @funcionarioSession.funcionario.cargo.name() == 'PADRAO')} ? 'Somente Gerentes e Funcionários podem acessar essa função' : ''">
               <span class="material-icons">flight_takeoff</span>
-              Cadastrar Viagem
+              Gerenciar Viagens
             </a>
           </li>
         
