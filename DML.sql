@@ -102,7 +102,7 @@ INSERT INTO modal (tipo, modelo, capacidade, ano_fabricacao, id_transportadora) 
 ('AVIAO', 'Airbus A320', 150, 2017, 2);       -- GOL
 
 -- Inserindo manutenções de modais
-INSERT INTO manuntencao_modal (id_modal, data_inicio, data_fim, descricao) VALUES
+INSERT INTO manutencao_modal (id_modal, data_inicio, data_fim, descricao) VALUES
 (1, '2024-01-01', '2024-01-05', 'Manutenção preventiva do Boeing 737'),
 (2, '2024-02-01', '2024-02-03', 'Revisão do sistema de freios'),
 (3, '2024-03-01', NULL, 'Manutenção do casco em andamento');

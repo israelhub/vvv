@@ -115,7 +115,7 @@ CREATE TABLE modal (
 );
 
 -- Tabela manuntencao_modal 
-CREATE TABLE manuntencao_modal (
+CREATE TABLE manutencao_modal (
     id_manuntencao BIGSERIAL PRIMARY KEY,
     id_modal BIGINT REFERENCES modal(id_modal) ON DELETE CASCADE,
     data_inicio DATE NOT NULL,

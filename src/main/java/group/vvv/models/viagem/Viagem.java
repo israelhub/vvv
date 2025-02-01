@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -38,7 +39,8 @@ public class Viagem {
     @Column(name = "horario_chegada", nullable = false)
     private LocalDateTime horarioChegada;
 
-    @OneToMany(mappedBy = "viagem", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "viagem", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("ordem ASC")
-    private List<Escala> escalas;
+    private List<Escala> escalas = new ArrayList<>();
+
 }

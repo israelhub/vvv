@@ -5,12 +5,13 @@
 <head>
     <title>Cadastro de Viagem</title>
 </head>
+<body>
 <div layout:fragment="content">
 
-        <h2 class="mb-4" th:text="${editando ? 'Editar Viagem' : 'Cadastrar Nova Viagem'}">Cadastrar Nova Viagem</h2>
+    <h2 class="mb-4" th:text="${editando ? 'Editar Viagem' : 'Cadastrar Nova Viagem'}">Cadastrar Nova Viagem</h2>
 
-        <form th:action="@{${editando ? '/web/administracao/viagem/editar/' + viagem.id_viagem : '/web/administracao/viagem'}}"
-              method="post" class="needs-validation" novalidate>
+    <form th:action="@{${editando ? '/web/administracao/viagem/editar/' + viagem.id_viagem : '/web/administracao/viagem'}}"
+    method="post" class="needs-validation" novalidate>
 
             <input type="hidden" th:if="${editando}" th:field="${viagem.id_viagem}" />
 
@@ -47,7 +48,7 @@
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Modal</label>
-                            <select name="modalId" class="form-select" required>  
+                            <select name="modalId" class="form-select" required>
                                 <option value="">Selecione o modal</option>
                                 <option th:each="modal : ${modais}"
                                         th:value="${modal.id_modal}"
@@ -64,7 +65,8 @@
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Horário Chegada</label>
                             <input type="datetime-local" name="horarioChegada" class="form-control" required
-                            th:value="${editando ? #temporals.format(viagem.horarioChegada, 'yyyy-MM-dd''T''HH:mm') : ''}">                        
+                                   th:value="${editando ? #temporals.format(viagem.horarioChegada, 'yyyy-MM-dd''T''HH:mm') : ''}"/>
+                        </div> 
                     </div>
 
                     <div class="row">
@@ -73,76 +75,78 @@
                             <div class="input-group">
                                 <span class="input-group-text">R$</span>
                                 <input type="number" name="valor" class="form-control" step="0.01" required
-                                th:value="${editando ? viagem.valor : ''}">                            </div>
+                                th:value="${editando ? viagem.valor : ''}">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-<!-- Escalas -->
-<div id="escalasContainer">
-
-    <div th:if="${editando && viagem.escalas != null}" th:each="escala, iterStat : ${viagem.escalas}" class="card mb-4 escala-form">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h4 th:text="'Escala ' + ${iterStat.count}">Escala</h4>
-        <button type="button" class="btn-close remove-escala" aria-label="Close"></button>
-    </div>
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Origem</label>
-                <select th:name="'escalaOrigem[' + ${iterStat.index} + ']'" class="form-select" required>
-                    <option value="">Selecione a origem</option>
-                    <option th:each="local : ${locais}"
-                            th:value="${local.id_local}"
-                            th:text="${local.descricaoCompleta}"
-                            th:selected="${escala.origem != null && escala.origem.id_local == local.id_local}">
-                    </option>
-                </select>
+            <div id="escalasContainer">
+                <div th:if="${editando && not #lists.isEmpty(viagem.escalas)}" 
+                     th:each="escala, iterStat : ${viagem.escalas}" 
+                     class="card mb-4 escala-form">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 th:text="'Escala ' + ${iterStat.count}">Escala</h4>
+                        <button type="button" class="btn-close remove-escala" aria-label="Close"></button>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Origem</label>
+                                <select th:name="|escalaOrigem[${iterStat.index}]|" class="form-select" required>
+                                    <option value="">Selecione a origem</option>
+                                    <option th:each="local : ${locais}"
+                                            th:value="${local.id_local}"
+                                            th:text="${local.descricaoCompleta}"
+                                            th:selected="${escala.origem != null && escala.origem.id_local == local.id_local}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Destino</label>
+                                <select th:name="|escalaDestino[${iterStat.index}]|" class="form-select" required>
+                                    <option value="">Selecione o destino</option>
+                                    <option th:each="local : ${locais}"
+                                            th:value="${local.id_local}"
+                                            th:text="${local.descricaoCompleta}"
+                                            th:selected="${escala.destino != null && escala.destino.id_local == local.id_local}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Modal</label>
+                                <select th:name="|escalaModal[${iterStat.index}]|" class="form-select" required>
+                                    <option value="">Selecione o modal</option>
+                                    <option th:each="modal : ${modais}"
+                                            th:value="${modal.id_modal}"
+                                            th:text="${modal.tipo + ' - ' + modal.modelo}"
+                                            th:selected="${escala.modal != null && escala.modal.id_modal == modal.id_modal}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Horário Partida</label>
+                                <input type="datetime-local" 
+                                       th:name="|escalaHorarioPartida[${iterStat.index}]|" 
+                                       class="form-control" 
+                                       required
+                                       th:value="${#temporals.format(escala.horarioPartida, 'yyyy-MM-dd''T''HH:mm')}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Horário Chegada</label>
+                                <input type="datetime-local" 
+                                       th:name="|escalaHorarioChegada[${iterStat.index}]|" 
+                                       class="form-control" 
+                                       required
+                                       th:value="${#temporals.format(escala.horarioChegada, 'yyyy-MM-dd''T''HH:mm')}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Destino</label>
-                <select th:name="'escalaDestino[' + ${iterStat.index} + ']'" class="form-select" required>
-                    <option value="">Selecione o destino</option>
-                    <option th:each="local : ${locais}"
-                            th:value="${local.id_local}"
-                            th:text="${local.descricaoCompleta}"
-                            th:selected="${escala.destino != null && escala.destino.id_local == local.id_local}">
-                    </option>
-                </select>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <label class="form-label">Modal</label>
-                <select th:name="'escalaModal[' + ${iterStat.index} + ']'" class="form-select" required>
-                    <option value="">Selecione o modal</option>
-                    <option th:each="modal : ${modais}"
-                            th:value="${modal.id_modal}"
-                            th:text="${modal.tipo + ' - ' + modal.modelo}"
-                            th:selected="${escala.modal != null && escala.modal.id_modal == modal.id_modal}">
-                    </option>
-                </select>
-            </div>
-            <div class="col-md-4 mb-3">
-                <label class="form-label">Horário Partida</label>
-                <input type="datetime-local" 
-                       th:name="'escalaHorarioPartida[' + ${iterStat.index} + ']'" 
-                       class="form-control" 
-                       required
-                       th:value="${#temporals.format(escala.horarioPartida, 'yyyy-MM-dd''T''HH:mm')}">
-            </div>
-            <div class="col-md-4 mb-3">
-                <label class="form-label">Horário Chegada</label>
-                <input type="datetime-local" 
-                       th:name="'escalaHorarioChegada[' + ${iterStat.index} + ']'" 
-                       class="form-control" 
-                       required
-                       th:value="${#temporals.format(escala.horarioChegada, 'yyyy-MM-dd''T''HH:mm')}">
-            </div>
-        </div>
-    </div>
-</div>
             
             <button type="button" id="addEscala" class="btn btn-secondary mb-3">Adicionar Escala</button>
 
@@ -152,16 +156,25 @@
                 </button>
                 <a href="/web/administracao/viagem/lista" class="btn btn-secondary">Voltar</a>
             </div>
-        </form>
-    </div>
+    </form>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const escalasContainer = document.getElementById('escalasContainer');
-            const addEscalaButton = document.getElementById('addEscala');
-            let escalaCount = 0;
+            document.addEventListener('DOMContentLoaded', function() {
+                const escalasContainer = document.getElementById('escalasContainer');
+                const addEscalaButton = document.getElementById('addEscala');
+                let escalaCount = document.querySelectorAll('.escala-form').length;
+
+            
+            document.querySelectorAll('.remove-escala').forEach(button => {
+                button.addEventListener('click', function() {
+                    this.closest('.escala-form').remove();
+                    atualizarNumeracaoEscalas();
+                    escalaCount--;
+                });
+            });
 
             addEscalaButton.addEventListener('click', function() {
+                const index = escalaCount;
                 escalaCount++;
                 const escalaHtml = `
                     <div class="card mb-4 escala-form">
@@ -173,7 +186,7 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Origem</label>
-                                    <select name="escalaOrigem" class="form-select" required>
+                                    <select name="escalaOrigem[${index}]" class="form-select" required>
                                         <option value="">Selecione a origem</option>
                                         ${Array.from(document.querySelector('select[name="origemId"]').options)
                                             .map(opt => `<option value="${opt.value}">${opt.text}</option>`)
@@ -182,7 +195,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Destino</label>
-                                    <select name="escalaDestino" class="form-select" required>
+                                    <select name="escalaDestino[${index}]" class="form-select" required>
                                         <option value="">Selecione o destino</option>
                                         ${Array.from(document.querySelector('select[name="destinoId"]').options)
                                             .map(opt => `<option value="${opt.value}">${opt.text}</option>`)
@@ -193,7 +206,7 @@
                             <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label">Modal</label>
-                                    <select name="escalaModal" class="form-select" required>
+                                    <select name="escalaModal[${index}]" class="form-select" required>
                                         <option value="">Selecione o modal</option>
                                         ${Array.from(document.querySelector('select[name="modalId"]').options)
                                             .map(opt => `<option value="${opt.value}">${opt.text}</option>`)
@@ -202,11 +215,11 @@
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label">Horário Partida</label>
-                                    <input type="datetime-local" name="escalaHorarioPartida" class="form-control" required>
+                                    <input type="datetime-local" name="escalaHorarioPartida[${index}]" class="form-control" required>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label">Horário Chegada</label>
-                                    <input type="datetime-local" name="escalaHorarioChegada" class="form-control" required>
+                                    <input type="datetime-local" name="escalaHorarioChegada[${index}]" class="form-control" required>
                                 </div>
                             </div>
                         </div>
@@ -228,17 +241,18 @@
                     header.textContent = `Escala ${index + 1}`;
                 });
             }
+        });
 
-            // Form validation
-            const form = document.querySelector('form');
-            form.addEventListener('submit', function(event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-            });
+        // Form validation
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
         });
     </script>
 </div>
+</body>
 </html>
