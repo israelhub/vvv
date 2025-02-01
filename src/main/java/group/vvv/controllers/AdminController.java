@@ -2,22 +2,14 @@ package group.vvv.controllers;
 
 import group.vvv.config.FuncionarioSession;
 import group.vvv.models.Funcionario;
-import group.vvv.models.PontoDeVenda;
 import group.vvv.models.PontoFuncionario;
 import group.vvv.models.Reserva;
-import group.vvv.models.viagem.Aeroporto;
-import group.vvv.models.viagem.Cidade;
-import group.vvv.models.viagem.Estacao;
-import group.vvv.models.viagem.Local;
-import group.vvv.models.viagem.Modal;
-import group.vvv.models.viagem.Porto;
 import group.vvv.services.FuncionarioService;
-import group.vvv.services.LocalService;
-import group.vvv.services.ModalService;
 import group.vvv.services.PontoDeVendaService;
 import group.vvv.services.ReservaService;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +21,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/web/administracao")
 public class AdminController {
-
-    @Autowired
-    private ModalService modalService;
-
-    @Autowired
-    private LocalService localService;
 
     @Autowired
     private PontoDeVendaService pontoDeVendaService;
@@ -51,34 +37,6 @@ public class AdminController {
     @GetMapping
     public String index() {
         return "admin/layout";
-    }
-
-    // Ponto de Venda
-    @GetMapping("/ponto-de-venda")
-    public String pontoVendaForm(Model model, RedirectAttributes ra) {
-        if (funcionarioSession == null || funcionarioSession.getFuncionario() == null ||
-                funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.GERENTE &&
-                        funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.PADRAO) {
-            ra.addFlashAttribute("mensagem", "Só o Gerente e o Funcionário pode acessar essa página");
-            ra.addFlashAttribute("tipoMensagem", "error");
-            return "redirect:/web/administracao";
-        }
-        model.addAttribute("pontoDeVenda", new PontoDeVenda());
-        model.addAttribute("gerentes", funcionarioService.listarGerentes());
-        return "admin/pontoDeVenda-form";
-    }
-
-    @PostMapping("/ponto-de-venda")
-    public String cadastrarPontoVenda(@ModelAttribute PontoDeVenda pontoDeVenda, RedirectAttributes ra) {
-        try {
-            pontoDeVendaService.cadastrar(pontoDeVenda);
-            ra.addFlashAttribute("mensagem", "Ponto de venda cadastrado com sucesso!");
-            ra.addFlashAttribute("tipoMensagem", "success");
-        } catch (Exception e) {
-            ra.addFlashAttribute("mensagem", "Erro ao cadastrar ponto de venda: " + e.getMessage());
-            ra.addFlashAttribute("tipoMensagem", "error");
-        }
-        return "redirect:/web/administracao/ponto-de-venda";
     }
 
     // Aprovação de Vendas Online
@@ -115,9 +73,9 @@ public class AdminController {
         return "redirect:/web/administracao/reservas-pendentes";
     }
 
-    // Cadastro de Funcionario
+    // Gerenciar Funcionario
 
-    @GetMapping("/funcionario")
+    @GetMapping("/funcionario") 
     public String funcionarioForm(Model model, RedirectAttributes ra) {
         if (funcionarioSession == null || funcionarioSession.getFuncionario() == null ||
                 funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.GERENTE) {
@@ -125,9 +83,11 @@ public class AdminController {
             ra.addFlashAttribute("tipoMensagem", "error");
             return "redirect:/web/administracao";
         }
-
+    
+        model.addAttribute("editando", false);
+        model.addAttribute("funcionario", new Funcionario());
         model.addAttribute("pontosDeVenda", pontoDeVendaService.listarTodos());
-        return "admin/cadastroFuncionario-form";
+        return "admin/funcionario-form";
     }
 
     @PostMapping("/funcionario")
@@ -188,6 +148,175 @@ public class AdminController {
             ra.addFlashAttribute("mensagem", "Erro ao cadastrar funcionário: " + e.getMessage());
             ra.addFlashAttribute("tipoMensagem", "error");
         }
-        return "redirect:/web/administracao/funcionario";
+        return "redirect:/web/administracao/funcionario/lista"; 
+    }
+
+    @GetMapping("/funcionario/lista")
+    public String listarFuncionarios(Model model, RedirectAttributes ra) {
+        if (funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.GERENTE) {
+            ra.addFlashAttribute("mensagem", "Só o Gerente pode acessar essa página");
+            ra.addFlashAttribute("tipoMensagem", "error");
+            return "redirect:/web/administracao";
+        }
+        model.addAttribute("funcionarios", funcionarioService.listarTodos());
+        return "admin/funcionario-list";
+    }
+
+    private List<PontoFuncionario> criarPontosFuncionario(
+            Funcionario funcionario,
+            List<Long> pontoDeVenda,
+            List<String> diaSemana,
+            List<LocalTime> horarioInicial,
+            List<LocalTime> horarioFinal) {
+
+        List<PontoFuncionario> pontos = new ArrayList<>();
+
+        if (pontoDeVenda != null && diaSemana != null &&
+                horarioInicial != null && horarioFinal != null) {
+
+            int index = 0;
+            for (int i = 0; i < pontoDeVenda.size(); i++) {
+                Long idPonto = pontoDeVenda.get(i);
+
+                int diasCount = 0;
+                while (index + diasCount < diaSemana.size() &&
+                        diaSemana.get(index + diasCount) != null &&
+                        !diaSemana.get(index + diasCount).isEmpty()) {
+                    diasCount++;
+                }
+
+                for (int j = 0; j < diasCount; j++) {
+                    PontoFuncionario pf = new PontoFuncionario();
+                    PontoFuncionario.PontoFuncionarioId id = new PontoFuncionario.PontoFuncionarioId(
+                            funcionario.getId_funcionario(),
+                            idPonto,
+                            PontoFuncionario.DiaSemana.valueOf(diaSemana.get(index + j).toUpperCase()));
+
+                    pf.setId(id);
+                    pf.setFuncionario(funcionario);
+                    pf.setPontoDeVenda(pontoDeVendaService.buscarPorId(idPonto));
+                    pf.setHorarioInicial(horarioInicial.get(index + j));
+                    pf.setHorarioFinal(horarioFinal.get(index + j));
+
+                    pontos.add(pf);
+                }
+                index += diasCount;
+            }
+        }
+
+        return pontos;
+    }
+
+    @GetMapping("/funcionario/editar/{id}")
+    public String editarFuncionario(@PathVariable Long id, Model model, RedirectAttributes ra) {
+        if (funcionarioSession.getFuncionario().getCargo() != Funcionario.Cargo.GERENTE) {
+            ra.addFlashAttribute("mensagem", "Só o Gerente pode editar funcionários");
+            ra.addFlashAttribute("tipoMensagem", "error");
+            return "redirect:/web/administracao";
+        }
+    
+        try {
+            Funcionario funcionario = funcionarioService.buscarPorId(id);
+            List<PontoFuncionario> pontosFuncionario = funcionarioService.buscarPontosFuncionario(id);
+    
+            model.addAttribute("funcionario", funcionario);
+            model.addAttribute("pontosFuncionario", pontosFuncionario);
+            model.addAttribute("pontosDeVenda", pontoDeVendaService.listarTodos());
+            model.addAttribute("editando", true);
+    
+            return "admin/funcionario-form";
+    
+        } catch (Exception e) {
+            ra.addFlashAttribute("mensagem", "Erro ao buscar funcionário: " + e.getMessage());
+            ra.addFlashAttribute("tipoMensagem", "error");
+            return "redirect:/web/administracao/funcionario/lista";
+        }
+    }
+
+    @PostMapping("/funcionario/editar/{id}")
+    public String atualizarFuncionario(@PathVariable Long id,
+            @ModelAttribute Funcionario funcionario,
+            @RequestParam(required = false) List<Long> pontoDeVenda,
+            @RequestParam(required = false) List<String> diaSemana,
+            @RequestParam(required = false) List<LocalTime> horarioInicial,
+            @RequestParam(required = false) List<LocalTime> horarioFinal,
+            RedirectAttributes ra) {
+        try {
+            // Buscar funcionário existente
+            Funcionario funcionarioExistente = funcionarioService.buscarPorId(id);
+            
+            // Atualizar dados básicos
+            funcionarioExistente.setNome(funcionario.getNome());
+            funcionarioExistente.setEmail(funcionario.getEmail());
+            funcionarioExistente.setCargo(funcionario.getCargo());
+    
+            // Atualizar funcionário
+            funcionarioService.atualizarDados(funcionarioExistente);
+    
+            // Remover pontos existentes
+            funcionarioService.removerPontosFuncionario(id);
+    
+            // Criar e salvar novos pontos
+            if (pontoDeVenda != null && diaSemana != null &&
+                    horarioInicial != null && horarioFinal != null) {
+    
+                int index = 0;
+                for (int i = 0; i < pontoDeVenda.size(); i++) {
+                    Long idPonto = pontoDeVenda.get(i);
+    
+                    int diasCount = 0;
+                    while (index + diasCount < diaSemana.size() &&
+                            diaSemana.get(index + diasCount) != null &&
+                            !diaSemana.get(index + diasCount).isEmpty()) {
+                        diasCount++;
+                    }
+    
+                    for (int j = 0; j < diasCount; j++) {
+                        String dia = diaSemana.get(index + j);
+                        LocalTime horaInicial = horarioInicial.get(index + j);
+                        LocalTime horaFinal = horarioFinal.get(index + j);
+    
+                        if (idPonto != null && dia != null && !dia.isEmpty() &&
+                                horaInicial != null && horaFinal != null) {
+    
+                            PontoFuncionario pontoFuncionario = new PontoFuncionario();
+                            PontoFuncionario.PontoFuncionarioId pontoId = new PontoFuncionario.PontoFuncionarioId(
+                                    funcionarioExistente.getId_funcionario(),
+                                    idPonto,
+                                    PontoFuncionario.DiaSemana.valueOf(dia.toUpperCase()));
+                            
+                            pontoFuncionario.setId(pontoId);
+                            pontoFuncionario.setFuncionario(funcionarioExistente);
+                            pontoFuncionario.setPontoDeVenda(pontoDeVendaService.buscarPorId(idPonto));
+                            pontoFuncionario.setHorarioInicial(horaInicial);
+                            pontoFuncionario.setHorarioFinal(horaFinal);
+    
+                            funcionarioService.cadastrarPontoFuncionario(pontoFuncionario);
+                        }
+                    }
+                    index += diasCount;
+                }
+            }
+    
+            ra.addFlashAttribute("mensagem", "Funcionário atualizado com sucesso!");
+            ra.addFlashAttribute("tipoMensagem", "success");
+        } catch (Exception e) {
+            ra.addFlashAttribute("mensagem", "Erro ao atualizar funcionário: " + e.getMessage());
+            ra.addFlashAttribute("tipoMensagem", "error");
+        }
+        return "redirect:/web/administracao/funcionario/lista";
+    }
+
+    @DeleteMapping("/funcionario/{id}")
+    public String deletarFuncionario(@PathVariable Long id, RedirectAttributes ra) {
+        try {
+            funcionarioService.deletar(id);
+            ra.addFlashAttribute("mensagem", "Funcionário excluído com sucesso!");
+            ra.addFlashAttribute("tipoMensagem", "success");
+        } catch (Exception e) {
+            ra.addFlashAttribute("mensagem", "Erro ao excluir funcionário: " + e.getMessage());
+            ra.addFlashAttribute("tipoMensagem", "error");
+        }
+        return "redirect:/web/administracao/funcionario/lista";
     }
 }

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{admin/layout}"
+>
+  <head>
+    <title>Pontos de Venda</title>
+  </head>
+  <div layout:fragment="content">
+    <div class="container mt-5">
+      <h2>Pontos de Venda</h2>
+
+      <a
+        href="/web/administracao/ponto-de-venda/novo"
+        class="btn btn-primary mb-3"
+      >
+        <i class="fas fa-plus"></i> Novo Ponto de Venda
+      </a>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>CNPJ</th>
+            <th>Endereço</th>
+            <th>Telefone</th>
+            <th>Gerente</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="ponto : ${pontosDeVenda}">
+            <td th:text="${ponto.nome}"></td>
+            <td th:text="${ponto.cnpj}"></td>
+            <td
+              th:text="${ponto.rua + ', ' + ponto.numero_rua + ' - CEP: ' + ponto.cep}"
+            ></td>
+            <td th:text="${ponto.telefone}"></td>
+            <td th:text="${ponto.gerente?.nome}"></td>
+            <td>
+              <a
+                th:href="@{/web/administracao/ponto-de-venda/editar/{id}(id=${ponto.id_ponto_de_venda})}"
+                class="btn btn-sm btn-warning"
+              >
+                <i class="fas fa-edit"></i> Editar
+              </a>
+              <form
+                th:action="@{/web/administracao/ponto-de-venda/{id}(id=${ponto.id_ponto_de_venda})}"
+                method="POST"
+                style="display: inline"
+                onsubmit="return confirm('Tem certeza que deseja excluir este ponto de venda?');"
+              >
+                <input type="hidden" name="_method" value="DELETE" />
+                <button type="submit" class="btn btn-sm btn-danger">
+                  <i class="fas fa-trash"></i> Excluir
+                </button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</html>

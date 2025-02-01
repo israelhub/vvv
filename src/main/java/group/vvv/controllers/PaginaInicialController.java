@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/web")
-public class PaginaInicialWebController {
+public class PaginaInicialController {
 
     @Autowired
     private ViagemService viagemService;

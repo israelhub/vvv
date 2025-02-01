@@ -82,18 +82,18 @@
                th:class="${@funcionarioSession.funcionario != null && (@funcionarioSession.funcionario.cargo.name() == 'GERENTE' || @funcionarioSession.funcionario.cargo.name() == 'PADRAO')} ? '' : 'disabled'"
                th:title="${@funcionarioSession.funcionario != null && !(@funcionarioSession.funcionario.cargo.name() == 'GERENTE' || @funcionarioSession.funcionario.cargo.name() == 'PADRAO')} ? 'Somente Gerentes e Funcionários podem acessar essa função' : ''">
               <span class="material-icons">store</span>
-              Cadastrar Ponto de Venda
-            </a>
-          </li>
+              Gerenciar Pontos de Venda
+            </a> 
+         </li>
         
-          <li>
-            <a th:href="@{/web/administracao/funcionario}"
-               th:class="${@funcionarioSession.funcionario != null && @funcionarioSession.funcionario.cargo.name() == 'GERENTE'} ? '' : 'disabled'"
-               th:title="${@funcionarioSession.funcionario != null && @funcionarioSession.funcionario.cargo.name() != 'GERENTE'} ? 'Somente Gerentes podem cadastrar funcionários' : ''">
-              <span class="material-icons">person_add</span>
-              Cadastrar Funcionario
-            </a>
-          </li>
+         <li>
+          <a th:href="@{/web/administracao/funcionario/lista}"
+             th:class="${@funcionarioSession.funcionario != null && @funcionarioSession.funcionario.cargo.name() == 'GERENTE'} ? '' : 'disabled'"
+             th:title="${@funcionarioSession.funcionario != null && @funcionarioSession.funcionario.cargo.name() != 'GERENTE'} ? 'Somente Gerentes podem gerenciar funcionários' : ''">
+              <span class="material-icons">people</span>
+              Gerenciar Funcionários
+          </a>
+         </li>
         
           <li>
             <a th:href="@{/web/administracao/reservas-pendentes}"

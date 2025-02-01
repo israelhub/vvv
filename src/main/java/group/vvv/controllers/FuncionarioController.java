@@ -9,7 +9,7 @@ import group.vvv.models.Funcionario;
 import group.vvv.services.FuncionarioService;
 @Controller
 @RequestMapping("/web/funcionarios")
-public class FuncionarioWebController {
+public class FuncionarioController {
     @Autowired
     private FuncionarioService funcionarioService;
 

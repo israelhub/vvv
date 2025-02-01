@@ -45,8 +45,8 @@ CREATE TYPE dia_semana_enum AS ENUM ('SEGUNDA', 'TERCA', 'QUARTA', 'QUINTA', 'SE
 
 -- Tabela Associativa 'ponto_funcionario'
 CREATE TABLE ponto_funcionario (
-    id_funcionario BIGINT NOT NULL REFERENCES funcionario (id_funcionario),
-    id_ponto_de_venda BIGINT NOT NULL REFERENCES ponto_de_venda (id_ponto_de_venda),
+    id_funcionario BIGINT NOT NULL REFERENCES funcionario (id_funcionario) ON DELETE CASCADE,
+    id_ponto_de_venda BIGINT NOT NULL REFERENCES ponto_de_venda (id_ponto_de_venda) ON DELETE CASCADE,
     dia_semana dia_semana_enum NOT NULL,
     horario_inicial TIME NOT NULL,
     horario_final TIME NOT NULL,

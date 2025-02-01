@@ -2,15 +2,15 @@ group\vvv\config\WebConfig.class
 group\vvv\repositories\ParcelaRepository.class
 group\vvv\repositories\EstacaoRepository.class
 group\vvv\repositories\ReservaPassageiroRepository.class
+group\vvv\controllers\FuncionarioController.class
 group\vvv\repositories\LocalRepository.class
+group\vvv\controllers\ClienteController.class
 group\vvv\models\Cartao.class
 group\vvv\repositories\ModalRepository.class
 group\vvv\models\PontoFuncionario$PontoFuncionarioId.class
 group\vvv\models\Ticket.class
 group\vvv\services\ViagemService.class
 group\vvv\models\viagem\Local.class
-group\vvv\controllers\ReservaWebController.class
-group\vvv\controllers\FuncionarioWebController.class
 group\vvv\services\ModalService.class
 group\vvv\services\TicketService.class
 group\vvv\repositories\AeroportoRepository.class
@@ -20,6 +20,7 @@ group\vvv\repositories\PontoDeVendaRepository.class
 group\vvv\models\Passageiro.class
 group\vvv\controllers\LocalController.class
 group\vvv\models\Reserva$StatusReserva.class
+group\vvv\controllers\PaginaInicialController.class
 group\vvv\models\Parcela.class
 group\vvv\models\Funcionario.class
 group\vvv\models\viagem\ManutencaoModal.class
@@ -31,7 +32,6 @@ group\vvv\repositories\PontoFuncionarioRepository.class
 group\vvv\models\viagem\Estacao.class
 group\vvv\config\AdminAuthInterceptor.class
 group\vvv\models\ReservaPassageiro$ReservaPassageiroId.class
-group\vvv\controllers\PaginaInicialWebController.class
 group\vvv\models\viagem\Cidade.class
 group\vvv\repositories\CidadeRepository.class
 group\vvv\models\PontoFuncionario$DiaSemana.class
@@ -52,12 +52,13 @@ group\vvv\repositories\EscalaRepository.class
 group\vvv\config\UserSession.class
 group\vvv\controllers\AdminController.class
 group\vvv\services\ReservaService.class
+group\vvv\controllers\PontoDeVendaController.class
 group\vvv\VvvApplication.class
 group\vvv\models\viagem\Modal.class
 group\vvv\services\CartaoService.class
 group\vvv\models\viagem\Porto.class
+group\vvv\controllers\ReservaController.class
 group\vvv\controllers\ModalController.class
-group\vvv\controllers\MinhasReservasController.class
 group\vvv\services\FuncionarioService.class
 group\vvv\repositories\FuncionarioRepository.class
 group\vvv\repositories\ViagemRepository.class
@@ -72,7 +73,7 @@ group\vvv\repositories\TransportadoraRepository.class
 group\vvv\repositories\TicketRepository.class
 group\vvv\models\viagem\Transportadora.class
 group\vvv\models\Pagamento.class
-group\vvv\controllers\ClienteWebController.class
+group\vvv\controllers\ConsultarReservasController.class
 group\vvv\services\PassageiroService.class
 group\vvv\controllers\ModificarViagemController.class
 group\vvv\models\Funcionario$Cargo.class

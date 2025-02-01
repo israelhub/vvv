@@ -26,7 +26,7 @@ public class ClienteWebControllerTest {
     private Model model;
 
     @InjectMocks
-    private ClienteWebController clienteWebController;
+    private ClienteController clienteWebController;
 
     @BeforeEach
     public void setUp() {

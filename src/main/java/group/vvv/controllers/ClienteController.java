@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/web/clientes")
-public class ClienteWebController {
+public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
@@ -18,7 +18,7 @@ public class ClienteWebController {
     @Autowired
     private UserSession userSession;
 
-    public ClienteWebController(ClienteService clienteService, UserSession userSession) {
+    public ClienteController(ClienteService clienteService, UserSession userSession) {
         this.clienteService = clienteService;
         this.userSession = userSession;
     }

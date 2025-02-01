@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/web/minhas-reservas")
-public class MinhasReservasController {
+public class ConsultarReservasController {
 
     @Autowired
     private UserSession userSession;

@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/web/viagens")
-public class ReservaWebController {
+public class ReservaController {
 
     @Autowired
     private ViagemService viagemService;

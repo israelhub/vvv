@@ -45,7 +45,46 @@ public class FuncionarioService {
         funcionarioRepository.save(funcionarioExistente);
     }
 
+    public void atualizarDados(Funcionario funcionario, List<PontoFuncionario> novosHorarios) {
+        // Remove horários antigos
+        pontoFuncionarioRepository.deleteByFuncionarioId(funcionario.getId_funcionario());
+        
+        // Salva funcionário atualizado
+        funcionarioRepository.save(funcionario);
+        
+        // Adiciona novos horários
+        if(novosHorarios != null) {
+            novosHorarios.forEach(pf -> pontoFuncionarioRepository.save(pf));
+        }
+    }
+
     public List<Funcionario> listarGerentes() {
         return funcionarioRepository.findByCargo(Cargo.GERENTE);
     }
+
+    public void deletar(Long id) {
+        funcionarioRepository.deleteById(id);
+    }
+
+    public Funcionario buscarPorId(Long id) {
+        return funcionarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
+    }
+
+    public List<Funcionario> listarTodos() {
+        return funcionarioRepository.findAll();
+    }
+
+    public List<PontoFuncionario> buscarPontosFuncionario(Long id) {
+        return pontoFuncionarioRepository.findByFuncionarioId(id);
+    }
+
+    public void removerPontosFuncionario(Long funcionarioId) {
+        // Remove todos os pontos existentes do funcionário
+        List<PontoFuncionario> pontos = buscarPontosFuncionario(funcionarioId);
+        for (PontoFuncionario ponto : pontos) {
+            pontoFuncionarioRepository.delete(ponto);
+        }
+    }
+
 }

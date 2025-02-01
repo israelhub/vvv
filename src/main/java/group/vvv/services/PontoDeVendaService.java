@@ -22,6 +22,15 @@ public class PontoDeVendaService {
     }
 
     public PontoDeVenda buscarPorId(Long id) {
-        return pontoDeVendaRepository.findById(id).orElseThrow(() -> new RuntimeException("Ponto de Venda não encontrado"));
+        return pontoDeVendaRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Ponto de Venda não encontrado"));
+    }
+
+    public void deletar(Long id) {
+        pontoDeVendaRepository.deleteById(id);
+    }
+
+    public void atualizar(PontoDeVenda pontoDeVenda) {
+        pontoDeVendaRepository.save(pontoDeVenda);
     }
 }
