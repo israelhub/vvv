@@ -39,8 +39,7 @@ public class Viagem {
     @Column(name = "horario_chegada", nullable = false)
     private LocalDateTime horarioChegada;
 
-    @OneToMany(mappedBy = "viagem", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "viagem", cascade = CascadeType.ALL)
     @OrderBy("ordem ASC")
-    private List<Escala> escalas = new ArrayList<>();
-
+    private List<Escala> escalas;
 }

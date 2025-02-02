@@ -4,6 +4,7 @@ import group.vvv.config.FuncionarioSession;
 import group.vvv.models.Funcionario;
 import group.vvv.models.PontoFuncionario;
 import group.vvv.models.Reserva;
+import group.vvv.models.Reserva.StatusReserva;
 import group.vvv.services.FuncionarioService;
 import group.vvv.services.PontoDeVendaService;
 import group.vvv.services.ReservaService;

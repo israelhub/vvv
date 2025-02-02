@@ -15,8 +15,8 @@ public class PaginaInicialController {
     private ViagemService viagemService;
 
     @GetMapping("/paginaInicial")
-    public String exibirPaginaInicial(Model model) {
-        model.addAttribute("viagens", viagemService.getViagens());
+    public String paginaInicial(Model model) {
+        model.addAttribute("viagens", viagemService.getViagensDisponiveis());
         return "paginaInicial";
     }
 }
