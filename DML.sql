@@ -140,9 +140,11 @@ INSERT INTO parcela (id_pagamento, numero_parcela, valor_parcela) VALUES
 (2, 2, 150.00);
 
 -- Inserindo Tickets
-INSERT INTO ticket (tipo_passagem, localizador, hora_partida, hora_chegada, id_reserva, id_passageiro) VALUES 
-('EXECUTIVA', 'ABC123', '2024-03-20 08:00:00', '2024-03-20 10:00:00', 1, 1),
-('ECONOMICA', 'DEF456', '2024-03-21 10:00:00', '2024-03-21 14:00:00', 2, 2);
+INSERT INTO ticket (tipo_passagem, localizador, origem, destino, hora_partida, hora_chegada, id_reserva, id_passageiro) VALUES 
+('ADULTO', 'LOC123A', 'São Paulo', 'Belo Horizonte', '2024-03-20 08:00:00', '2024-03-20 09:00:00', 1, 1),
+('ADULTO', 'LOC123B', 'Belo Horizonte', 'Rio de Janeiro', '2024-03-20 09:00:00', '2024-03-20 10:00:00', 1, 1),
+('ADULTO', 'LOC456A', 'Rio de Janeiro', 'Porto Alegre', '2024-03-21 10:00:00', '2024-03-21 12:30:00', 2, 2),
+('ADULTO', 'LOC456B', 'Porto Alegre', 'Belo Horizonte', '2024-03-21 12:30:00', '2024-03-21 14:00:00', 2, 2);
 
 -- Inserindo Reserva_Passageiro
 INSERT INTO reserva_passageiro (id_reserva, id_passageiro) VALUES 

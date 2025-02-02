@@ -10,6 +10,8 @@ import group.vvv.services.*;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -224,22 +226,22 @@ public class ReservaPresencialController {
             @RequestParam(defaultValue = "1") Integer numParcelas,
             RedirectAttributes ra,
             Model model) {
-    
+
         try {
             Reserva reserva = reservaService.getReservaById(id);
             // Salva o cartão para o funcionário
             Cartao cartao = cartaoService.salvarCartaoParaFuncionario(numero, cvv, validade, nomeTitular, tipoCartao);
-            
+
             // Cria o pagamento e as parcelas
             pagamentoService.criarPagamento(reserva, cartao, numParcelas);
-            
+
             // Atualiza status da reserva
             reserva.setStatus(StatusReserva.CONFIRMADA);
             reservaService.salvarReserva(reserva);
-            
+
             // Gera os tickets
             ticketService.gerarTickets(reserva);
-            
+
             return "redirect:/web/pontos-de-venda/reservas/viagem/" + id + "/tickets";
         } catch (Exception e) {
             ra.addFlashAttribute("mensagem", "Erro ao processar pagamento: " + e.getMessage());
@@ -247,6 +249,7 @@ public class ReservaPresencialController {
             return "redirect:/web/pontos-de-venda/reservas/viagem/" + id + "/pagamento";
         }
     }
+
     @GetMapping("/viagem/{id}/tickets")
     public String exibirTickets(@PathVariable Long id, Model model) {
         Reserva reserva = reservaService.getReservaById(id);
@@ -256,6 +259,18 @@ public class ReservaPresencialController {
         model.addAttribute("tickets", tickets);
 
         return "reservaAdmin/emitirTicketPresencial";
+    }
+
+    private String calcularTempoViagem(LocalDateTime partida, LocalDateTime chegada) {
+        Duration duracao = Duration.between(partida, chegada);
+        long horas = duracao.toHours();
+        long minutos = duracao.toMinutesPart();
+
+        if (horas > 0) {
+            return String.format("%dh%02dm", horas, minutos);
+        } else {
+            return String.format("%dm", minutos);
+        }
     }
 
     @GetMapping("/viagem/{id}/ticket/download")
@@ -322,8 +337,8 @@ public class ReservaPresencialController {
                 // Dados do passageiro e viagem
                 addTicketRow(table, "Passageiro", ticket.getPassageiro().getNome(), headerFont, normalFont);
                 addTicketRow(table, "Tipo de Passagem", ticket.getTipoPassagem(), headerFont, normalFont);
-                addTicketRow(table, "Origem", ticket.getReserva().getOrigem(), headerFont, normalFont);
-                addTicketRow(table, "Destino", ticket.getReserva().getDestino(), headerFont, normalFont);
+                addTicketRow(table, "Origem", ticket.getOrigem(), headerFont, normalFont);
+                addTicketRow(table, "Destino", ticket.getDestino(), headerFont, normalFont);
 
                 DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -335,6 +350,8 @@ public class ReservaPresencialController {
                         ticket.getHoraPartida().format(timeFormatter), headerFont, normalFont);
                 addTicketRow(table, "Horário Chegada",
                         ticket.getHoraChegada().format(timeFormatter), headerFont, normalFont);
+                String tempoViagem = calcularTempoViagem(ticket.getHoraPartida(), ticket.getHoraChegada());
+                addTicketRow(table, "Tempo de Viagem", tempoViagem, headerFont, normalFont);
 
                 document.add(table);
 

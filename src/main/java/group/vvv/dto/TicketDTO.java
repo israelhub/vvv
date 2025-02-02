@@ -14,4 +14,6 @@ public class TicketDTO {
     private String modalPrincipal;
     private String companhia;
     private Double valor;
+    private Double valorTotal; // Valor total da reserva
+    private Double valorTrecho; // Valor proporcional do trecho
 }

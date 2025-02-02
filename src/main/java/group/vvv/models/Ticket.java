@@ -16,6 +16,12 @@ public class Ticket {
     
     @Column(nullable = false)
     private String localizador;
+
+    @Column(nullable = false)
+    private String origem;
+
+    @Column(nullable = false)
+    private String destino;
     
     @Column(nullable = false)
     private LocalDateTime horaPartida;

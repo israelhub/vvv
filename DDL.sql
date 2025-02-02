@@ -213,6 +213,8 @@ CREATE TABLE ticket (
         id_ticket BIGSERIAL PRIMARY KEY,
         tipo_passagem VARCHAR(50),
         localizador VARCHAR(50),
+        origem VARCHAR(50),
+        destino VARCHAR(50),
         hora_partida TIMESTAMP NOT NULL,
         hora_chegada TIMESTAMP NOT NULL,
         id_reserva BIGINT NOT NULL REFERENCES reserva (id_reserva) ON DELETE CASCADE,

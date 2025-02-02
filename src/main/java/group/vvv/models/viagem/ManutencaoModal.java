@@ -3,7 +3,6 @@ package group.vvv.models.viagem;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
-import java.math.BigDecimal;
 
 @Entity
 @Data
