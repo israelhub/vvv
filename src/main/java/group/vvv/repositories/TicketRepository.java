@@ -12,4 +12,13 @@ import group.vvv.models.Ticket;
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
     @Query("SELECT t FROM Ticket t WHERE t.reserva.id_reserva = :idReserva")
     List<Ticket> findByReservaId(@Param("idReserva") Long idReserva);
+
+    @Query("SELECT t FROM Ticket t JOIN t.reserva r WHERE r.cliente IS NOT NULL AND YEAR(t.horaPartida) = :ano")
+    List<Ticket> findByAnoAndOnline(@Param("ano") int ano);
+    
+    @Query("SELECT t FROM Ticket t JOIN t.reserva r WHERE r.cliente IS NOT NULL AND YEAR(t.horaPartida) = :ano AND MONTH(t.horaPartida) = :mes")
+    List<Ticket> findByAnoMesAndOnline(@Param("ano") int ano, @Param("mes") int mes);
+    
+    @Query("SELECT t FROM Ticket t JOIN t.reserva r JOIN r.viagem v JOIN v.modal m JOIN m.transportadora tr WHERE r.cliente IS NOT NULL AND tr.nome = :companhia")
+    List<Ticket> findByCompanhiaAndOnline(@Param("companhia") String companhia);
 }

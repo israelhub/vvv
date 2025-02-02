@@ -30,4 +30,12 @@ public class ModalService {
     public void deletar(Long id) {
         modalRepository.deleteById(id);
     }
+
+    public String getDescricaoModal(Modal modal) {
+        return modal.getTipo() + " - " + modal.getModelo();
+    }
+    
+    public String getNomeTransportadora(Modal modal) {
+        return modal.getTransportadora().getNome();
+    }
 }
