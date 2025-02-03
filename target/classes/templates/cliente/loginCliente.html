@@ -7,22 +7,30 @@
 <body>
 <div class="container mt-5">
     <h1>Login do Cliente</h1>
-    <form th:action="@{/web/clientes/login}" th:object="${cliente}" method="post">
+    <form th:action="@{/web/clientes/login}" method="post">
+        <input type="hidden" name="returnUrl" th:value="${param.returnUrl}">
+        <input type="hidden" name="passageirosNormal" th:value="${param.passageirosNormal}">
+        <input type="hidden" name="passageirosCrianca" th:value="${param.passageirosCrianca}">
+        
         <div class="mb-3">
             <label for="email" class="form-label">Email</label>
-            <input type="email" id="email" name="email" th:field="*{email}" class="form-control" required>
+            <input type="email" id="email" name="email" class="form-control" required>
         </div>
 
         <div class="mb-3">
             <label for="senha" class="form-label">Senha</label>
-            <input type="password" id="senha" name="senha" th:field="*{senha}" class="form-control" required>
+            <input type="password" id="senha" name="senha" class="form-control" required>
         </div>
 
         <button type="submit" class="btn btn-primary">Login</button>
     </form>
     
-    <div th:if="${mensagem}" class="mt-3 alert alert-danger">
-        <p th:text="${mensagem}"></p>
+    <div class="mt-3">
+        <a th:href="@{/web/clientes/cadastro}" class="btn btn-secondary">Não tem uma conta? Cadastre-se</a>
+    </div>
+    
+    <div th:if="${mensagemErro}" class="mt-3 alert alert-danger">
+        <p th:text="${mensagemErro}"></p>
     </div>
 </div>
 </body>

@@ -35,6 +35,7 @@ group\vvv\models\ReservaPassageiro$ReservaPassageiroId.class
 group\vvv\models\viagem\Cidade.class
 group\vvv\repositories\CidadeRepository.class
 group\vvv\models\PontoFuncionario$DiaSemana.class
+group\vvv\services\EscalaService.class
 group\vvv\services\PontoDeVendaService.class
 group\vvv\repositories\PortoRepository.class
 group\vvv\controllers\ViagensPresenciaisController.class
@@ -53,7 +54,9 @@ group\vvv\config\UserSession.class
 group\vvv\controllers\AdminController.class
 group\vvv\services\ReservaService.class
 group\vvv\controllers\PontoDeVendaController.class
+group\vvv\dto\TicketDTO.class
 group\vvv\VvvApplication.class
+group\vvv\controllers\api\TicketApiController.class
 group\vvv\models\viagem\Modal.class
 group\vvv\services\CartaoService.class
 group\vvv\models\viagem\Porto.class

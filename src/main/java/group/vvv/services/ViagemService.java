@@ -5,6 +5,7 @@ import group.vvv.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,5 +57,29 @@ public class ViagemService {
 
     public void atualizarViagem(Viagem viagem) {
         viagemRepository.save(viagem);
+    }
+
+    public List<Viagem> buscarViagens(String origem, String destino, LocalDate data) {
+        return viagemRepository.findAllWithEscalas().stream()
+                .filter(viagem -> {
+                    boolean match = true;
+
+                    if (origem != null && !origem.isEmpty()) {
+                        match = viagem.getOrigem().getDescricaoCompleta()
+                                .toLowerCase().contains(origem.toLowerCase());
+                    }
+
+                    if (match && destino != null && !destino.isEmpty()) {
+                        match = viagem.getDestino().getDescricaoCompleta()
+                                .toLowerCase().contains(destino.toLowerCase());
+                    }
+
+                    if (match && data != null) {
+                        match = viagem.getHorarioPartida().toLocalDate().equals(data);
+                    }
+
+                    return match;
+                })
+                .collect(Collectors.toList());
     }
 }

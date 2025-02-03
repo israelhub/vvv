@@ -1,6 +1,6 @@
-group\vvv\controllers\ClienteWebControllerTest.class
 group\vvv\services\FuncionarioServiceTest.class
 group\vvv\services\ClienteServiceTest.class
 group\vvv\models\ClienteTest.class
 group\vvv\models\FuncionarioTest.class
+group\vvv\services\ViagemServiceTest.class
 group\vvv\VvvApplicationTests.class

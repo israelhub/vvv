@@ -1,4 +1,3 @@
-icial.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -11,11 +10,11 @@ icial.html -->
 <body>
     <header class="header">
         <div class="logo">
-            <h1>Vai&Volta Viagens</h1>
+            <img th:src="@{/images/logo.png}" alt="Vai&Volta Viagens Logo">
         </div>
         <nav class="nav-menu">
             <div th:if="${not @userSession.authenticated}">
-                <a href="/web/clientes/login" class="login-btn">
+                <a th:href="@{/web/clientes/login}" class="login-btn">
                     <i class="fas fa-user"></i>
                     Iniciar Sessão
                 </a>
@@ -54,12 +53,32 @@ icial.html -->
     </header>
     <main class="main">
         <section class="hero">
-            <h2>Descubra novos destinos</h2>
+            <h2>Explore novos destinos</h2>
             <p>Encontre as melhores viagens para sua próxima aventura</p>
         </section>
 
         <section class="viagens">
-            <h2>Viagens Disponíveis</h2>
+            <div class="search-box">
+                <form method="get" action="/web/paginaInicial" class="search-form">
+                    <div class="search-inputs">
+                        <div class="input-group">
+                            <input type="text" name="origem" class="form-control" 
+                                   placeholder="Origem" th:value="${param.origem}">
+                        </div>
+                        <div class="input-group">
+                            <input type="text" name="destino" class="form-control" 
+                                   placeholder="Destino" th:value="${param.destino}">
+                        </div>
+                        <div class="input-group">
+                            <input type="date" name="data" class="form-control" 
+                                   th:value="${param.data}">
+                        </div>
+                        <button type="submit" class="btn-search">
+                            <i class="fas fa-search"></i> Buscar
+                        </button>
+                    </div>
+                </form>
+            </div>
             <div class="viagens-grid">
                 <div th:each="viagem : ${viagens}" class="viagem-card">
                     <a th:href="@{/web/viagens/detalhes/{id}(id=${viagem.id_viagem})}">

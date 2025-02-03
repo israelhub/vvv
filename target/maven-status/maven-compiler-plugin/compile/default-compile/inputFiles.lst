@@ -4,6 +4,7 @@ C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\config\UserSession.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\config\WebConfig.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\AdminController.java
+C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\api\TicketApiController.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\ClienteController.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\ConsultarReservasController.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\FuncionarioController.java
@@ -15,6 +16,7 @@ C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\ReservaController.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\ReservaPresencialController.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\controllers\ViagensPresenciaisController.java
+C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\dto\TicketDTO.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\Cartao.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\Cliente.java
 C:\Meus Arquivos\Izzra's Bibliotecary\Projetos (CODIGO)\vvv\src\main\java\group\vvv\models\Funcionario.java

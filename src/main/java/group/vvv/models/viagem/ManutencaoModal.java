@@ -1,8 +1,12 @@
 package group.vvv.models.viagem;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.Data;
 import java.time.LocalDate;
+
 
 @Entity
 @Data
@@ -18,9 +22,11 @@ public class ManutencaoModal {
     @JoinColumn(name = "id_modal", nullable = false)
     private Modal modal;
 
+    @NotNull(message = "A data de início é obrigatória")
     @Column(name = "data_inicio", nullable = false)
     private LocalDate dataInicio;
 
+    @Future(message = "A data fim deve ser no futuro")
     @Column(name = "data_fim")
     private LocalDate dataFim;
 

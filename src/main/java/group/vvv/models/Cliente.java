@@ -14,7 +14,8 @@ public class Cliente {
     private Long id_cliente;
 
     @Column(nullable = false, length = 60)
-    @NotNull(message = "O nome não pode ser nulo")
+    @NotBlank(message = "O nome é obrigatório")
+    @Size(min = 3, max = 60, message = "O nome deve ter entre 3 e 60 caracteres")
     private String nome;
 
     @Column(nullable = false)

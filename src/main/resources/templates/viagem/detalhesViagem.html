@@ -3,44 +3,95 @@
 <head>
     <title>Detalhes da Viagem</title>
     <link rel="stylesheet" th:href="@{/styledetalhesviagem.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
 <div class="container mt-5">
     <h1>Detalhes da Viagem</h1>
     <div class="viagem-detalhes">
-        <div>
-            <h2>Origem</h2>
-            <p th:text="${viagem.origem.descricaoCompleta}"></p>
-            <p>
-                <strong>Horário de Partida:</strong>
-                <span th:text="${#temporals.format(viagem.horarioPartida, 'dd/MM/yyyy HH:mm')}"></span>
-            </p>
-        </div>
-        
-        <div>
-            <h2>Destino</h2>
-            <p th:text="${viagem.destino.descricaoCompleta}"></p>
-            <p>
-                <strong>Horário de Chegada:</strong>
-                <span th:text="${#temporals.format(viagem.horarioChegada, 'dd/MM/yyyy HH:mm')}"></span>
-            </p>
+        <!-- Card Origem -->
+        <div class="card-info">
+            <h2 class="section-title">
+                <i class="fas fa-plane-departure"></i>
+                Origem
+            </h2>
+            <div class="info-content">
+                <div class="info-row">
+                    <span class="info-label">Local:</span>
+                    <span class="info-value" th:text="${viagem.origem.descricaoCompleta}"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Data e Hora:</span>
+                    <span class="info-value" th:text="${#temporals.format(viagem.horarioPartida, 'dd/MM/yyyy HH:mm')}"></span>
+                </div>
+            </div>
         </div>
 
-        <div th:if="${not #lists.isEmpty(viagem.escalas)}">
-            <h2>Escalas</h2>
-            <div th:each="escala : ${viagem.escalas}" class="escala-item">
-                <p>
-                    <strong>Local:</strong> 
-                    <span th:text="${escala.origem.descricaoCompleta}"></span>
-                </p>
-                <p>
-                    <strong>Partida:</strong>
-                    <span th:text="${#temporals.format(escala.horarioPartida, 'dd/MM/yyyy HH:mm')}"></span>
-                </p>
-                <p>
-                    <strong>Chegada:</strong>
-                    <span th:text="${#temporals.format(escala.horarioChegada, 'dd/MM/yyyy HH:mm')}"></span>
-                </p>
+        <!-- Card Destino -->
+        <div class="card-info">
+            <h2 class="section-title">
+                <i class="fas fa-plane-arrival"></i>
+                Destino
+            </h2>
+            <div class="info-content">
+                <div class="info-row">
+                    <span class="info-label">Local:</span>
+                    <span class="info-value" th:text="${viagem.destino.descricaoCompleta}"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Data e Hora:</span>
+                    <span class="info-value" th:text="${#temporals.format(viagem.horarioChegada, 'dd/MM/yyyy HH:mm')}"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Modal -->
+        <div class="card-info">
+            <h2 class="section-title">
+                <i class="fas fa-shuttle-van"></i>
+                Transporte
+            </h2>
+            <div class="modal-info">
+                <i class="modal-icon" th:class="${'fas ' + 
+                    (viagem.modal.tipo == 'AEREO' ? 'fa-plane' : 
+                    viagem.modal.tipo == 'RODOVIARIO' ? 'fa-bus' : 
+                    viagem.modal.tipo == 'AQUATICO' ? 'fa-ship' : 'fa-shuttle-van')}"></i>
+                <div>
+                    <div class="info-row">
+                        <span class="info-label">Tipo:</span>
+                        <span class="info-value" th:text="${viagem.modal.tipo}"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Modelo:</span>
+                        <span class="info-value" th:text="${viagem.modal.modelo}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Escalas -->
+        <div class="card-info" th:if="${not #lists.isEmpty(viagem.escalas)}">
+            <h2 class="section-title">
+                <i class="fas fa-map-marker-alt"></i>
+                Escalas
+            </h2>
+            <div th:each="escala, iterStat : ${viagem.escalas}" class="escala-card">
+                <div class="info-row">
+                    <span class="info-label">Escala [[${iterStat.count}]]:</span>
+                    <span class="info-value" th:text="${escala.origem.descricaoCompleta}"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Chegada:</span>
+                    <span class="info-value" th:text="${#temporals.format(escala.horarioChegada, 'dd/MM/yyyy HH:mm')}"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Partida:</span>
+                    <span class="info-value" th:text="${#temporals.format(escala.horarioPartida, 'dd/MM/yyyy HH:mm')}"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Modal:</span>
+                    <span class="info-value" th:text="${escala.modal.tipo + ' - ' + escala.modal.modelo}"></span>
+                </div>
             </div>
         </div>
 
@@ -95,14 +146,23 @@
             </form>
         </div>
 
-        <div th:if="${not @userSession.authenticated}" class="alert alert-warning">
-            Você precisa estar logado para fazer uma reserva. 
-            <a href="/web/clientes/login" class="btn btn-primary">Fazer Login</a>
-        </div>
-
-        <a th:if="${@userSession.authenticated}" th:href="@{/web/viagens/reservar/{id}(id=${viagem.id_viagem}, passageirosNormal=${passageirosNormal}, passageirosCrianca=${passageirosCrianca})}" class="btn btn-primary">
-            Reservar
-        </a>
+        <!-- Botões de ação -->
+        <div class="acoes" style="grid-column: 1 / -1; text-align: center;">
+            <div th:if="${not @userSession.authenticated}" class="alert alert-warning">
+                Para fazer uma reserva, você precisa estar logado. 
+                <a th:href="@{/web/clientes/login(returnUrl=${'/web/viagens/detalhes/' + viagem.id_viagem}, 
+                                                 passageirosNormal=${passageirosNormal}, 
+                                                 passageirosCrianca=${passageirosCrianca})}" 
+                   class="btn btn-primary">
+                    Fazer Login
+                </a>
+            </div>
+    
+            <a th:if="${@userSession.authenticated}" 
+               th:href="@{/web/viagens/reservar/{id}(id=${viagem.id_viagem}, passageirosNormal=${passageirosNormal}, passageirosCrianca=${passageirosCrianca})}" 
+               class="btn-primary">
+                <i class="fas fa-ticket-alt"></i> Reservar
+            </a>
     </div>
 </div>
 

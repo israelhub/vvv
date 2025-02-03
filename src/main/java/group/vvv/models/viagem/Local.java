@@ -1,6 +1,7 @@
 package group.vvv.models.viagem;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -12,6 +13,7 @@ public class Local {
     @Column(name = "id_local")
     private Long id_local;
 
+    @NotNull(message = "A cidade é obrigatória")
     @ManyToOne
     @JoinColumn(name = "id_cidade", nullable = false)
     private Cidade id_cidade;

@@ -21,6 +21,7 @@ body {
 }
 
 .header {
+    height: 80px; /* Altura fixa para o header */
     background-color: var(--primary-color);
     color: white;
     padding: 1rem 5%;
@@ -33,10 +34,23 @@ body {
     z-index: 1000;
 }
 
-.logo h1 {
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.logo img {
+    height: 30px; 
+    width: auto;
+    margin-bottom: 10px; /* Ajuste fino para centralização */
+}
+
+/*.logo h1 {
     font-size: 1.5rem;
     font-weight: 600;
-}
+} */
 
 .login-btn {
     background-color: var(--accent-color);
@@ -56,26 +70,12 @@ body {
     padding-top: 80px;
 }
 
-.hero {
-    text-align: center;
-    padding: 4rem 1rem;
-    background: linear-gradient(135deg, #74ebd5, #9face6);
-    color: white;
-}
-
-.hero h2 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-}
-
 .viagens {
     padding: 2rem 5%;
 }
 
 .viagens h2 {
-    text-align: center;
-    margin-bottom: 2rem;
-    color: var(--primary-color);
+    display: none;
 }
 
 .viagens-grid {
@@ -232,6 +232,70 @@ body {
     font-size: 16px;
 }
 
+.hero {
+    text-align: center;
+    padding: 2rem 1rem; /* Reduzir padding vertical */
+    background: linear-gradient(135deg, #74ebd5, #9face6);
+    color: white;
+    margin-bottom: 1rem;  /* espaço entre a search box e a hero */
+}
+
+.hero p {
+    margin-bottom: 0;
+}
+.hero h2 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.search-box {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    margin: 1rem auto; /* espaço entre a search box e a hero */
+    max-width: 800px;
+    margin-bottom: 3rem; /* Espaço entre search box e grid de viagens */
+}
+
+.search-form {
+    width: 100%;
+}
+
+.search-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    align-items: end;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group input {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.btn-search {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-search:hover {
+    background-color: var(--primary-color-dark);
+}
+
+
 @media (max-width: 768px) {
     .viagens-grid {
         grid-template-columns: 1fr;
@@ -239,5 +303,9 @@ body {
     
     .viagem-card {
         margin: 0 1rem;
+    }
+
+    .search-inputs {
+        grid-template-columns: 1fr;
     }
 }

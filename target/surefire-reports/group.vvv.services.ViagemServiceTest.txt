@@ -1,0 +1,44 @@
+-------------------------------------------------------------------------------
+Test set: group.vvv.services.ViagemServiceTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 0.163 s <<< FAILURE! -- in group.vvv.services.ViagemServiceTest
+group.vvv.services.ViagemServiceTest.testSalvarViagemComEscalasOrdenadas -- Time elapsed: 0.029 s <<< FAILURE!
+Wanted but not invoked:
+escalaService.salvarEscalas(
+    <custom argument matcher>
+);
+-> at group.vvv.services.EscalaService.salvarEscalas(EscalaService.java:28)
+Actually, there were zero interactions with this mock.
+
+	at group.vvv.services.EscalaService.salvarEscalas(EscalaService.java:28)
+	at group.vvv.services.ViagemServiceTest.testSalvarViagemComEscalasOrdenadas(ViagemServiceTest.java:148)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+group.vvv.services.ViagemServiceTest.testSalvarViagemComEscalas -- Time elapsed: 0.017 s <<< FAILURE!
+Wanted but not invoked:
+escalaService.salvarEscalas(
+    [Escala(id_escala=null, viagem=null, origem=null, destino=null, modal=null, horarioPartida=2025-02-02T21:42:31.448083300, horarioChegada=2025-02-02T22:42:31.448083300, ordem=1)]
+);
+-> at group.vvv.services.EscalaService.salvarEscalas(EscalaService.java:28)
+Actually, there were zero interactions with this mock.
+
+	at group.vvv.services.EscalaService.salvarEscalas(EscalaService.java:28)
+	at group.vvv.services.ViagemServiceTest.testSalvarViagemComEscalas(ViagemServiceTest.java:60)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+group.vvv.services.ViagemServiceTest.testSalvarViagemAtualizacao -- Time elapsed: 0.004 s <<< FAILURE!
+Wanted but not invoked:
+escalaService.deletarEscalasDaViagem(1L);
+-> at group.vvv.services.EscalaService.deletarEscalasDaViagem(EscalaService.java:33)
+Actually, there were zero interactions with this mock.
+
+	at group.vvv.services.EscalaService.deletarEscalasDaViagem(EscalaService.java:33)
+	at group.vvv.services.ViagemServiceTest.testSalvarViagemAtualizacao(ViagemServiceTest.java:125)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+

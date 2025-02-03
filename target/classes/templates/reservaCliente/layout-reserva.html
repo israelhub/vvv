@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title layout:title-pattern="$CONTENT_TITLE - VVV Viagens">Reserva</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/reserva-flow.css}" rel="stylesheet">
+</head>
+<body>
+    <div class="reserva-container">
+        <!-- Indicador de Progresso -->
+        <div class="progress-indicator">
+            <div class="progress-step" th:classappend="${currentStep == 1 ? 'active' : (currentStep > 1 ? 'completed' : '')}">
+                <div class="step-number">1</div>
+                <div class="step-label">Passageiros</div>
+            </div>
+            <div class="progress-step" th:classappend="${currentStep == 2 ? 'active' : (currentStep > 2 ? 'completed' : '')}">
+                <div class="step-number">2</div>
+                <div class="step-label">Pagamento</div>
+            </div>
+            <div class="progress-step" th:classappend="${currentStep == 3 ? 'active' : ''}">
+                <div class="step-number">3</div>
+                <div class="step-label">Confirmação</div>
+            </div>
+        </div>
+
+        <!-- Container Principal -->
+        <div class="main-content-wrapper">            
+            <!-- Painel Lateral -->
+            <aside class="side-panel">
+                <div class="side-panel-content">
+                    <div class="trip-summary">
+                        <h3>Resumo da Viagem</h3>
+                        <div class="summary-item">
+                            <span class="summary-label">Origem:</span>
+                            <span class="summary-value" th:text="${viagem?.origem?.descricaoCompleta}">São Paulo</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Destino:</span>
+                            <span class="summary-value" th:text="${viagem?.destino?.descricaoCompleta}">Rio de Janeiro</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Data/Hora Partida:</span>
+                            <span class="summary-value" th:text="${viagem?.horarioPartida != null ? #temporals.format(viagem.horarioPartida, 'dd/MM/yyyy HH:mm') : ''}"></span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Data/Hora Chegada:</span>
+                            <span class="summary-value" th:text="${viagem?.horarioChegada != null ? #temporals.format(viagem.horarioChegada, 'dd/MM/yyyy HH:mm') : ''}"></span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Valor Total:</span>
+                            <span class="summary-value" th:text="${valorTotal != null ? 'R$ ' + #numbers.formatDecimal(valorTotal, 1, 'POINT', 2, 'COMMA') : ''}"></span>
+                        </div>
+                    </div>
+
+                    <div class="escalas-summary" th:if="${not #lists.isEmpty(viagem?.escalas)}">
+                        <h4 class="mt-3">Escalas</h4>
+                        <div th:each="escala : ${viagem.escalas}" class="escala-item">
+                            <div class="summary-item">
+                                <span class="summary-label">Local:</span>
+                                <span class="summary-value" th:text="${escala.origem.descricaoCompleta}"></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Chegada:</span>
+                                <span class="summary-value" th:text="${#temporals.format(escala.horarioChegada, 'dd/MM/yyyy HH:mm')}"></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Partida:</span>
+                                <span class="summary-value" th:text="${#temporals.format(escala.horarioPartida, 'dd/MM/yyyy HH:mm')}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Conteúdo Principal -->
+            <main class="main-content">
+                <div layout:fragment="content">
+                    <!-- O conteúdo específico de cada página será inserido aqui -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <th:block layout:fragment="scripts">
+        <!-- Scripts específicos de cada página serão inseridos aqui -->
+    </th:block>
+</body>
+</html>
