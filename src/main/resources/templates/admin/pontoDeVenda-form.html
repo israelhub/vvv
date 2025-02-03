@@ -1,65 +1,157 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{admin/layout}">
-<head>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{admin/layout}"
+>
+  <head>
     <title>Cadastro de Ponto de Venda</title>
-</head>
-<div layout:fragment="content">
+  </head>
+  <div layout:fragment="content">
     <div class="container mt-5">
-        <h2 th:text="${editando ? 'Editar' : 'Cadastrar'} + ' Ponto de Venda'"></h2>
+      <h2
+        th:text="${editando ? 'Editar' : 'Cadastrar'} + ' Ponto de Venda'"
+      ></h2>
 
-        <form th:action="${editando} ? @{/web/administracao/ponto-de-venda/editar/{id}(id=${pontoDeVenda.id_ponto_de_venda})} : @{/web/administracao/ponto-de-venda}" 
-        th:object="${pontoDeVenda}" 
-        method="post">
+      <form
+        th:action="${editando} ? @{/web/administracao/ponto-de-venda/editar/{id}(id=${pontoDeVenda.id_ponto_de_venda})} : @{/web/administracao/ponto-de-venda}"
+        th:object="${pontoDeVenda}"
+        method="post"
+      >
+        <input
+          type="hidden"
+          th:field="*{id_ponto_de_venda}"
+          th:if="${editando}"
+        />
 
-        <input type="hidden" th:field="*{id_ponto_de_venda}" th:if="${editando}"/>
+        <div class="mb-3">
+          <label for="nome" class="form-label">Nome</label>
+          <input
+            type="text"
+            id="nome"
+            th:field="*{nome}"
+            class="form-control"
+            required
+            minlength="2"
+            maxlength="60"
+            pattern="[A-Za-zÀ-ú\s]+"
+            title="Nome deve conter apenas letras e espaços"
+          />
+          <div class="invalid-feedback">
+            Nome é obrigatório e deve ter entre 2 e 60 caracteres
+          </div>
+        </div>
 
-            <div class="mb-3">
-                <label for="nome" class="form-label">Nome</label>
-                <input type="text" id="nome" th:field="*{nome}" class="form-control" required>
-            </div>
+        <div class="mb-3">
+          <label for="cnpj" class="form-label">CNPJ (Apenas números)</label>
+          <input
+            type="text"
+            id="cnpj"
+            th:field="*{cnpj}"
+            class="form-control"
+            required
+            maxlength="14"
+            title="CNPJ deve conter apenas números"
+          />
+          <div class="invalid-feedback">CNPJ inválido</div>
+        </div>
 
-            <div class="mb-3">
-                <label for="cnpj" class="form-label">CNPJ</label>
-                <input type="text" id="cnpj" th:field="*{cnpj}" class="form-control" required>
-            </div>
+        <div class="mb-3">
+          <label for="cep" class="form-label">CEP (Apenas números)</label>
+          <input
+            type="text"
+            id="cep"
+            th:field="*{cep}"
+            class="form-control"
+            maxlength="8"
+            pattern="\d{5}\-\d{3}"
+            title="CEP deve conter apenas números"
+            required
+          />
+          <div class="invalid-feedback">CEP inválido</div>
+        </div>
 
-            <div class="mb-3">
-                <label for="cep" class="form-label">CEP</label>
-                <input type="text" id="cep" th:field="*{cep}" class="form-control">
-            </div>
+        <div class="mb-3">
+          <label for="rua" class="form-label">Rua</label>
+          <input
+            type="text"
+            id="rua"
+            th:field="*{rua}"
+            class="form-control"
+            maxlength="255"
+            required
+          />
+        </div>
 
-            <div class="mb-3">
-                <label for="rua" class="form-label">Rua</label>
-                <input type="text" id="rua" th:field="*{rua}" class="form-control">
-            </div>
+        <div class="mb-3">
+          <label for="numero_rua" class="form-label">Número</label>
+          <input
+            type="text"
+            id="numero_rua"
+            th:field="*{numero_rua}"
+            class="form-control"
+            maxlength="10"
+            pattern="[0-9]+"
+            title="Apenas números são permitidos"
+            required
+          />
+          <div class="invalid-feedback">Número inválido</div>
+        </div>
 
-            <div class="mb-3">
-                <label for="numero_rua" class="form-label">Número</label>
-                <input type="text" id="numero_rua" th:field="*{numero_rua}" class="form-control">
-            </div>
+        <div class="mb-3">
+          <label for="telefone" class="form-label">Telefone (Apenas números)</label>
+          <input
+            type="text"
+            id="telefone"
+            th:field="*{telefone}"
+            class="form-control"
+            maxlength="11"
+            title="Telefone deve conter apenas números"
+          />
+          <div class="invalid-feedback">Telefone inválido</div>
+        </div>
 
-            <div class="mb-3">
-                <label for="telefone" class="form-label">Telefone</label>
-                <input type="text" id="telefone" th:field="*{telefone}" class="form-control">
-            </div>
+        <div class="mb-3">
+          <label for="gerente" class="form-label">Gerente</label>
+          <select
+            id="gerente"
+            th:field="*{gerente}"
+            class="form-control"
+            required
+          >
+            <option value="">Selecione um gerente</option>
+            <option
+              th:each="gerente : ${gerentes}"
+              th:value="${gerente.id_funcionario}"
+              th:text="${gerente.nome}"
+            ></option>
+          </select>
+        </div>
 
-            <div class="mb-3">
-                <label for="gerente" class="form-label">Gerente</label>
-                <select id="gerente" th:field="*{gerente}" class="form-control" required>
-                    <option value="">Selecione um gerente</option>
-                    <option th:each="gerente : ${gerentes}" 
-                            th:value="${gerente.id_funcionario}"
-                            th:text="${gerente.nome}">
-                    </option>
-                </select>
-            </div>
-
-            <button type="submit" class="btn btn-primary">
-                <span th:text="${editando ? 'Atualizar' : 'Cadastrar'} + ' Ponto de Venda'"></span>
-            </button>
-        </form>
+        <button type="submit" class="btn btn-primary">
+          <span
+            th:text="${editando ? 'Atualizar' : 'Cadastrar'} + ' Ponto de Venda'"
+          ></span>
+        </button>
+      </form>
     </div>
-</div>
-</html>
+    <style>
+        .form-control.is-invalid {
+            border-color: #dc3545;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+        
+        .form-control.is-valid {
+            border-color: #198754;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+        </style>
+        
+        </div>
+        </html>

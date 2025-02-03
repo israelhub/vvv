@@ -28,7 +28,6 @@ public class Modal {
 
     @Column(nullable = false)
     @NotNull(message = "O ano de fabricação não pode ser nulo")
-    @Max(value = 2100, message = "O ano deve ser menor que 2100") 
     private Integer ano_fabricacao;
     
     @ManyToOne

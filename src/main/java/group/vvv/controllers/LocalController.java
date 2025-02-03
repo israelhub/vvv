@@ -18,6 +18,7 @@ import group.vvv.models.viagem.Aeroporto;
 import group.vvv.models.viagem.Estacao;
 import group.vvv.models.viagem.Porto;
 import group.vvv.services.LocalService;
+import group.vvv.services.CidadeService;
 
 @Controller
 @RequestMapping("/web/administracao/local")
@@ -28,6 +29,9 @@ public class LocalController {
 
     @Autowired
     private FuncionarioSession funcionarioSession;
+
+    @Autowired
+    private CidadeService cidadeService;
 
     @GetMapping
     public String listarLocais(Model model, RedirectAttributes ra) {
@@ -44,28 +48,37 @@ public class LocalController {
             return "redirect:/web/administracao";
         }
         model.addAttribute("editando", false);
+        model.addAttribute("cidades", cidadeService.listarTodas());
         return "admin/local-form";
     }
 
     @PostMapping
     public String cadastrarLocal(
+            @RequestParam String tipoCidade,
+            @RequestParam(required = false) Long cidadeExistente,
             @RequestParam String nomeCidade,
-            @RequestParam String codigoCidade, 
+            @RequestParam String codigoCidade,
             @RequestParam String tipo,
             @RequestParam String nomeInfraestrutura,
             @RequestParam(required = false) String codigoAeroporto,
             RedirectAttributes ra) {
         try {
             Local local = new Local();
-            Cidade cidade = new Cidade();
-            cidade.setNome(nomeCidade);
-            cidade.setCodigo(codigoCidade);
-            localService.cadastrarCidade(cidade);
-            
+            Cidade cidade;
+
+            if ("existente".equals(tipoCidade)) {
+                cidade = cidadeService.findById(cidadeExistente);
+            } else {
+                cidade = new Cidade();
+                cidade.setNome(nomeCidade);
+                cidade.setCodigo(codigoCidade);
+                localService.cadastrarCidade(cidade);
+            }
+
             local.setId_cidade(cidade);
             atualizarDadosLocal(local, nomeCidade, codigoCidade, tipo, nomeInfraestrutura, codigoAeroporto);
             localService.cadastrar(local);
-            
+
             ra.addFlashAttribute("mensagem", "Local cadastrado com sucesso!");
             ra.addFlashAttribute("tipoMensagem", "success");
         } catch (Exception e) {
@@ -95,6 +108,7 @@ public class LocalController {
             tipo = "";
         }
         model.addAttribute("tipoLocal", tipo);
+        model.addAttribute("cidades", cidadeService.listarTodas());
 
         return "admin/local-form";
     }
@@ -156,7 +170,7 @@ public class LocalController {
                     aeroporto = new Aeroporto();
                 }
                 aeroporto.setNome(nomeInfraestrutura);
-                aeroporto.setCodigo(Integer.parseInt(codigoAeroporto));
+                aeroporto.setCodigo(codigoAeroporto);
                 local.setId_aeroporto(aeroporto);
                 local.setId_estacao(null);
                 local.setId_porto(null);

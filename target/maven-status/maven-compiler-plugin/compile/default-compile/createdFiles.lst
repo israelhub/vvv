@@ -35,6 +35,7 @@ group\vvv\models\ReservaPassageiro$ReservaPassageiroId.class
 group\vvv\models\viagem\Cidade.class
 group\vvv\repositories\CidadeRepository.class
 group\vvv\models\PontoFuncionario$DiaSemana.class
+group\vvv\services\CidadeService.class
 group\vvv\services\EscalaService.class
 group\vvv\services\PontoDeVendaService.class
 group\vvv\repositories\PortoRepository.class

@@ -1,135 +1,167 @@
 <!DOCTYPE html>
-<html
-  xmlns:th="http://www.thymeleaf.org"
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{admin/layout}"
->
-  <head>
-    <title th:text="${editando ? 'Editar Local' : 'Cadastro de Local'}">
-      Cadastro de Local
-    </title>
-  </head>
-  <div layout:fragment="content">
-    <div class="container mt-5">
-      <h2 th:text="${editando ? 'Editar Local' : 'Cadastro de Local'}">
-        Cadastro de Local
-      </h2>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+    <title th:text="${editando ? 'Editar Local' : 'Cadastro de Local'}">Cadastro de Local</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container mt-5">
+            <h2 th:text="${editando ? 'Editar Local' : 'Cadastro de Local'}">Cadastro de Local</h2>
 
-      <div
-        th:if="${mensagem}"
-        th:class="${'alert alert-' + tipoMensagem}"
-        role="alert"
-      >
-        <span th:text="${mensagem}"></span>
-      </div>
+            <div th:if="${mensagem}" th:class="${'alert alert-' + tipoMensagem}" role="alert">
+                <span th:text="${mensagem}"></span>
+            </div>
 
-      <form
-        th:action="${editando ? '/web/administracao/local/editar/' + local.id_local : '/web/administracao/local'}"
-        method="post"
-      >
-        <div class="mb-3">
-          <label for="nomeCidade" class="form-label">Nome da Cidade</label>
-          <input
-            type="text"
-            id="nomeCidade"
-            name="nomeCidade"
-            class="form-control"
-            required
-            th:value="${editando ? local.id_cidade.nome : ''}"
-          />
+            <form th:action="${editando ? '/web/administracao/local/editar/' + local.id_local : '/web/administracao/local'}"
+                  method="post" class="needs-validation" novalidate>
+
+                <!-- Seleção do tipo de cidade -->
+                <div class="mb-4">
+                    <label class="d-block mb-2">Tipo de Cidade:</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="tipoCidade" 
+                               id="cidadeExistenteRadio" value="existente" checked>
+                        <label class="form-check-label" for="cidadeExistenteRadio">
+                            Cidade Existente
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="tipoCidade" 
+                               id="novaCidadeRadio" value="nova">
+                        <label class="form-check-label" for="novaCidadeRadio">
+                            Nova Cidade
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Cidade Existente -->
+                <div id="cidadeExistenteDiv" class="mb-3">
+                    <label for="cidadeExistente" class="form-label">Cidade</label>
+                    <select class="form-select" id="cidadeExistente" name="cidadeExistente">
+                        <option value="">Selecione uma cidade</option>
+                        <option th:each="cidade : ${cidades}"
+                                th:value="${cidade.id_cidade}"
+                                th:text="${cidade.nome + ' (' + cidade.codigo + ')'}"
+                                th:selected="${editando && local.id_cidade != null && local.id_cidade.id_cidade == cidade.id_cidade}">
+                        </option>
+                    </select>
+                    <div class="invalid-feedback">Selecione uma cidade</div>
+                </div>
+
+                <!-- Nova Cidade -->
+                <div id="novaCidadeDiv" class="mb-3" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label for="nomeCidade" class="form-label">Nome da Cidade</label>
+                            <input type="text" class="form-control" id="nomeCidade" name="nomeCidade"
+                                   minlength="2" maxlength="50">
+                            <div class="invalid-feedback">Nome da cidade é obrigatório (2-50 caracteres)</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="codigoCidade" class="form-label">Código da Cidade</label>
+                            <input type="text" class="form-control" id="codigoCidade" name="codigoCidade"
+                                   pattern="[A-Z]{3}" maxlength="3">
+                            <div class="invalid-feedback">Código deve ter 3 letras maiúsculas</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tipo de Infraestrutura -->
+                <div class="mb-3">
+                    <label for="tipo" class="form-label">Tipo de Infraestrutura</label>
+                    <select class="form-select" id="tipo" name="tipo" required>
+                        <option value="">Selecione o tipo</option>
+                        <option value="aeroporto" th:selected="${tipoLocal == 'aeroporto'}">Aeroporto</option>
+                        <option value="estacao" th:selected="${tipoLocal == 'estacao'}">Estação</option>
+                        <option value="porto" th:selected="${tipoLocal == 'porto'}">Porto</option>
+                    </select>
+                    <div class="invalid-feedback">Selecione o tipo de infraestrutura</div>
+                </div>
+
+                <!-- Nome da Infraestrutura -->
+                <div class="mb-3">
+                    <label for="nomeInfraestrutura" class="form-label">Nome da Infraestrutura</label>
+                    <input type="text" class="form-control" id="nomeInfraestrutura" 
+                           name="nomeInfraestrutura" required
+                           minlength="2" maxlength="60"
+                           th:value="${editando ? (local.id_aeroporto != null ? local.id_aeroporto.nome : 
+                           (local.id_estacao != null ? local.id_estacao.nome : 
+                           (local.id_porto != null ? local.id_porto.nome : ''))) : ''}">
+                    <div class="invalid-feedback">Nome da infraestrutura é obrigatório (2-60 caracteres)</div>
+                </div>
+
+                <!-- Código do Aeroporto (condicional) -->
+                <div id="codigoAeroportoDiv" class="mb-3" style="display: none;">
+                    <label for="codigoAeroporto" class="form-label">Código do Aeroporto</label>
+                    <input type="text" class="form-control" id="codigoAeroporto" 
+                           name="codigoAeroporto"
+                           minlength="1" maxlength="10"
+                           th:value="${editando && local.id_aeroporto != null ? local.id_aeroporto.codigo : ''}">
+                    <div class="invalid-feedback">Código do aeroporto é obrigatório</div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary" 
+                            th:text="${editando ? 'Atualizar' : 'Cadastrar'}">Cadastrar</button>
+                    <a href="/web/administracao/local" class="btn btn-secondary">Voltar</a>
+                </div>
+            </form>
         </div>
 
-        <div class="mb-3">
-          <label for="codigoCidade" class="form-label">Código da Cidade</label>
-          <input
-            type="text"
-            id="codigoCidade"
-            name="codigoCidade"
-            class="form-control"
-            pattern="[A-Z]{3}"
-            title="Código deve ter exatamente 3 letras maiúsculas"
-            required
-            th:value="${editando ? local.id_cidade.codigo : ''}"
-          />
-        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.querySelector('form');
+                const cidadeExistenteRadio = document.getElementById('cidadeExistenteRadio');
+                const novaCidadeRadio = document.getElementById('novaCidadeRadio');
+                const cidadeExistenteDiv = document.getElementById('cidadeExistenteDiv');
+                const novaCidadeDiv = document.getElementById('novaCidadeDiv');
+                const tipoSelect = document.getElementById('tipo');
+                const codigoAeroportoDiv = document.getElementById('codigoAeroportoDiv');
+                const codigoAeroportoInput = document.getElementById('codigoAeroporto');
+                
+                function toggleCidadeInputs() {
+                    const isExistente = cidadeExistenteRadio.checked;
+                    cidadeExistenteDiv.style.display = isExistente ? 'block' : 'none';
+                    novaCidadeDiv.style.display = isExistente ? 'none' : 'block';
+                    
+                    // Toggle required attributes
+                    document.getElementById('cidadeExistente').required = isExistente;
+                    document.getElementById('nomeCidade').required = !isExistente;
+                    document.getElementById('codigoCidade').required = !isExistente;
+                }
 
-        <div class="mb-3">
-          <label for="tipo" class="form-label">Tipo de Infraestrutura</label>
-          <select id="tipo" name="tipo" class="form-control" required>
-            <option value="">Selecione um tipo</option>
-            <option value="aeroporto" th:selected="${tipoLocal == 'aeroporto'}">
-              Aeroporto
-            </option>
-            <option value="estacao" th:selected="${tipoLocal == 'estacao'}">
-              Estação
-            </option>
-            <option value="porto" th:selected="${tipoLocal == 'porto'}">
-              Porto
-            </option>
-          </select>
-        </div>
+                function toggleAeroportoFields() {
+                    const isAeroporto = tipoSelect.value === 'aeroporto';
+                    codigoAeroportoDiv.style.display = isAeroporto ? 'block' : 'none';
+                    codigoAeroportoInput.required = isAeroporto;
+                }
 
-        <div class="mb-3">
-          <label for="nomeInfraestrutura" class="form-label"
-            >Nome da Infraestrutura</label
-          >
-          <input
-            type="text"
-            id="nomeInfraestrutura"
-            name="nomeInfraestrutura"
-            class="form-control"
-            required
-            th:value="${editando ? (local.id_aeroporto != null ? local.id_aeroporto.nome : 
-                                            (local.id_estacao != null ? local.id_estacao.nome : 
-                                            (local.id_porto != null ? local.id_porto.nome : ''))) : ''}"
-          />
-        </div>
+                // Event Listeners
+                cidadeExistenteRadio.addEventListener('change', toggleCidadeInputs);
+                novaCidadeRadio.addEventListener('change', toggleCidadeInputs);
+                tipoSelect.addEventListener('change', toggleAeroportoFields);
 
-        <div class="mb-3" id="codigoAeroportoContainer">
-            <label for="codigoAeroporto" class="form-label">Código do Aeroporto</label>
-            <input
-                type="text"
-                id="codigoAeroporto"
-                name="codigoAeroporto"
-                class="form-control"
-                pattern="[0-9]+"
-                title="Digite apenas números"
-                th:value="${editando && local.id_aeroporto != null ? local.id_aeroporto.codigo : ''}"
-                th:required="${tipoLocal == 'aeroporto'}"
-            />
-        </div>
+                // Auto uppercase for cidade code
+                document.getElementById('codigoCidade').addEventListener('input', function() {
+                    this.value = this.value.toUpperCase();
+                });
 
-        <button
-          type="submit"
-          class="btn btn-primary"
-          th:text="${editando ? 'Atualizar' : 'Cadastrar'}"
-        >
-          Cadastrar
-        </button>
-        <a href="/web/administracao/local" class="btn btn-secondary">Voltar</a>
-      </form>
+                // Form validation
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                });
+
+                // Initial state
+                toggleCidadeInputs();
+                toggleAeroportoFields();
+            });
+        </script>
     </div>
-  </div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const tipo = document.getElementById("tipo");
-        const container = document.getElementById("codigoAeroportoContainer");
-        const input = document.getElementById("codigoAeroporto");
-    
-        function toggleCodigoAeroporto() {
-            const isAeroporto = tipo.value === "aeroporto";
-            container.style.display = isAeroporto ? "block" : "none";
-            input.required = isAeroporto;
-            if (!isAeroporto) {
-                input.value = "";
-            }
-        }
-    
-        tipo.addEventListener("change", toggleCodigoAeroporto);
-        
-        // Configura estado inicial baseado no valor atual do select
-        toggleCodigoAeroporto();
-    });
-    </script>
+</body>
 </html>

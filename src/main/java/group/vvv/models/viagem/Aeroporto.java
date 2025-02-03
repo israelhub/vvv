@@ -19,5 +19,5 @@ public class Aeroporto {
 
     @NotNull(message = "O código do aeroporto não pode ser nulo")
     @Column(nullable = false, unique = true)
-    private int codigo;  
+    private String codigo;  
 }

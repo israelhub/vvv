@@ -18,27 +18,58 @@
     
             <div class="mb-3">
                 <label for="tipo" class="form-label">Tipo</label>
-                <input type="text" id="tipo" th:field="*{tipo}" class="form-control" required>
+                <input type="text" id="tipo" th:field="*{tipo}" 
+                       class="form-control" 
+                       required
+                       maxlength="30"
+                       th:classappend="${#fields.hasErrors('tipo')} ? 'is-invalid'">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('tipo')}" th:errors="*{tipo}">
+                    O tipo não pode ser nulo
+                </div>
             </div>
 
             <div class="mb-3">
                 <label for="modelo" class="form-label">Modelo</label>
-                <input type="text" id="modelo" th:field="*{modelo}" class="form-control">
+                <input type="text" id="modelo" th:field="*{modelo}" 
+                       class="form-control"
+                       required
+                       maxlength="50"
+                       th:classappend="${#fields.hasErrors('modelo')} ? 'is-invalid'">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('modelo')}" th:errors="*{modelo}">
+                    O modelo não pode ser nulo
+                </div>
             </div>
 
             <div class="mb-3">
                 <label for="capacidade" class="form-label">Capacidade</label>
-                <input type="number" id="capacidade" th:field="*{capacidade}" class="form-control" required>
+                <input type="number" id="capacidade" th:field="*{capacidade}" 
+                       class="form-control"
+                       required
+                       min="1"
+                       th:classappend="${#fields.hasErrors('capacidade')} ? 'is-invalid'">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('capacidade')}" th:errors="*{capacidade}">
+                    A capacidade deve ser maior que zero
+                </div>
             </div>
 
             <div class="mb-3">
                 <label for="ano_fabricacao" class="form-label">Ano de Fabricação</label>
-                <input type="number" id="ano_fabricacao" th:field="*{ano_fabricacao}" class="form-control">
+                <input type="number" id="ano_fabricacao" th:field="*{ano_fabricacao}" 
+                       class="form-control"
+                       required
+                       min="1900"
+                       th:max="${#calendars.format(#calendars.createNow(), 'yyyy')}"
+                       th:classappend="${#fields.hasErrors('ano_fabricacao')} ? 'is-invalid'">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('ano_fabricacao')}" th:errors="*{ano_fabricacao}">
+                    O ano deve ser igual ou menor que o ano atual
+                </div>
             </div>
-
+            
             <div class="mb-3">
                 <label for="transportadora" class="form-label">Transportadora</label>
-                <select class="form-control" name="transportadora" required>
+                <select class="form-control" id="transportadora" name="transportadora" 
+                        required
+                        th:classappend="${#fields.hasErrors('transportadora')} ? 'is-invalid'">
                     <option value="">Selecione uma transportadora</option>
                     <option th:each="transp : ${transportadoras}" 
                             th:value="${transp.idTransportadora}"
@@ -46,6 +77,9 @@
                             th:selected="${modal.transportadora != null && modal.transportadora.idTransportadora == transp.idTransportadora}">
                     </option>
                 </select>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('transportadora')}">
+                    Selecione uma transportadora
+                </div>
             </div>
         
             <button type="submit" class="btn btn-primary" 

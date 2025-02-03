@@ -71,7 +71,7 @@ CREATE TABLE estado (
 CREATE TABLE aeroporto (
         id_aeroporto BIGSERIAL PRIMARY KEY,
         nome VARCHAR(50) NOT NULL,
-        codigo INT NOT NULL UNIQUE
+        codigo VARCHAR(20) NOT NULL UNIQUE
 );
 
 -- Tabela: estacao

@@ -1,6 +1,4 @@
-group\vvv\services\FuncionarioServiceTest.class
-group\vvv\services\ClienteServiceTest.class
-group\vvv\models\ClienteTest.class
-group\vvv\models\FuncionarioTest.class
-group\vvv\services\ViagemServiceTest.class
+group\vvv\controllers\LocalControllerTest.class
+group\vvv\controllers\ModalControllerTest.class
+group\vvv\controllers\ClienteControllerTest.class
 group\vvv\VvvApplicationTests.class

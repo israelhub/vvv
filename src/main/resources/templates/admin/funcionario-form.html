@@ -30,9 +30,11 @@
         <form
           th:action="${editando ? '/web/administracao/funcionario/editar/' + funcionario.id_funcionario : '/web/administracao/funcionario'}"
           method="post"
+          class="needs-validation"
+          novalidate
         >
           <div class="mb-3">
-            <label for="nome" class="form-label">Nome</label>
+            <label for="nome" class="form-label">Nome*</label>
             <input
               type="text"
               th:value="${funcionario != null ? funcionario.nome : ''}"
@@ -40,10 +42,18 @@
               id="nome"
               name="nome"
               required
+              minlength="2"
+              maxlength="60"
+              pattern="[A-Za-zÀ-ÿ\s']+"
+              title="Nome deve conter apenas letras, espaços e acentos"
             />
+            <div class="invalid-feedback">
+              Por favor insira um nome válido (2-60 caracteres, apenas letras)
+            </div>
           </div>
+
           <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
+            <label for="email" class="form-label">Email*</label>
             <input
               type="email"
               class="form-control"
@@ -51,10 +61,14 @@
               name="email"
               th:value="${funcionario != null ? funcionario.email : ''}"
               required
+              maxlength="320"
+              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+              title="Digite um email válido"
             />
+            <div class="invalid-feedback">Por favor insira um email válido</div>
           </div>
           <div class="mb-3">
-            <label for="cargo" class="form-label">Cargo</label>
+            <label for="cargo" class="form-label">Cargo*</label>
             <select class="form-control" id="cargo" name="cargo" required>
               <option
                 value="GERENTE"
@@ -294,6 +308,23 @@
             }
           });
         });
+        (function () {
+          "use strict";
+          var forms = document.querySelectorAll(".needs-validation");
+          Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener(
+              "submit",
+              function (event) {
+                if (!form.checkValidity()) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+                form.classList.add("was-validated");
+              },
+              false
+            );
+          });
+        })();
       </script>
     </div>
   </body>
