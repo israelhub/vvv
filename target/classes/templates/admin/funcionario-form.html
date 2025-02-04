@@ -91,15 +91,14 @@
             </select>
           </div>
 
+          <!-- Div pontosDeVendaContainer substituída -->
           <div class="pontosDeVendaContainer">
-            <!-- Se não houver pontos, mostra formulário vazio -->
-            <div
-              th:if="${pontosFuncionario == null or pontosFuncionario.empty}"
-              class="pontoDeVenda"
-            >
+            <!-- Primeiro Ponto de Venda (Obrigatório) -->
+            <div class="pontoDeVenda mb-4">
+              <h4>Ponto de Venda Principal (Obrigatório)</h4>
               <div class="mb-3">
                 <label class="form-label">Ponto de Venda</label>
-                <select name="pontoDeVenda" class="form-control">
+                <select name="pontoDeVenda[]" class="form-control" required>
                   <option value="">Selecione um ponto de venda</option>
                   <option
                     th:each="pdv : ${pontosDeVenda}"
@@ -111,10 +110,11 @@
 
               <div class="diasContainer">
                 <div class="dia mb-3">
+                  <!-- Manter código existente dos dias -->
                   <div class="row">
                     <div class="col">
                       <label>Dia da Semana</label>
-                      <select name="diaSemana" class="form-control">
+                      <select name="diaSemana[]" class="form-control">
                         <option value="">Selecione um dia</option>
                         <option value="SEGUNDA">Segunda</option>
                         <option value="TERCA">Terça</option>
@@ -127,19 +127,12 @@
                     </div>
                     <div class="col">
                       <label>Horário Inicial</label>
-                      <input
-                        type="time"
-                        name="horarioInicial"
-                        class="form-control"
-                      />
+                      <input type="time" name="horarioInicial[]" class="form-control" />
+
                     </div>
                     <div class="col">
                       <label>Horário Final</label>
-                      <input
-                        type="time"
-                        name="horarioFinal"
-                        class="form-control"
-                      />
+                      <input type="time" name="horarioFinal[]" class="form-control" />
                     </div>
                     <div class="col-auto align-self-end mb-3">
                       <button type="button" class="btn btn-danger removeDia">
@@ -154,89 +147,47 @@
               </button>
             </div>
 
-            <!-- Se houver pontos, itera sobre eles -->
-            <div th:each="ponto : ${pontosFuncionario}" class="pontoDeVenda">
+            <!-- Segundo Ponto de Venda (Opcional) -->
+            <div class="pontoDeVenda mb-4">
+              <h4>Ponto de Venda Secundário (Opcional)</h4>
               <div class="mb-3">
                 <label class="form-label">Ponto de Venda</label>
-                <select name="pontoDeVenda" class="form-control">
+                <select name="pontoDeVenda[]" class="form-control">
                   <option value="">Selecione um ponto de venda</option>
                   <option
                     th:each="pdv : ${pontosDeVenda}"
                     th:value="${pdv.id_ponto_de_venda}"
                     th:text="${pdv.nome}"
-                    th:selected="${ponto.pontoDeVenda != null && ponto.pontoDeVenda.id_ponto_de_venda == pdv.id_ponto_de_venda}"
                   ></option>
                 </select>
               </div>
 
               <div class="diasContainer">
                 <div class="dia mb-3">
+                  <!-- Manter código existente dos dias -->
                   <div class="row">
                     <div class="col">
                       <label>Dia da Semana</label>
-                      <select name="diaSemana" class="form-control">
+                      <select name="diaSemana[]" class="form-control">
                         <option value="">Selecione um dia</option>
-                        <option
-                          value="SEGUNDA"
-                          th:selected="${ponto.id.diaSemana == 'SEGUNDA'}"
-                        >
-                          Segunda
-                        </option>
-                        <option
-                          value="TERCA"
-                          th:selected="${ponto.id.diaSemana == 'TERCA'}"
-                        >
-                          Terça
-                        </option>
-                        <option
-                          value="QUARTA"
-                          th:selected="${ponto.id.diaSemana == 'QUARTA'}"
-                        >
-                          Quarta
-                        </option>
-                        <option
-                          value="QUINTA"
-                          th:selected="${ponto.id.diaSemana == 'QUINTA'}"
-                        >
-                          Quinta
-                        </option>
-                        <option
-                          value="SEXTA"
-                          th:selected="${ponto.id.diaSemana == 'SEXTA'}"
-                        >
-                          Sexta
-                        </option>
-                        <option
-                          value="SABADO"
-                          th:selected="${ponto.id.diaSemana == 'SABADO'}"
-                        >
-                          Sábado
-                        </option>
-                        <option
-                          value="DOMINGO"
-                          th:selected="${ponto.id.diaSemana == 'DOMINGO'}"
-                        >
-                          Domingo
-                        </option>
+                        <option value="SEGUNDA">Segunda</option>
+                        <option value="TERCA">Terça</option>
+                        <option value="QUARTA">Quarta</option>
+                        <option value="QUINTA">Quinta</option>
+                        <option value="SEXTA">Sexta</option>
+                        <option value="SABADO">Sábado</option>
+                        <option value="DOMINGO">Domingo</option>
                       </select>
                     </div>
                     <div class="col">
                       <label>Horário Inicial</label>
-                      <input
-                        type="time"
-                        name="horarioInicial"
-                        class="form-control"
-                        th:value="${ponto.horarioInicial}"
-                      />
+                      <input type="time" name="horarioInicial[]" class="form-control" />
+
                     </div>
                     <div class="col">
                       <label>Horário Final</label>
-                      <input
-                        type="time"
-                        name="horarioFinal"
-                        class="form-control"
-                        th:value="${ponto.horarioFinal}"
-                      />
+                      <input type="time" name="horarioFinal[]" class="form-control" />
+
                     </div>
                     <div class="col-auto align-self-end mb-3">
                       <button type="button" class="btn btn-danger removeDia">
@@ -251,17 +202,14 @@
               </button>
             </div>
           </div>
+          <!-- Fim da div pontosDeVendaContainer -->
 
-          <button type="button" class="btn btn-secondary mt-3 addPontoDeVenda">
-            Adicionar Ponto de Venda
-          </button>
-          <button type="button" class="btn btn-danger mt-3 removePontoDeVenda">
-            Remover Ponto de Venda
-          </button>
+          <!-- Botão de adicionar/remover ponto de venda removidos -->
+
           <button type="submit" class="btn btn-primary mt-3">
-            <span th:text="${editando ? 'Salvar Alterações' : 'Cadastrar'}"
-              >Cadastrar</span
-            >
+            <span th:text="${editando ? 'Salvar Alterações' : 'Cadastrar'}">
+              Cadastrar
+            </span>
           </button>
         </form>
 
@@ -271,60 +219,69 @@
       </div>
 
       <script>
-        $(document).ready(function () {
-          // Adicionar ponto de venda
-          $(".addPontoDeVenda").click(function () {
-            var pontoHtml = $(".pontoDeVenda").first().clone();
-            pontoHtml.find("input").val("");
-            pontoHtml.find("select").prop("selectedIndex", 0);
-            pontoHtml.find(".diasContainer .dia:not(:first)").remove(); // Remove dias extras
-            $(".pontosDeVendaContainer").append(pontoHtml);
-          });
+$(document).ready(function () {
+    // Funcionalidade de adicionar/remover dias
+    $(".addDia").click(function () {
+        var diasContainer = $(this).siblings(".diasContainer");
+        var diaHtml = diasContainer.find(".dia").first().clone();
+        diaHtml.find("input").val("");
+        diaHtml.find("select").prop("selectedIndex", 0);
+        diasContainer.append(diaHtml);
+    });
 
-          // Remover ponto de venda
-          $(".removePontoDeVenda").click(function () {
-            if ($(".pontoDeVenda").length > 1) {
-              $(".pontoDeVenda:last").remove();
-            }
-          });
+    // Funcionalidade de remover dias
+    $(document).on("click", ".removeDia", function () {
+        var diasContainer = $(this).closest(".diasContainer");
+        if (diasContainer.find(".dia").length > 1) {
+            $(this).closest(".dia").remove();
+        }
+    });
 
-          // Adicionar dia
-          $(document).on("click", ".addDia", function () {
-            var diaHtml = $(this)
-              .siblings(".diasContainer")
-              .find(".dia")
-              .first()
-              .clone();
-            diaHtml.find("input").val("");
-            diaHtml.find("select").prop("selectedIndex", 0);
-            $(this).siblings(".diasContainer").append(diaHtml);
-          });
+    // Campos obrigatórios do primeiro ponto de venda
+    const primeiroPontoDeVenda = document.querySelector(".pontoDeVenda:first-child");
+    if (primeiroPontoDeVenda) {
+        primeiroPontoDeVenda.querySelectorAll(
+            'select[name="pontoDeVenda[]"], select[name="diaSemana[]"], input[name="horarioInicial[]"], input[name="horarioFinal[]"]'
+        ).forEach(input => input.required = true);
+    }
 
-          // Remover dia
-          $(document).on("click", ".removeDia", function () {
-            var diasContainer = $(this).closest(".diasContainer");
-            if (diasContainer.find(".dia").length > 1) {
-              $(this).closest(".dia").remove();
-            }
-          });
-        });
-        (function () {
-          "use strict";
-          var forms = document.querySelectorAll(".needs-validation");
-          Array.prototype.slice.call(forms).forEach(function (form) {
-            form.addEventListener(
-              "submit",
-              function (event) {
-                if (!form.checkValidity()) {
-                  event.preventDefault();
-                  event.stopPropagation();
+    // Remover required do segundo ponto de venda
+    const segundoPontoDeVenda = document.querySelector(".pontoDeVenda:nth-child(2)");
+    if (segundoPontoDeVenda) {
+        segundoPontoDeVenda.querySelectorAll("[required]")
+            .forEach(input => input.required = false);
+    }
+
+    // Validação de dias únicos por ponto de venda
+    $("form").on("submit", function (e) {
+        const pontosDeVenda = $(".pontoDeVenda");
+        let isValid = true;
+
+        pontosDeVenda.each(function() {
+            const diasSelecionados = new Set();
+            $(this).find('select[name="diaSemana[]"]').each(function () {
+                const dia = $(this).val();
+                if (dia && diasSelecionados.has(dia)) {
+                    isValid = false;
+                    $(this).addClass("is-invalid");
+                    if (!$(this).next(".invalid-feedback").length) {
+                        $(this).after(
+                            '<div class="invalid-feedback">Este dia já foi selecionado para este ponto de venda</div>'
+                        );
+                    }
+                } else {
+                    diasSelecionados.add(dia);
+                    $(this).removeClass("is-invalid");
                 }
-                form.classList.add("was-validated");
-              },
-              false
-            );
-          });
-        })();
+            });
+        });
+
+        if (!isValid) {
+            e.preventDefault();
+            return false;
+        }
+    });
+});
       </script>
     </div>
   </body>

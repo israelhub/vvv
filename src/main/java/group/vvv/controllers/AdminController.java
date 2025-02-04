@@ -99,60 +99,77 @@ public class AdminController {
             @RequestParam(required = false) List<LocalTime> horarioFinal,
             RedirectAttributes ra) {
         try {
+            // Validar número máximo de pontos de venda
+            if (pontoDeVenda != null && pontoDeVenda.size() > 2) {
+                ra.addFlashAttribute("mensagem", "Máximo de 2 pontos de venda permitidos");
+                ra.addFlashAttribute("tipoMensagem", "error");
+                return "redirect:/web/administracao/funcionario";
+            }
+    
             Funcionario novoFuncionario = funcionarioService.cadastrar(funcionario);
     
-            if (pontoDeVenda != null && diaSemana != null && horarioInicial != null && horarioFinal != null) {
-                int currentIndex = 0;
-                
-                for (int i = 0; i < pontoDeVenda.size(); i++) {
-                    Long idPonto = pontoDeVenda.get(i);
-                    
-                    // Conta quantos dias consecutivos não nulos existem para este ponto
-                    int diasCount = 0;
-                    while (currentIndex + diasCount < diaSemana.size() && 
-                           diaSemana.get(currentIndex + diasCount) != null && 
-                           !diaSemana.get(currentIndex + diasCount).isEmpty()) {
-                        diasCount++;
-                    }
+            if (pontoDeVenda != null && diaSemana != null && 
+                horarioInicial != null && horarioFinal != null) {
     
-                    // Para cada dia deste ponto de venda
-                    for (int j = 0; j < diasCount; j++) {
-                        String dia = diaSemana.get(currentIndex + j);
-                        LocalTime horaInicial = horarioInicial.get(currentIndex + j);
-                        LocalTime horaFinal = horarioFinal.get(currentIndex + j);
+                // Processar primeiro ponto de venda (obrigatório)
+                Long idPonto = pontoDeVenda.get(0);
+                processarPontoDeVenda(novoFuncionario, idPonto, diaSemana, horarioInicial, horarioFinal, 0);
     
-                        PontoFuncionario pontoFuncionario = new PontoFuncionario();
-                        PontoFuncionario.PontoFuncionarioId id = new PontoFuncionario.PontoFuncionarioId(
-                                novoFuncionario.getId_funcionario(),
-                                idPonto,
-                                PontoFuncionario.DiaSemana.valueOf(dia));
-    
-                        pontoFuncionario.setId(id);
-                        pontoFuncionario.setFuncionario(novoFuncionario);
-                        pontoFuncionario.setPontoDeVenda(pontoDeVendaService.buscarPorId(idPonto));
-                        pontoFuncionario.setHorarioInicial(horaInicial);
-                        pontoFuncionario.setHorarioFinal(horaFinal);
-    
-                        funcionarioService.cadastrarPontoFuncionario(pontoFuncionario);
-                    }
-                    
-                    // Atualiza o índice para o próximo conjunto de dias
-                    currentIndex += diasCount;
-                    // Pula um índice extra para separar os conjuntos de dias de diferentes pontos
-                    currentIndex++;
+                // Processar segundo ponto de venda (opcional)
+                if (pontoDeVenda.size() > 1 && pontoDeVenda.get(1) != null && !pontoDeVenda.get(1).toString().isEmpty()) {
+                    int primeirosPontoDias = contarDiasPonto(diaSemana, 0);
+                    processarPontoDeVenda(novoFuncionario, pontoDeVenda.get(1), diaSemana, horarioInicial, horarioFinal, primeirosPontoDias);
                 }
             }
     
-            ra.addFlashAttribute("mensagem", 
-                    "Funcionário cadastrado com sucesso! Senha inicial: " + novoFuncionario.getSenha());
+            ra.addFlashAttribute("mensagem", "Funcionário cadastrado com sucesso! Senha inicial: " + novoFuncionario.getSenha());
             ra.addFlashAttribute("tipoMensagem", "success");
-            
             return "redirect:/web/administracao/funcionario/lista";
+    
         } catch (Exception e) {
             ra.addFlashAttribute("mensagem", "Erro ao cadastrar funcionário: " + e.getMessage());
             ra.addFlashAttribute("tipoMensagem", "error");
             return "redirect:/web/administracao/funcionario";
         }
+    }
+    
+    private void processarPontoDeVenda(Funcionario funcionario, Long idPonto, 
+            List<String> diaSemana, List<LocalTime> horarioInicial, 
+            List<LocalTime> horarioFinal, int startIndex) {
+        
+        int diasCount = contarDiasPonto(diaSemana, startIndex);
+    
+        for (int j = 0; j < diasCount; j++) {
+            String dia = diaSemana.get(startIndex + j);
+            if (dia != null && !dia.isEmpty()) {
+                LocalTime horaInicial = horarioInicial.get(startIndex + j);
+                LocalTime horaFinal = horarioFinal.get(startIndex + j);
+    
+                PontoFuncionario pontoFuncionario = new PontoFuncionario();
+                PontoFuncionario.PontoFuncionarioId id = new PontoFuncionario.PontoFuncionarioId(
+                        funcionario.getId_funcionario(),
+                        idPonto,
+                        PontoFuncionario.DiaSemana.valueOf(dia.toUpperCase()));
+    
+                pontoFuncionario.setId(id);
+                pontoFuncionario.setFuncionario(funcionario);
+                pontoFuncionario.setPontoDeVenda(pontoDeVendaService.buscarPorId(idPonto));
+                pontoFuncionario.setHorarioInicial(horaInicial);
+                pontoFuncionario.setHorarioFinal(horaFinal);
+    
+                funcionarioService.cadastrarPontoFuncionario(pontoFuncionario);
+            }
+        }
+    }
+    
+    private int contarDiasPonto(List<String> diaSemana, int startIndex) {
+        int count = 0;
+        while (startIndex + count < diaSemana.size() && 
+               diaSemana.get(startIndex + count) != null && 
+               !diaSemana.get(startIndex + count).isEmpty()) {
+            count++;
+        }
+        return count;
     }
 
     @GetMapping("/funcionario/lista")
@@ -237,7 +254,7 @@ public class AdminController {
         }
     }
 
-    @PostMapping("/funcionario/editar/{id}")
+    @PostMapping("/funcionario/editar/{id}") 
     public String atualizarFuncionario(@PathVariable Long id,
             @ModelAttribute Funcionario funcionario,
             @RequestParam(required = false) List<Long> pontoDeVenda,
@@ -246,69 +263,47 @@ public class AdminController {
             @RequestParam(required = false) List<LocalTime> horarioFinal,
             RedirectAttributes ra) {
         try {
-            // Buscar funcionário existente
+            // Validar número máximo de pontos de venda
+            if (pontoDeVenda != null && pontoDeVenda.size() > 2) {
+                ra.addFlashAttribute("mensagem", "Máximo de 2 pontos de venda permitidos");
+                ra.addFlashAttribute("tipoMensagem", "error");
+                return "redirect:/web/administracao/funcionario/editar/" + id;
+            }
+    
             Funcionario funcionarioExistente = funcionarioService.buscarPorId(id);
             
-            // Atualizar dados básicos
             funcionarioExistente.setNome(funcionario.getNome());
             funcionarioExistente.setEmail(funcionario.getEmail());
             funcionarioExistente.setCargo(funcionario.getCargo());
     
-            // Atualizar funcionário
             funcionarioService.atualizarDados(funcionarioExistente);
     
             // Remover pontos existentes
             funcionarioService.removerPontosFuncionario(id);
     
-            // Criar e salvar novos pontos
-            if (pontoDeVenda != null && diaSemana != null &&
-                    horarioInicial != null && horarioFinal != null) {
+            if (pontoDeVenda != null && diaSemana != null && 
+                horarioInicial != null && horarioFinal != null) {
     
-                int index = 0;
-                for (int i = 0; i < pontoDeVenda.size(); i++) {
-                    Long idPonto = pontoDeVenda.get(i);
+                // Processar primeiro ponto de venda (obrigatório)
+                Long idPonto = pontoDeVenda.get(0);
+                processarPontoDeVenda(funcionarioExistente, idPonto, diaSemana, horarioInicial, horarioFinal, 0);
     
-                    int diasCount = 0;
-                    while (index + diasCount < diaSemana.size() &&
-                            diaSemana.get(index + diasCount) != null &&
-                            !diaSemana.get(index + diasCount).isEmpty()) {
-                        diasCount++;
-                    }
-    
-                    for (int j = 0; j < diasCount; j++) {
-                        String dia = diaSemana.get(index + j);
-                        LocalTime horaInicial = horarioInicial.get(index + j);
-                        LocalTime horaFinal = horarioFinal.get(index + j);
-    
-                        if (idPonto != null && dia != null && !dia.isEmpty() &&
-                                horaInicial != null && horaFinal != null) {
-    
-                            PontoFuncionario pontoFuncionario = new PontoFuncionario();
-                            PontoFuncionario.PontoFuncionarioId pontoId = new PontoFuncionario.PontoFuncionarioId(
-                                    funcionarioExistente.getId_funcionario(),
-                                    idPonto,
-                                    PontoFuncionario.DiaSemana.valueOf(dia.toUpperCase()));
-                            
-                            pontoFuncionario.setId(pontoId);
-                            pontoFuncionario.setFuncionario(funcionarioExistente);
-                            pontoFuncionario.setPontoDeVenda(pontoDeVendaService.buscarPorId(idPonto));
-                            pontoFuncionario.setHorarioInicial(horaInicial);
-                            pontoFuncionario.setHorarioFinal(horaFinal);
-    
-                            funcionarioService.cadastrarPontoFuncionario(pontoFuncionario);
-                        }
-                    }
-                    index += diasCount;
+                // Processar segundo ponto de venda (opcional) 
+                if (pontoDeVenda.size() > 1 && pontoDeVenda.get(1) != null && !pontoDeVenda.get(1).toString().isEmpty()) {
+                    int primeirosPontoDias = contarDiasPonto(diaSemana, 0);
+                    processarPontoDeVenda(funcionarioExistente, pontoDeVenda.get(1), diaSemana, horarioInicial, horarioFinal, primeirosPontoDias);
                 }
             }
     
             ra.addFlashAttribute("mensagem", "Funcionário atualizado com sucesso!");
             ra.addFlashAttribute("tipoMensagem", "success");
+            return "redirect:/web/administracao/funcionario/lista";
+    
         } catch (Exception e) {
             ra.addFlashAttribute("mensagem", "Erro ao atualizar funcionário: " + e.getMessage());
             ra.addFlashAttribute("tipoMensagem", "error");
+            return "redirect:/web/administracao/funcionario/editar/" + id;
         }
-        return "redirect:/web/administracao/funcionario/lista";
     }
 
     @DeleteMapping("/funcionario/{id}")
