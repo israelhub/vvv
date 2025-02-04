@@ -107,21 +107,40 @@ INSERT INTO manutencao_modal (id_modal, data_inicio, data_fim, descricao) VALUES
 (2, '2024-02-01', '2024-02-03', 'Revisão do sistema de freios'),
 (3, '2024-03-01', NULL, 'Manutenção do casco em andamento');
 
--- Inserindo Viagens
 INSERT INTO viagem (num_reservas_associadas, valor, id_origem, id_destino, id_modal, horario_chegada, horario_partida) VALUES 
-(0, 500.00, 1, 2, 1, '2024-03-20 10:00:00', '2024-03-20 08:00:00'),
-(0, 300.00, 2, 3, 2, '2024-03-21 14:00:00', '2024-03-21 10:00:00'),
-(0, 1500.00, 3, 4, 3, '2024-03-22 20:00:00', '2024-03-22 08:00:00');
+-- São Paulo -> Rio de Janeiro (LATAM)
+(0, 450.00, 1, 2, 1, '2024-03-20 07:45:00', '2024-03-20 06:30:00'),
+-- Rio de Janeiro -> Salvador (GOL)
+(0, 780.00, 2, 5, 5, '2024-03-20 11:30:00', '2024-03-20 09:45:00');
+
+-- Inserindo Viagens de Ônibus
+INSERT INTO viagem (num_reservas_associadas, valor, id_origem, id_destino, id_modal, horario_chegada, horario_partida) VALUES 
+-- São Paulo -> Belo Horizonte
+(0, 220.00, 1, 3, 2, '2024-03-20 16:00:00', '2024-03-20 08:00:00'),
+-- Belo Horizonte -> Rio de Janeiro
+(0, 180.00, 3, 2, 2, '2024-03-21 05:00:00', '2024-03-20 23:00:00');
+
+-- Inserindo Viagens de Trem
+INSERT INTO viagem (num_reservas_associadas, valor, id_origem, id_destino, id_modal, horario_chegada, horario_partida) VALUES 
+-- São Paulo -> Rio de Janeiro (com escala em São José dos Campos)
+(0, 300.00, 1, 2, 4, '2024-03-20 14:00:00', '2024-03-20 08:00:00');
+
+-- Inserindo Viagens de Navio
+INSERT INTO viagem (num_reservas_associadas, valor, id_origem, id_destino, id_modal, horario_chegada, horario_partida) VALUES 
+-- Rio de Janeiro -> Salvador
+(0, 1200.00, 2, 5, 3, '2024-03-22 14:00:00', '2024-03-20 14:00:00');
 
 -- Inserindo Escalas
 INSERT INTO escala (id_viagem, id_origem, id_destino, id_modal, horario_partida, horario_chegada, ordem) VALUES 
-(1, 1, 3, 1, '2024-03-20 08:30:00', '2024-03-20 09:00:00', 1),
-(2, 2, 4, 2, '2024-03-21 11:30:00', '2024-03-21 12:30:00', 1);
+-- Escala do trem SP -> RJ em São José dos Campos
+(5, 1, 2, 4, '2024-03-20 10:30:00', '2024-03-20 11:30:00', 1),
+-- Escala do navio RJ -> Salvador em Vitória
+(6, 2, 5, 3, '2024-03-21 08:00:00', '2024-03-21 20:00:00', 1);
 
 -- Inserindo Reservas
 INSERT INTO reserva (data, status, valor_total, origem, destino, id_cliente, id_funcionario, id_viagem) VALUES 
 ('2024-03-19', 'CONFIRMADA', 500.00, 'São Paulo', 'Rio de Janeiro', 1, 4, 1),
-('2024-03-20', 'PENDENTE_PAGAMENTO', 300.00, 'Rio de Janeiro', 'Belo Horizonte', 2, 4, 2);
+('2024-03-20', 'PENDENTE_AO_GERENTE_DE_NEGOCIOS_VIRTUAIS', 300.00, 'Rio de Janeiro', 'Belo Horizonte', 2, 4, 2);
 
 -- Inserindo Cartões
 INSERT INTO cartao (numero_encriptado, cvv_encriptado, validade, nome_titular, tipo, id_cliente) VALUES 

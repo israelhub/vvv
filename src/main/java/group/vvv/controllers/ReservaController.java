@@ -219,18 +219,22 @@ public class ReservaController {
         }
     }
 
-    @GetMapping("/reserva/sucesso") 
+    // ReservaController.java
+    @GetMapping("/reserva/sucesso")
     public String mostrarPaginaSucesso(@RequestParam(required = false) Long reservaId, Model model) {
         try {
             if (reservaId == null) {
                 return "redirect:/web/paginaInicial";
             }
-    
+
             Reserva reserva = reservaService.getReservaById(reservaId);
+            Viagem viagem = reserva.getViagem();
             List<ReservaPassageiro> passageiros = reservaService.getPassageiros(reserva);
-            
+
             model.addAttribute("reserva", reserva);
+            model.addAttribute("viagem", viagem); // Adiciona a viagem
             model.addAttribute("passageiros", passageiros);
+            model.addAttribute("currentStep", 3);
             return "reservaCliente/reservaSucesso";
         } catch (Exception e) {
             return "redirect:/web/paginaInicial";
@@ -292,8 +296,11 @@ public class ReservaController {
     @GetMapping("/reserva/{id}/pagamento")
     public String exibirPaginaPagamento(@PathVariable Long id, Model model) {
         Reserva reserva = reservaService.getReservaById(id);
+        Viagem viagem = reserva.getViagem();
+
         model.addAttribute("reserva", reserva);
-        model.addAttribute("currentStep", 2); // Define que estamos no passo 2 (pagamento)
+        model.addAttribute("viagem", viagem); // Adiciona a viagem
+        model.addAttribute("currentStep", 2);
         return "reservaCliente/pagamentoCliente";
     }
 

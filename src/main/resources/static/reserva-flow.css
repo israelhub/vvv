@@ -1,9 +1,37 @@
+/* Header ajustado para corresponder ao da página inicial */
+.header-reserva {
+    height: 80px; /* Mesma altura do header inicial */
+    background-color: var(--primary-color, #2D3047);
+    color: white;
+    padding: 1rem 5%;
+    display: flex;
+    justify-content: flex-start; /* Alinha à esquerda como na página inicial */
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-reserva .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.header-reserva .logo img {
+    height: 30px;
+    width: auto;
+    margin-bottom: 10px; /* Mesmo ajuste da página inicial */
+}
 .reserva-container {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     background: linear-gradient(135deg, #74ebd5, #9face6);
-    padding: 1rem;  /* Reduzido de 1.5rem para 1rem */
+    margin-top: 80px;
+    padding: 2rem 5%;
 }
 
 /* Indicador de progresso - ajustado para ficar mais próximo do topo */
@@ -79,7 +107,7 @@
     max-width: 1800px;
     margin: 0 auto;
     width: 100%;
-    min-height: calc(100vh - 150px); /* Altura total menos o espaço do progress-indicator e padding */
+    min-height: calc(90vh - 150px); /* Altura total menos o espaço do progress-indicator e padding */
 }
 
 /* Painel lateral - ajustado proporção */

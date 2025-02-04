@@ -21,4 +21,18 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     
     @Query("SELECT t FROM Ticket t JOIN t.reserva r JOIN r.viagem v JOIN v.modal m JOIN m.transportadora tr WHERE r.cliente IS NOT NULL AND tr.nome = :companhia")
     List<Ticket> findByCompanhiaAndOnline(@Param("companhia") String companhia);
+
+    @Query("SELECT t FROM Ticket t " +
+       "JOIN t.reserva r " +
+       "JOIN r.viagem v " + 
+       "JOIN v.modal m " +
+       "JOIN m.transportadora tr " +
+       "WHERE r.cliente IS NOT NULL " +
+       "AND tr.nome = :companhia " +
+       "AND YEAR(t.horaPartida) = :ano " +
+       "AND MONTH(t.horaPartida) = :mes")
+List<Ticket> findByCompanhiaAnoMesAndOnline(
+    @Param("companhia") String companhia,
+    @Param("ano") int ano, 
+    @Param("mes") int mes);
 }

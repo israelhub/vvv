@@ -33,11 +33,16 @@ public class ClienteController {
     @PostMapping
     public String cadastrarClienteWeb(@ModelAttribute Cliente cliente, Model model) {
         try {
-            clienteService.cadastrar(cliente);
-            model.addAttribute("mensagem", "Cliente cadastrado com sucesso!");
+            // Cadastra o cliente
+            Cliente novoCliente = clienteService.cadastrar(cliente);
+            
+            model.addAttribute("mensagem", "Cadastro realizado com sucesso!");
+            model.addAttribute("cadastroSucesso", true);
             return "cliente/areaCadastroCliente";
+            
         } catch (Exception e) {
             model.addAttribute("mensagem", "Erro ao cadastrar: " + e.getMessage());
+            model.addAttribute("cadastroSucesso", false);
             return "cliente/areaCadastroCliente";
         }
     }

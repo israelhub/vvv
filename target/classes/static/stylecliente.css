@@ -144,6 +144,48 @@ h1 {
     border-left: 0.3em solid transparent;
 }
 
+/* Botões pós cadastro */
+.btn-outline-primary {
+    background-color: transparent;
+    border: 2px solid #74ebd5;
+    border-radius: 8px;
+    color: #74ebd5;
+    padding: 12px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 102%;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    margin: 0;
+}
+
+.btn-outline-primary:hover {
+    background-color: #74ebd5;
+    color: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.post-cadastro-btns {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 95%;
+}
+
+
+.post-cadastro-btns .btn-primary,
+.post-cadastro-btns .btn-outline-primary {
+    width: 100%;
+    margin: 0;
+    text-align: center;
+    padding: 12px 15px;
+}
+
 /* Responsividade */
 @media (max-width: 576px) {
     .container {

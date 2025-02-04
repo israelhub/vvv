@@ -154,4 +154,11 @@ public class TicketService {
 
         return dto;
     }
+
+    public List<TicketDTO> buscarTicketsOnlinePorCompanhiaAnoMes(String companhia, int ano, int mes) {
+        return ticketRepository.findByCompanhiaAnoMesAndOnline(companhia, ano, mes)
+                .stream()
+                .map(this::converterParaDTO)
+                .collect(Collectors.toList());
+    }
 }

@@ -32,4 +32,12 @@ public class TicketApiController {
             @PathVariable String companhia) {
         return ResponseEntity.ok(ticketService.buscarTicketsOnlinePorCompanhia(companhia)); 
     }
+
+    @GetMapping("/companhia/{companhia}/ano/{ano}/mes/{mes}")
+public ResponseEntity<List<TicketDTO>> getTicketsPorCompanhiaAnoMes(
+        @PathVariable String companhia,
+        @PathVariable int ano,
+        @PathVariable int mes) {
+    return ResponseEntity.ok(ticketService.buscarTicketsOnlinePorCompanhiaAnoMes(companhia, ano, mes));
+}
 }

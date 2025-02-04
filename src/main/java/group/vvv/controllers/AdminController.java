@@ -100,56 +100,59 @@ public class AdminController {
             RedirectAttributes ra) {
         try {
             Funcionario novoFuncionario = funcionarioService.cadastrar(funcionario);
-
-            if (pontoDeVenda != null && diaSemana != null &&
-                    horarioInicial != null && horarioFinal != null) {
-
-                int index = 0;
+    
+            if (pontoDeVenda != null && diaSemana != null && horarioInicial != null && horarioFinal != null) {
+                int currentIndex = 0;
+                
                 for (int i = 0; i < pontoDeVenda.size(); i++) {
                     Long idPonto = pontoDeVenda.get(i);
-
+                    
+                    // Conta quantos dias consecutivos não nulos existem para este ponto
                     int diasCount = 0;
-                    while (index + diasCount < diaSemana.size() &&
-                            diaSemana.get(index + diasCount) != null &&
-                            !diaSemana.get(index + diasCount).isEmpty()) {
+                    while (currentIndex + diasCount < diaSemana.size() && 
+                           diaSemana.get(currentIndex + diasCount) != null && 
+                           !diaSemana.get(currentIndex + diasCount).isEmpty()) {
                         diasCount++;
                     }
-
+    
+                    // Para cada dia deste ponto de venda
                     for (int j = 0; j < diasCount; j++) {
-                        String dia = diaSemana.get(index + j);
-                        LocalTime horaInicial = horarioInicial.get(index + j);
-                        LocalTime horaFinal = horarioFinal.get(index + j);
-
-                        if (idPonto != null && dia != null && !dia.isEmpty() &&
-                                horaInicial != null && horaFinal != null) {
-
-                            PontoFuncionario pontoFuncionario = new PontoFuncionario();
-                            PontoFuncionario.PontoFuncionarioId id = new PontoFuncionario.PontoFuncionarioId(
-                                    novoFuncionario.getId_funcionario(),
-                                    idPonto,
-                                    PontoFuncionario.DiaSemana.valueOf(dia.toUpperCase()));
-                            pontoFuncionario.setId(id);
-                            pontoFuncionario.setFuncionario(novoFuncionario);
-                            pontoFuncionario.setPontoDeVenda(pontoDeVendaService.buscarPorId(idPonto));
-                            pontoFuncionario.setHorarioInicial(horaInicial);
-                            pontoFuncionario.setHorarioFinal(horaFinal);
-
-                            funcionarioService.cadastrarPontoFuncionario(pontoFuncionario);
-                        }
+                        String dia = diaSemana.get(currentIndex + j);
+                        LocalTime horaInicial = horarioInicial.get(currentIndex + j);
+                        LocalTime horaFinal = horarioFinal.get(currentIndex + j);
+    
+                        PontoFuncionario pontoFuncionario = new PontoFuncionario();
+                        PontoFuncionario.PontoFuncionarioId id = new PontoFuncionario.PontoFuncionarioId(
+                                novoFuncionario.getId_funcionario(),
+                                idPonto,
+                                PontoFuncionario.DiaSemana.valueOf(dia));
+    
+                        pontoFuncionario.setId(id);
+                        pontoFuncionario.setFuncionario(novoFuncionario);
+                        pontoFuncionario.setPontoDeVenda(pontoDeVendaService.buscarPorId(idPonto));
+                        pontoFuncionario.setHorarioInicial(horaInicial);
+                        pontoFuncionario.setHorarioFinal(horaFinal);
+    
+                        funcionarioService.cadastrarPontoFuncionario(pontoFuncionario);
                     }
-                    index += diasCount;
+                    
+                    // Atualiza o índice para o próximo conjunto de dias
+                    currentIndex += diasCount;
+                    // Pula um índice extra para separar os conjuntos de dias de diferentes pontos
+                    currentIndex++;
                 }
             }
-
-            ra.addFlashAttribute("mensagem",
+    
+            ra.addFlashAttribute("mensagem", 
                     "Funcionário cadastrado com sucesso! Senha inicial: " + novoFuncionario.getSenha());
             ra.addFlashAttribute("tipoMensagem", "success");
-
+            
+            return "redirect:/web/administracao/funcionario/lista";
         } catch (Exception e) {
             ra.addFlashAttribute("mensagem", "Erro ao cadastrar funcionário: " + e.getMessage());
             ra.addFlashAttribute("tipoMensagem", "error");
+            return "redirect:/web/administracao/funcionario";
         }
-        return "redirect:/web/administracao/funcionario/lista"; 
     }
 
     @GetMapping("/funcionario/lista")

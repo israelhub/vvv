@@ -129,7 +129,7 @@ public class ConsultarReservasController {
         Paragraph header = new Paragraph();
         header.setAlignment(Element.ALIGN_CENTER);
         header.add(new Chunk("VVV VIAGENS\n", titleFont));
-        header.add(new Chunk("Sua Viagem, Nosso Compromisso",
+        header.add(new Chunk("Explore novos destinos",
                 new Font(Font.FontFamily.HELVETICA, 12, Font.ITALIC)));
         header.setSpacingAfter(20);
         document.add(header);
